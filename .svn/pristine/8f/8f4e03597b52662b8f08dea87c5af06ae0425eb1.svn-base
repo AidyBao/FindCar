@@ -1,0 +1,111 @@
+//
+//  ZXMessageViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXMessageViewController: ZXUIViewController {
+    
+    @IBOutlet weak var tabList: UITableView!
+    var dataList: Array<ZXMsgListModel> = []
+    var currentPage = 1
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.navigationItem.title = "消息"
+        
+        setUIStyle()
+        
+        addRefresh()
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        
+        tabList.backgroundColor = UIColor.zx_subTintColor
+        tabList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+        tabList.register(UINib.init(nibName: String.init(describing: ZXMessageImgCell.ZXMessageImgCellID), bundle: nil), forCellReuseIdentifier: ZXMessageImgCell.reuseIdentifier)
+    }
+    
+    func addRefresh() {
+        tabList.zx_addHeaderRefresh(showGif: true, target: self, action: #selector(refreshForHeader))
+        tabList.zx_addFooterRefresh(autoRefresh: true, target: self, action: #selector(refreshForFooter))
+        self.tabList.mj_header.beginRefreshing()
+    }
+
+    @objc func refreshForHeader() {
+        currentPage = 1
+        requestForMessageList(false)
+    }
+    
+    @objc func refreshForFooter() {
+        requestForMessageList(false)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+}
+
+extension ZXMessageViewController {
+    func requestForMessageList(_ showHUD: Bool) {
+        if showHUD {
+            ZXHUD.showText(in: self.view, text: ZX_LOADING_TEXT, delay: ZX.HUDDelay)
+        }
+        ZXMessageCenter.requestForMsgList(pageNum: currentPage, pageSize: ZX.PageSize) { (success, code, list, errorMsg) in
+            ZXHUD.hide(for: self.view, animated: true)
+            self.tabList.mj_header.endRefreshing()
+            self.tabList.mj_footer.endRefreshing()
+            ZXEmptyView.hide(from: self.tabList)
+            ZXEmptyView.hide(from: self.view)
+            if success {
+                if let list = list {
+                    if self.currentPage == 1 {
+                        self.dataList = list
+                    } else {
+                        self.dataList.append(contentsOf: list)
+                    }
+                    if self.dataList.count < ZX.PageSize {
+                        self.tabList.mj_footer.endRefreshingWithNoMoreData()
+                    }
+                    self.tabList.reloadData()
+                }
+                if self.dataList.count == 0 {
+                    ZXEmptyView.show(in: self.tabList, type: .noData, text: "暂无新消息", subText: nil)
+                }
+            } else {
+                if code != ZXAPI_LOGIN_INVALID {
+                    if self.dataList.count > 0 {//之前有数据，再次获取时网络出错
+                        if code == ZXAPI_HTTP_TIME_OUT {
+                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZX.HUDDelay)
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: "此时无法访问服务器", delay: ZX.HUDDelay)
+                        }
+                    } else {//第一次获取数据就出错 详细网络连接错误
+                        if code == ZXAPI_HTTP_ERROR {
+                            ZXEmptyView.show(in: self.view, type: .networkError, text: nil, subText: nil, retry: {
+                                self.requestForMessageList(true)
+                            })
+                        } else {
+                            ZXEmptyView.show(in: self.tabList, type: .noData, text: "暂无新消息", subText: nil)
+                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZX.HUDDelay)
+                        }
+                    }
+                } else {
+                    if self.dataList.count == 0 {
+                        ZXEmptyView.show(in: self.tabList, type: .noData, text: "暂无新消息", subText: nil)
+                    }
+                }
+            }
+        }
+    }
+    
+}

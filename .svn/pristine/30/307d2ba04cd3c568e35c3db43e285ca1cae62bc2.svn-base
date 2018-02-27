@@ -1,0 +1,232 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            if direction == .up {
+                return 42.0 + 20.0 + 10.0
+            }else{
+                return 42.0 + 10.0
+            }
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            let headerView:ZXTaskToolCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskToolCell.ZXTaskToolCellID) as! ZXTaskToolCell
+            //上滑动后增加一个状态栏的高度
+            if direction == .up {
+                headerView.setTopGap(true)
+            }else{
+                headerView.setTopGap(false)
+            }
+            headerView.delegate = self
+            return headerView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0.0
+        switch indexPath.section {
+        case 0:
+            if direction == .up {
+                cellH = 0
+            }else{
+                if indexPath.row == 0 {
+                    cellH = 64.0
+                }else{
+                    cellH = 108.0
+                }
+            }
+        case 1:
+            cellH = ZXTaskTableViewCell.height
+        default:
+            break
+        }
+        return cellH
+    }
+}
+
+
+extension ZXHomePageViewController: UITableViewDataSource {
+    
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            if indexPath.row == 0 {
+                let navCell: ZXTaskNavCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskNavCell.ZXTaskNavCellID, for: indexPath) as! ZXTaskNavCell
+                navCell.delegate = self
+                return navCell
+            }else{
+                let bannerCell: ZXTaskBannerCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID, for: indexPath) as! ZXTaskBannerCell
+                bannerCell.delegate = self
+                return bannerCell
+            }
+        case 1:
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            return rootCell
+        default:
+            return UITableViewCell.init(style: .default, reuseIdentifier: "UNKnow")
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var cellCount: Int = 0
+        switch section {
+        case 0:
+            if direction == .up {
+                cellCount = 0
+            }else{
+                cellCount = 2
+            }
+        case 1:
+            cellCount = 3
+        default:
+            break
+        }
+        return cellCount
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskTableViewCellDelegate {
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, marked: Bool) {
+        print("Marked: \(marked)")
+    }
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell) {
+        print("Share Action")
+    }
+}
+
+
+//MARK: - BannerDelegate
+extension ZXHomePageViewController: ZXTaskBannerCellDelegate {
+    func didSelectedBannerCell(_ index: Int) {
+        print(index)
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskToolCellDelegate {
+    func didTaskToolAction(_ sender: ZXStatusButton) {
+        
+        //
+        var screenViewY: CGFloat = 108.0 + 64.0 + 42.0
+        
+        if direction == .up {
+            screenViewY = 64.0
+        }else {
+            screenViewY = 108.0 + 64.0 + 42.0
+        }
+        let viewF: CGRect = CGRect.init(x: 0, y: screenViewY, width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT - screenViewY)
+        
+        //
+        if self.listTableView.headerView(forSection: 1) is ZXTaskToolCell {
+            let headerView = listTableView.headerView(forSection: 1) as! ZXTaskToolCell
+            headerView.cancelSelected(true)
+        }
+        
+        //
+        if sender.isSelected {
+            defaultView?.dismiss()
+            agencyView?.dismiss()
+            addressView?.dismiss()
+            taskView?.dismiss()
+            return
+        }else{
+            defaultView?.dismiss()
+            agencyView?.dismiss()
+            addressView?.dismiss()
+            taskView?.dismiss()
+        }
+        
+        //
+        switch sender.tag {
+        case ZXTaskToolCell.ZXTaskButtonTag.defaultBtn: //默认排序
+            sender.zx_isSelected(true)
+            defaultView = ZXDefaultView.loadNib()
+            defaultView?.frame = viewF
+            ZXRootController.appWindow()?.addSubview(defaultView!)
+            defaultView?.setDefaultValue(sortId)
+            defaultView?.block = {sortView,seleId in
+                self.defaultView?.dismiss()
+                sender.zx_isSelected(false)
+                
+                self.sortId = seleId
+            }
+
+        case ZXTaskToolCell.ZXTaskButtonTag.agentBtn://代理费
+            sender.zx_isSelected(true)
+            agencyView = ZXAgencyView.loadNib()
+            agencyView?.frame = viewF
+            ZXRootController.appWindow()?.addSubview(self.agencyView!)
+            agencyView?.setDefaultValue(minValue, maxValue,agencyIndex)
+            agencyView?.block = {agView,minVal,maxVal,btnInx in
+                self.agencyView?.dismiss()
+                sender.zx_isSelected(false)
+                
+                self.minValue = minVal
+                self.maxValue = maxVal
+                
+                self.agencyIndex = btnInx
+            }
+        case ZXTaskToolCell.ZXTaskButtonTag.locationBtn://归属地
+            
+            if areaArr.count == 0 {
+                ZXHUD.showFailure(in: self.view, text: "暂无相关数据", delay: ZXHUD.DelayTime)
+                return
+            }
+            
+            sender.zx_isSelected(true)
+            addressView = ZXAddressView.loadNib()
+            addressView?.frame = viewF
+            ZXRootController.appWindow()?.addSubview(self.addressView!)
+            addressView?.loadAddrData(areaArr,proId,proIndex,cityId,cityIndex)
+            addressView?.block = {agView,provinceId,provinceIndex,citId,citIndex in
+                self.addressView?.dismiss()
+                sender.zx_isSelected(false)
+                
+                self.proId = provinceId
+                self.proIndex = provinceIndex
+                self.cityId = citId
+                self.cityIndex = citIndex
+            }
+        case ZXTaskToolCell.ZXTaskButtonTag.taskBtn://任务状态
+            sender.zx_isSelected(true)
+            taskView = ZXTaskStatusView.loadNib()
+            taskView?.frame = viewF
+            ZXRootController.appWindow()?.addSubview(self.taskView!)
+            taskView?.setDefaultValue(self.taskId)
+            taskView?.block = {agView,seleId in
+                self.taskView?.dismiss()
+                sender.zx_isSelected(false)
+                
+                self.taskId = seleId
+            }
+        default:
+            break
+        }
+    }
+}
+
+

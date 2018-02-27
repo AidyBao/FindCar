@@ -1,0 +1,280 @@
+//
+//  ZXTakePhotoPageViewController.swift
+//  FindCar
+//
+//  Created by screson on 2017/12/15.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+import AVFoundation
+
+enum ZXPlateCheckType {
+    case match  //车牌匹配
+    case verify //车牌验证
+}
+
+protocol ZXPlateDetectDelegate: class {
+    ///车牌识别成功
+    func zxPlateDetect(model: ZXLicenseModel, image: UIImage?)
+    ///任务匹配成功
+    func zxTaskMatched(model: ZXTaskModel? , inputPlateNumber: String?)
+    ///验证车辆信息 车牌验证正确
+    func zxPlateVerified(taskId: String, inputPlateNumber: String?)
+}
+
+extension ZXPlateDetectDelegate {
+    func zxPlateDetect(model: ZXLicenseModel, image: UIImage?) {}
+    func zxTaskMatched(model: ZXTaskModel? , inputPlateNumber: String?) {}
+    func zxPlateVerified(taskId: String, inputPlateNumber: String?) {}
+}
+
+
+/// 拍照
+class ZXTakePhotoPageViewController: ZXUIViewController {
+    //
+    //static var checkType: ZXPlateCheckType = ZXPlateCheckType.match
+    //static var taskId: String?
+    weak var delegate: ZXPlateDetectDelegate?
+    
+    fileprivate var session: AVCaptureSession?
+    fileprivate var videoInput: AVCaptureDeviceInput?
+    fileprivate var stillImageOutput: AVCaptureStillImageOutput?
+    fileprivate var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    @IBOutlet weak var previewView: UIView!
+    @IBOutlet weak var bottomControlView: UIView!
+    
+    @IBOutlet weak var tipsBackView: UIView!
+    @IBOutlet weak var tipsBackViewWidth: NSLayoutConstraint!
+    
+    fileprivate var granted = false
+    fileprivate var zx_viewDidAppear = false
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.previewView.layer.masksToBounds = true
+        self.checkEnvironment()
+        
+        let maskLayer = CAShapeLayer()
+        let path = UIBezierPath(roundedRect: CGRect.init(x: 0, y: 0, width: 100, height: 30), byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: 15, height: 15))
+        maskLayer.path = path.cgPath
+        
+        self.tipsBackView.layer.mask = maskLayer
+        self.tipsBackView.backgroundColor = UIColor.zx_colorRGB(0, 0, 0, 0.7)
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.previewLayer != nil {
+            self.previewLayer?.frame = self.previewView.bounds
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.zx_viewDidAppear = true
+        if granted {
+            self.session?.startRunning()
+        }
+        if self.tipsBackViewWidth.constant > 30 {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+                self.tipsBackViewWidth.constant = 30
+                UIView.animate(withDuration: 0.35, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.session?.stopRunning()
+        if let last = self.navigationController?.viewControllers.last, last != self, !(last is ZXCardPlateConfirmViewController) {
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+    }
+    
+    fileprivate func initCaptureSession() {
+        if let backCamera = self.backCamera(),self.session == nil {
+            do {
+                self.videoInput = try AVCaptureDeviceInput.init(device: backCamera)
+                self.session = AVCaptureSession()
+                self.session?.beginConfiguration()
+                self.stillImageOutput = AVCaptureStillImageOutput()
+                self.stillImageOutput?.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
+                self.session?.addInput(self.videoInput!)
+                self.session?.addOutput(self.stillImageOutput!)
+                self.session?.commitConfiguration()
+                
+                self.previewLayer = AVCaptureVideoPreviewLayer.init(session: self.session!)
+                self.previewLayer?.videoGravity = .resizeAspectFill
+                self.previewLayer?.frame = self.previewView.bounds
+                if let pLayer = self.previewLayer {
+                    self.previewView.layer.insertSublayer(pLayer, below: self.previewView.layer.sublayers?.first)
+                }
+                if self.zx_viewDidAppear, let session = session, !session.isRunning {
+                    session.startRunning()
+                }
+            } catch {
+                ZXHUD.showFailure(in: self.view, text: error.localizedDescription, delay: ZXHUD.DelayTime)
+            }
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "摄像头不可用", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    //MARK: - Control Action
+    //MARK: - 关闭
+    @IBAction func closeAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    //MARK: - 拍摄说明
+    @IBAction func infomationAction(_ sender: Any) {
+        ZXExampleShowViewController.showWithImageNames(["shotpic1", "shotpic2", "shotpic3", "shotpic4"], ["正确拍摄操作示例", "正确拍摄操作示例", "错误拍摄操作示例", "错误拍摄操作示例"], upoun: self) {
+
+        }
+    }
+    
+    //MARK: - TakePhotoAction
+    @IBAction func takePhotoAction(_ sender: Any) {
+        if let videoConnection = self.stillImageOutput?.connection(with: .video) {
+            self.stillImageOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: { (buffer, error) in
+                if let buffer = buffer,let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer) {
+                    if let image = UIImage.init(data: data) {
+                        self.session?.stopRunning()
+                        self.startCropWithImage(image)
+                    } else {
+                        ZXHUD.showFailure(in: ZXRootController.appWindow()!, text: "图片内容为空", delay: ZXHUD.DelayTime)
+                    }
+                } else {
+                    ZXHUD.showFailure(in: ZXRootController.appWindow()!, text: error?.localizedDescription ?? "获取照片失败", delay: ZXHUD.DelayTime)
+                }
+            })
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "无法进行拍照", delay: ZXHUD.DelayTime)
+        }
+    }
+    //MARK: - 裁剪
+    fileprivate func startCropWithImage(_ image: UIImage) {
+        let param = CroppingParameters.init(isEnabled: true, allowResizing: false, allowMoving: true, minimumSize: CGSize(width: 280, height: 200))
+        let cropVC = ConfirmViewController.init(image: image, croppingParameters: param)
+        cropVC.onComplete = { [unowned self] image, asset in
+            if let image = image {
+                self.checkAction(image)
+            } else {
+                //重拍
+                //self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: {
+                    ZXRouter.tabbarShouldSelected(at: 1)
+                })
+            }
+        }
+        cropVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        self.present(cropVC, animated: true, completion: nil)
+    }
+    
+    //MARK: - Config
+    fileprivate func checkEnvironment() {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .authorized:
+            self.granted = true
+            self.initCaptureSession()
+        case .denied:
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "您阻止了相机访问权限,请在设置中开启", buttonText: "确定", action: {
+                ZXCommonUtils.openURL(UIApplicationOpenSettingsURLString)
+            })
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted) in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.granted = true
+                        self.initCaptureSession()
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: "获取权限失败", delay: ZXHUD.DelayTime)
+                    }
+                }
+            })
+        case .restricted:
+            ZXHUD.showFailure(in: self.view, text: "该设备相机功能被禁用", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    fileprivate func backCamera() -> AVCaptureDevice? {
+        if #available(iOS 10.0, *) {
+            return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        } else {
+            let devices = AVCaptureDevice.devices(for: .video)
+            for device in devices {
+                if device.position == .back {
+                    return device
+                }
+            }
+        }
+        return nil
+    }
+    
+    fileprivate func frontCamera() -> AVCaptureDevice? {
+        if #available(iOS 10.0, *) {
+            return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        } else {
+            let devices = AVCaptureDevice.devices(for: .video)
+            for device in devices {
+                if device.position == .front {
+                    return device
+                }
+            }
+        }
+        return nil
+    }
+    
+    fileprivate var isCameraAvailable: Bool { return UIImagePickerController.isSourceTypeAvailable(.camera) }
+}
+
+extension ZXTakePhotoPageViewController {
+    //图片识别前 BaiduToken 检测
+    fileprivate func checkAction(_ image: UIImage) {
+        if let token = ZXOCRUtils.ACCESS_TOKEN {
+            self.detectActionWith(token,image: image)
+        } else {
+            ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "初始化API...", delay: 0)
+            ZXOCRUtils.getToken(completion: { (token, error) in
+                ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                if let token = token {
+                    self.detectActionWith(token, image: image)
+                } else {
+                    ZXAlertUtils.showAlert(wihtTitle: nil, message: "获取TOKEN失败", buttonTexts:["取消", "重试"], action: { (index) in
+                        if index == 1 {
+                            self.checkAction(image)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    //MARK: - 图片识别
+    fileprivate func detectActionWith(_ token: String,image: UIImage) {
+        ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "车牌识别中...", delay: 0)
+        ZXOCRUtils.license_plate(imageData: UIImageJPEGRepresentation(image, 1.0)!, access_token: token, completion: { (model, error) in
+            ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+            if let model = model {//识别到车牌
+                self.dismiss(animated: false, completion: nil)//裁剪界面
+                //关闭拍摄界面
+                ZXRootController.selectedNav().dismiss(animated: false, completion: { [unowned self] in
+                    self.delegate?.zxPlateDetect(model: model, image: image)
+                })
+            } else {
+                ZXHUD.showFailure(in: ZXRootController.appWindow()!, text: error ?? "未识别到车牌信息", delay: ZXHUD.DelayTime)
+            }
+        })
+    }
+}

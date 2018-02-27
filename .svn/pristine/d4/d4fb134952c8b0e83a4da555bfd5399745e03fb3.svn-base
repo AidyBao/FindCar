@@ -1,0 +1,137 @@
+//
+//  ZXAgencyView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+typealias ZXAgencyViewBlock = (ZXAgencyView, Int) -> Void
+
+class ZXAgencyView: UIView {
+    
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var backViewH: NSLayoutConstraint!
+    @IBOutlet weak var noLimitBtn: ZXStatusButton!
+    @IBOutlet weak var tenBtn: ZXStatusButton!
+    @IBOutlet weak var thirtyBtn: ZXStatusButton!
+    @IBOutlet weak var fiftyBtn: ZXStatusButton!
+    @IBOutlet weak var aboveFiftyBtn: ZXStatusButton!
+    
+    @IBOutlet weak var minText: UITextField!
+    @IBOutlet weak var maxText: UITextField!
+    @IBOutlet weak var confirmBtn: ZXUIButton!
+    
+    @IBOutlet weak var geliViewOne: UIView!
+    @IBOutlet weak var geliViewTwo: UIView!
+    
+    var block: ZXAgencyViewBlock?
+    
+    static func loadNib() -> ZXAgencyView{
+        let nibView:ZXAgencyView = Bundle.main.loadNibNamed("ZXAgencyView", owner: self, options: nil)?.first as! ZXAgencyView
+        return nibView
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    }
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.frame = CGRect.init(x: 0, y: self.frame.origin.y, width: self.frame.size.width, height: self.frame.size.height)
+        
+        self.backView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: 44)
+    }
+    
+    func setUIStyle() {
+        self.noLimitBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.tenBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.thirtyBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.fiftyBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.aboveFiftyBtn.titleLabel?.font = UIFont.zx_titleFont
+        
+        self.minText.backgroundColor = UIColor.zx_subTintColor
+        self.maxText.backgroundColor = UIColor.zx_subTintColor
+        self.minText.layer.cornerRadius = 6.0
+        self.minText.layer.masksToBounds = true
+        self.maxText.layer.cornerRadius = 6.0
+        self.maxText.layer.masksToBounds = true
+        
+        self.confirmBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.confirmBtn.layer.cornerRadius = 6.0
+        self.confirmBtn.layer.masksToBounds = true
+    }
+    
+    func setAnima() {
+        self.backViewH.constant = 0
+        self.backView.alpha = 0
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 100.0
+            self.backView.alpha = 1.0
+        }) { (finish) in
+            self.alpha = 1.0
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if block != nil {
+            block?(self,0)
+        }
+        
+        self.dismiss()
+    }
+    
+    func dismiss() {
+        
+        self.backViewH.constant = 100
+        self.backView.alpha = 1
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 0.0
+            self.backView.alpha = 0.0
+        }) { (finish) in
+            self.alpha = 0.0
+        }
+        
+        self.removeFromSuperview()
+    }
+    
+    @IBAction func buttonAction(_ sender: UIButton) {
+        
+        
+    }
+    
+    
+    @IBAction func confirmBtnAction(_ sender: UIButton) {
+    }
+    
+    
+
+}

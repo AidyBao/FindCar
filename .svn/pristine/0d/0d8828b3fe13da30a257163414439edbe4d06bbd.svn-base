@@ -1,0 +1,181 @@
+//
+//  ZXVerificationCodeViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXVerificationCodeViewController: UIViewController {
+    
+    @IBOutlet weak var titleLB: UILabel!
+    @IBOutlet weak var telLB: UILabel!
+    @IBOutlet weak var inputLB: UILabel!
+    @IBOutlet weak var getVerCode: ZXCountDownButton!
+    var verCodeView: ZXVerifivationCodeView?
+    
+    var verCode: String = ""
+    var tel:     String = ""
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setUIStyle()
+        
+        self.addVerCodeView()
+        
+        self.addCountDownBtn()
+        
+        //监听从后台返回前台是时间变化
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshDate), name: ZXNotification.UI.enterForeground.zx_noticeName(), object: nil)
+    }
+    
+    func setUIStyle() {
+        self.titleLB.textColor = UIColor.zx_textColorTitle
+        self.titleLB.font = UIFont.boldSystemFont(ofSize: 29.0)
+        
+        self.telLB.textColor = UIColor.zx_textColorTitle
+        self.telLB.font = UIFont.boldSystemFont(ofSize: 29.0)
+        
+        self.inputLB.textColor = UIColor.zx_textColorTitle
+        self.inputLB.font = UIFont.boldSystemFont(ofSize: 19.0)
+        
+        self.getVerCode.setTitleColor(UIColor.zx_textColorTitle, for: .normal)
+        self.getVerCode.titleLabel?.font = UIFont.systemFont(ofSize: 19.0)
+    }
+    
+    func addCountDownBtn() {
+        self.getVerCode.maxCount = 60
+        self.getVerCode.start()
+    }
+    
+    //MARK: - 输入框
+    func addVerCodeView() {
+        verCodeView = ZXVerifivationCodeView.init(frame: CGRect.init(x: 22, y: self.getVerCode.frame.maxY + 30.0, width: 264, height: 50.0), number: 4, margin: 10)
+        verCodeView?.delegate = self
+        view.addSubview(verCodeView!)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+
+    @IBAction func backAction(_ sender: UIButton) {
+        self.getVerCode.reset()
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    //MARK: - 重新获取验证码
+    @IBAction func getVerCodeAction(_ sender: ZXCountDownButton) {
+        verCodeView?.cleanVerificationCodeView()
+       
+        self.requestForGetCode()
+    }
+    
+    //MARK: - 监听从后台返回前台是时间变化
+    @objc func refreshDate() {
+        if self.getVerCode.isCouting,ZXGlobalData.inoutCount > 0,self.getVerCode.currentCount > 0 {
+            var temp = self.getVerCode.currentCount - ZXGlobalData.inoutCount
+            temp = temp < 0 ? 0 : temp
+            self.getVerCode.maxCount = temp
+            self.getVerCode.start()
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: ZXNotification.UI.enterForeground.zx_noticeName(), object: nil)
+    }
+}
+
+//MARK: - ZXVerifivationCodeViewDelegate
+extension ZXVerificationCodeViewController: ZXVerifivationCodeViewDelegate {
+    func didVerCodeFinished(codeView verCodeView: ZXVerifivationCodeView, verCode code: String) {
+        if code == "8888" {
+           self.getVerCode.reset()
+            self.navigationController?.pushViewController(ZXInvitationCodeViewController(), animated: true)
+        }else{
+            verCodeView.cleanVerificationCodeView()
+        }
+    }
+}
+
+//MARK: - Http
+extension ZXVerificationCodeViewController {
+    //MARK: - 重新获取验证码
+    func requestForGetCode() {
+        var dict: Dictionary<String,Any> = Dictionary()
+        if self.tel.isEmpty == false {
+            dict["tel"] = self.tel
+        }
+        ZXHUD.showLoading(in: self.view, text: "", delay: nil)
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.User.getSMSCode), params: dict, method: .post) { (success, status, content, string, errMsg) in
+            ZXHUD.hide(for: self.view, animated: true)
+            
+            if status == ZXAPI_SUCCESS {
+                if let code = content["smsCode"] {
+                    ZXHUD.showSuccess(in: self.view, text: "验证码已发送", delay: ZX.HUDDelay)
+                    self.verCode = String.init(describing: code)
+                    
+                    //已注册--》直接登录
+                    
+                    //未注册--》邀请码页面
+                    
+                }
+            }else{
+                ZXNetwork.errorCodeParse(status, httpError: {
+                    ZXHUD.showFailure(in: self.view, text: "连接失败请检查网络或重试", delay: ZX.HUDDelay)
+                }, serverError: {
+                    ZXHUD.showFailure(in: self.view, text: (errMsg?.description)!, delay: ZX.HUDDelay)
+                })
+            }
+        }
+    }
+    
+    //MARK: - HTTP
+    func requestForLogin() ->Void{
+        var dic: Dictionary<String,Any> = Dictionary()
+        if ZXDevice.zx_deviceUUID().isEmpty == false {
+            dic["uuid"] = ZXDevice.zx_deviceUUID()
+        }
+        dic["tel"] = self.tel
+        ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: nil)
+        ZXLoginManager.requestForLogin(success: { (succ, code, content, errMsg) in
+            ZXHUD.hide(for: self.view, animated: true)
+            
+            if code == ZXAPI_SUCCESS {
+                ZXHUD.showSuccess(in: self.view, text: content["msg"] as! String, delay: ZX.HUDDelay)
+                
+                NotificationCenter.zxpost.loginSuccess()
+                
+                if let data = content["data"] as? Dictionary<String,Any> {
+                    //保存用户登录信息
+                    ZXUser.user.save(data)
+                    
+                    //更新用户个人信息
+                    self.updateUserInfo()
+                    
+                    //进入主界面
+                    //                    self.changeContrller(isNewUser)
+                }
+            }
+        }) { (code, errMsg) in
+            ZXHUD.showFailure(in: self.view, text: errMsg, delay: ZX.HUDDelay)
+        }
+    }
+    
+    func updateUserInfo() {
+        DispatchQueue.main.async {
+            //1.获取设备信息
+            ZXLoginManager.requestForEquipment()
+        }
+    }
+}

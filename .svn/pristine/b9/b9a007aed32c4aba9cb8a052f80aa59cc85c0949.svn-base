@@ -1,0 +1,97 @@
+//
+//  ZXInvitationCodeViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXInvitationCodeViewController: UIViewController {
+    
+    @IBOutlet weak var titleLB: UILabel!
+    var tel: String = ""
+    var verCode: String = ""
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        addVerCodeView()
+    }
+    
+    //MARK: - 输入框
+    func addVerCodeView() {
+        let verCodeView = ZXVerifivationCodeView.init(frame: CGRect.init(x: 22, y: titleLB.frame.maxY + 30.0, width: ZXBOUNDS_WIDTH - 44, height: 50.0), number: 6, margin: 12)
+        verCodeView.delegate = self
+        view.addSubview(verCodeView)
+    }
+
+    @IBAction func backBtnAction(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+}
+
+extension ZXInvitationCodeViewController: ZXVerifivationCodeViewDelegate {
+    func didVerCodeFinished(codeView verCodeView: ZXVerifivationCodeView, verCode code: String) {
+        
+        self.reaquestForBindTel(code, verCodeView)
+        
+//        if code == "888888" {
+//            ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+//        }else{
+//            verCodeView.cleanVerificationCodeView()
+//        }
+    }
+}
+
+//MARK: - HTTP
+extension ZXInvitationCodeViewController {
+    
+    //MARK: - 邀请码绑定手机号
+    func reaquestForBindTel(_ invitCode: String,_ verCodeView: ZXVerifivationCodeView) {
+        ZXHUD.showLoading(in: self.view, text: "验证中...", delay: ZX.HUDDelay)
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.User.bindTel), params: ["tel":tel,"invitationCode":invitCode], method: .post) { (succ, code, content, str, zxerror) in
+            if succ {
+                if code == ZXAPI_SUCCESS {
+                    ZXHUD.showSuccess(in: self.view, text: content["msg"] as! String, delay: ZX.HUDDelay)
+                    NotificationCenter.zxpost.loginSuccess()
+                    if let data = content["data"] as? Dictionary<String,Any> {
+                        //保存用户登录信息
+                        ZXUser.user.save(data)
+                    }
+                    //更新用户个人信息
+                    self.updateUserInfo()
+                    //
+                    self.changeRootController()
+                }else{
+                    ZXHUD.showFailure(in: self.view, text: "邀请码验证失败", delay: ZX.HUDDelay)
+                    verCodeView.cleanVerificationCodeView()
+                }
+            }else{
+                ZXNetwork.errorCodeParse(code, httpError: {
+                    ZXHUD.showFailure(in: self.view, text: "连接失败请检查网络或重试", delay: ZX.HUDDelay)
+                }, serverError: {
+                    ZXHUD.showFailure(in: self.view, text: (zxerror?.errorMessage)!, delay: ZX.HUDDelay)
+                })
+                verCodeView.cleanVerificationCodeView()
+            }
+        }
+    }
+    
+    func changeRootController() {
+        ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+    }
+    
+    func updateUserInfo() {
+        DispatchQueue.main.async {
+            //1.获取设备信息
+            ZXLoginManager.requestForEquipment()
+        }
+    }
+}

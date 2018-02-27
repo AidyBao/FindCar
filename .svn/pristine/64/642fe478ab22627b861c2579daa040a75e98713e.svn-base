@@ -1,0 +1,39 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+
+
+}
+
+
+extension ZXHomePageViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 1
+        case 1:
+            return 1
+        case 2:
+            return 3
+        default:
+            return 1
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell.init()
+    }
+}

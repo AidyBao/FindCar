@@ -1,0 +1,47 @@
+//
+//  ZXTaskProcesseCCVCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTaskProcesseCCVCell: UICollectionViewCell {
+
+    static let width: CGFloat = floor((ZXBOUNDS_WIDTH - 40) / 6.0)
+    @IBOutlet weak var imgStatus: UIImageView!
+    
+    @IBOutlet weak var lbStatus: UILabel!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.lbStatus.text = ""
+        self.lbStatus.textColor = UIColor.zx_textColorMark
+        self.lbStatus.highlightedTextColor = UIColor.zx_tintColor
+    }
+    
+    func reloadStatus(progressColor: ZXTaskProgressColor, title: String, titleHighlighted: Bool) {
+        self.imgStatus.image = nil
+        self.lbStatus.text = title
+        self.lbStatus.highlightedTextColor = UIColor.zx_tintColor
+        switch progressColor {
+        case .gray:
+            self.imgStatus.image = #imageLiteral(resourceName: "step")
+        case .halfBlue:
+            self.imgStatus.image = #imageLiteral(resourceName: "stepA1")
+        case .allBlue:
+            self.imgStatus.image = #imageLiteral(resourceName: "stepA2")
+        case .halfYellow:
+            self.lbStatus.highlightedTextColor = UIColor.zx_customAColor
+            self.imgStatus.image = #imageLiteral(resourceName: "stepB1")
+        case .allYellow:
+            self.lbStatus.highlightedTextColor = UIColor.zx_customAColor
+            self.imgStatus.image = #imageLiteral(resourceName: "stepB2")
+        }
+        self.lbStatus.isHighlighted = titleHighlighted
+        
+    }
+
+}

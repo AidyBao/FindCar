@@ -1,0 +1,88 @@
+//
+//  ZXTextInput2TableViewCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTextInput2TableViewCell: ZXTableViewCell, UITextFieldDelegate {
+
+    weak var delegate: ZXTextInputDoneDelegate?
+    
+    static let height: CGFloat = 140
+    
+    @IBOutlet weak var lbTitle: UILabel!
+    @IBOutlet weak var txtf1: UITextField!
+    @IBOutlet weak var txtf2: UITextField!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.lbTitle.font = UIFont.zx_titleFont
+        self.lbTitle.textColor = UIColor.zx_textColorTitle
+        
+        self.txtf1.backgroundColor = UIColor.zx_emptyColor
+        self.txtf1.layer.cornerRadius = 5
+        self.txtf1.font = UIFont.zx_bodyFont
+        self.txtf1.textColor = UIColor.zx_textColorTitle
+        
+        self.txtf2.backgroundColor = UIColor.zx_emptyColor
+        self.txtf2.layer.cornerRadius = 5
+        self.txtf2.font = UIFont.zx_bodyFont
+        self.txtf2.textColor = UIColor.zx_textColorTitle
+        
+        self.txtf1.delegate = self
+        self.txtf2.delegate = self
+
+        self.txtf1.leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        self.txtf1.leftViewMode = .always
+        self.txtf2.leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        self.txtf2.leftViewMode = .always
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(textInputValueChanged(_:)), name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
+    }
+    
+    @objc func textInputValueChanged(_ notice: Notification) {
+//        if let textf = notice.object as? UITextField {
+//            var tempText = textf.text
+//            if let text = tempText, text.count > 127 {
+//                tempText = tempText?.substring(to: 127)
+//            }
+//            if textf == self.txtf1 {
+//                self.txtf1.text = tempText
+//            } else if textf == self.txtf2 {
+//                self.txtf2.text = tempText
+//            }
+//        }
+    }
+
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == self.txtf1 {
+            delegate?.zxTextCell(self, inputDone: textField.text, tag: 0)
+        } else if textField == self.txtf2 {
+            delegate?.zxTextCell(self, inputDone: textField.text, tag: 1)
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if !string.isEmpty, range.location > 127 {
+            return false
+        }
+        return true
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextFieldTextDidChange, object: nil)
+    }
+}

@@ -1,0 +1,301 @@
+//
+//  ZXTaskDetailViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import JXPhotoBrowser
+
+
+class ZXTaskDetailViewController: ZXUIViewController {
+
+    static var fromCarMatch: Bool = false//是否来源拍照匹配（是：验证车辆不再验证车牌）
+    var taskModel: ZXTaskModel?
+    var taskId: String?
+    var inputPlateNumber: String?
+    
+    fileprivate var arrReviewImages: Array<String> = []
+    fileprivate var tempView: UIView?
+    
+    fileprivate var fetchId: String? {
+        get {
+            return taskId ?? self.taskModel?.taskId
+        }
+    }
+    
+    @IBOutlet weak var tblList: UITableView!
+    
+    @IBOutlet weak var bottomControlView: UIView!
+    @IBOutlet weak var btnBackToHome: UIButton!
+    @IBOutlet weak var btnUploadInfo: UIButton!
+    
+    @IBOutlet weak var btnBigBackToHome: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.title = "任务详情"
+        self.view.backgroundColor = UIColor.zx_subTintColor
+
+        self.bottomControlView.isHidden = true
+        self.btnBackToHome.titleLabel?.font = UIFont.zx_titleFont
+        self.btnBackToHome.setTitleColor(UIColor.zx_textColorMark, for: .normal)
+        self.btnBackToHome.layer.shadowRadius = 5
+        self.btnBackToHome.layer.cornerRadius = 23
+        self.btnBackToHome.backgroundColor = .white
+        self.btnBackToHome.layer.shadowOffset = CGSize(width: 0, height: 5)
+        self.btnBackToHome.layer.shadowOpacity = 0.3
+        
+        self.btnBigBackToHome.titleLabel?.font = UIFont.zx_titleFont
+        self.btnBigBackToHome.setTitleColor(UIColor.zx_textColorMark, for: .normal)
+        self.btnBigBackToHome.layer.shadowRadius = 5
+        self.btnBigBackToHome.layer.cornerRadius = 23
+        self.btnBigBackToHome.backgroundColor = .white
+        self.btnBigBackToHome.layer.shadowOffset = CGSize(width: 0, height: 5)
+        self.btnBigBackToHome.layer.shadowOpacity = 0.3
+        
+        self.btnBigBackToHome.isHidden = true
+        self.btnBackToHome.isHidden = true
+        self.btnUploadInfo.isHidden = true
+
+
+        self.btnUploadInfo.titleLabel?.font = UIFont.zx_titleFont
+        self.btnUploadInfo.setTitleColor(.white, for: .normal)
+        
+        // Do any additional setup after loading the view.
+        self.tblList.showsVerticalScrollIndicator = false
+        self.tblList.rowHeight = UITableViewAutomaticDimension
+        self.tblList.estimatedRowHeight = 60
+
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.register(UINib.init(nibName: ZXTaskStatusHeaderCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskStatusHeaderCell.reuseIdentifier)//状态
+        self.tblList.register(UINib.init(nibName: ZXTaskStatusInfoTextCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskStatusInfoTextCell.reuseIdentifier)//审核说明
+        self.tblList.register(UINib.init(nibName: ZXTaskStatusProgressCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskStatusProgressCell.reuseIdentifier)//任务进度
+        self.tblList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)//任务基本信息
+        //任务上传信息
+        self.tblList.register(UINib.init(nibName: ZXUploadedMultiImageCell.NibName, bundle: nil), forCellReuseIdentifier: ZXUploadedMultiImageCell.reuseIdentifier)//
+        self.tblList.register(UINib.init(nibName: ZXUploadedTextInfoCell.NibName, bundle: nil), forCellReuseIdentifier: ZXUploadedTextInfoCell.reuseIdentifier)//文本信息
+        
+        //下拉刷新
+        self.tblList.zx_addHeaderRefresh(showGif: true, target: self, action: #selector(zx_refresh))
+        
+        //
+        self.tblList.register(UINib.init(nibName: ZXUploadedHeader.NibName, bundle: nil), forHeaderFooterViewReuseIdentifier: ZXUploadedHeader.reuseIdentifier)
+        
+        if self.fetchId == nil {
+            ZXEmptyView.show(in: self.view, type: .noData, text: "无任务详情数据", subText: nil)
+        } else {
+            if self.taskModel == nil {
+                self.fetchData()
+            } else {
+                self.reloadUIAction()
+            }
+        }
+        //
+        self.zx_addNavBarButtonItems(imageNames: ["more"], useOriginalColor: false, at: .right)
+    }
+    
+    override func zx_refresh() {
+        self.fetchData(false)
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        print("收藏、分享")
+    }
+    
+    fileprivate func fetchData(_ showHUD: Bool = true) {
+        if showHUD {
+            ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: 0)
+        }
+        if let fetchId = self.fetchId {
+            ZXTaskViewModel.detailInfo(taskId: fetchId, completion: { (success, code, taskModel, errorMsg) in
+                ZXEmptyView.hide(from: self.view)
+                self.tblList.mj_header.endRefreshing()
+                ZXHUD.hide(for: self.view, animated: true)
+                if success {
+                    self.taskModel = taskModel
+                    self.reloadUIAction()
+                } else {
+                    code.zx_errorCodeParse(loginInvalid: nil, serverError: {
+                        ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZXHUD.DelayTime)
+                    }, networkError: {
+                        if self.taskModel == nil {//第一次加载失败
+                            ZXEmptyView.show(in: self.view, type: .networkError, text: nil, subText: ZXEmptyView.zx_refreshText, topOffset: 0, retry: {
+                                self.fetchData(true)
+                            })
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZXHUD.DelayTime)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    fileprivate func reloadUIAction() {
+        self.tblList.reloadData()
+        self.bottomControlView.isHidden = true
+        self.btnBigBackToHome.isHidden = true
+        self.btnBackToHome.isHidden = true
+        self.btnUploadInfo.isHidden = true
+        //button
+        if let model = taskModel {
+            self.bottomControlView.isHidden = false
+            if !model.otherMatched {
+                if model.zx_controlType == .none {
+                    self.btnBigBackToHome.isHidden = false
+                } else {
+                    self.btnBackToHome.isHidden = false
+                    self.btnUploadInfo.isHidden = false
+                    self.btnUploadInfo.setTitle(model.zx_controlType.description(), for: .normal)
+                }
+            } else {
+                self.btnBigBackToHome.isHidden = false
+            }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !onceLoad {
+           self.fetchData(false)
+        } else {
+            self.onceLoad = true
+        }
+    }
+    
+    
+    @IBAction func backToHome(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func uploadInfoAction(_ sender: Any) {
+        if let model = taskModel {
+            switch model.zx_controlType {
+            case .uploadCarInfo://上传车辆信息
+                let uploadCarInfoVC = ZXUploadCarInfoViewController()
+                uploadCarInfoVC.taskId = self.fetchId
+                self.navigationController?.pushViewController(uploadCarInfoVC, animated: true)
+            case .verifyCarInfo://验证车辆信息
+                if ZXTaskDetailViewController.fromCarMatch {
+                    let verifyCarInfoVC = ZXVerifyCarInfoViewController()
+                    verifyCarInfoVC.taskId = self.fetchId
+                    verifyCarInfoVC.ocrNumber = model.plateNumber
+                    verifyCarInfoVC.inputNumber = self.inputPlateNumber
+                    self.navigationController?.pushViewController(verifyCarInfoVC, animated: true)
+                } else {//先验证车牌
+                    NotificationCenter.default.addObserver(self, selector: #selector(plateCheckedNotice(_:)), name: ZX_PlateChecked_Notice.zx_noticeName(), object: nil)
+                    let checkvc = ZXTakePhotoPageViewController()
+                    ZXTakePhotoPageViewController.checkType = .verify
+                    ZXTakePhotoPageViewController.taskId = model.taskId
+                    self.present(checkvc, animated: true, completion: nil)
+                }
+            case .handOverCar://交接车辆
+                let verifyGetCarCode = ZXInputGetCarCodeViewController()
+                verifyGetCarCode.taskId = self.fetchId
+                self.present(verifyGetCarCode, animated: true, completion: nil)
+            case .uploadSheet://上传交接单
+                let uploadHandOverSheet = ZXUploadTakeOverSheetViewController()
+                uploadHandOverSheet.taskId = self.fetchId
+                self.navigationController?.pushViewController(uploadHandOverSheet, animated: true)
+            default:
+                break
+            }
+        } else {
+            ZXHUD.showFailure(in: self.view , text: "无可操作数据", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    @objc func plateCheckedNotice(_ notice: NSNotification) {
+        if let obj = notice.object as? Dictionary<String, Any>, let taskId = obj["taskId"] as? String {
+            if let model = taskModel, model.taskId == taskId {
+                self.inputPlateNumber = obj["inputPlateNumber"] as? String
+                NotificationCenter.default.removeObserver(self, name: ZX_PlateChecked_Notice.zx_noticeName(), object: nil)
+                let verifyCarInfoVC = ZXVerifyCarInfoViewController()
+                verifyCarInfoVC.taskId = self.fetchId
+                verifyCarInfoVC.ocrNumber = model.plateNumber
+                verifyCarInfoVC.inputNumber = self.inputPlateNumber
+                self.navigationController?.pushViewController(verifyCarInfoVC, animated: true)
+            }
+        }
+    }
+    
+    deinit {
+        ZXTaskDetailViewController.fromCarMatch = false
+        NotificationCenter.default.removeObserver(self, name: ZX_PlateChecked_Notice.zx_noticeName(), object: nil)
+    }
+}
+
+
+extension ZXTaskDetailViewController: ZXImageInputCellDelegate {
+    func zxImageInputCellAddPhoto(cell: UITableViewCell) {
+        
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, selectAt index: Int, pointView: UIView?) {
+        if let indexPath = self.tblList.indexPath(for: cell), let model = taskModel {
+            self.arrReviewImages.removeAll()
+            switch indexPath.section {
+            case 5://交接单
+                self.arrReviewImages = model.handoverImgSmartStrs
+            case 6://[验证]正面图片
+                self.arrReviewImages = model.validateFrontImgSmartStrs
+            case 7://[验证]驾驶室图片
+                self.arrReviewImages = model.validateOpenImgSmartStrs
+            case 8://[验证]中控图片
+                self.arrReviewImages = model.validateControlImgSmartStrs
+            case 9://[验证]车尾图片
+                self.arrReviewImages = model.validateBackImgSmartStrs
+            case 14://授权书
+                self.arrReviewImages = model.authorizationDocumentImgSmartStrs
+            case 15://车架号图片
+                self.arrReviewImages = model.frameNumberImgSmartStrs
+            case 16://车头/车尾图片
+                self.arrReviewImages = model.carMatchImgSmartStrs
+            case 17://重大问题图片
+                self.arrReviewImages = model.problemImgSmartStrs
+            default:
+                break
+            }
+            if self.arrReviewImages.count > 0 {
+                self.tempView = pointView
+                let browser = PhotoBrowser(showByViewController: self, delegate: self)
+                let pDelegate = PhotoBrowserNumberPageControlDelegate(numberOfPages: self.arrReviewImages.count)
+                //pDelegate.centerY = ZXBOUNDS_HEIGHT - 60
+                browser.pageControlDelegate = pDelegate
+                browser.show(index: index)
+            }
+        }
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, deleteAt index: Int) {
+        
+    }
+    
+    
+}
+
+extension ZXTaskDetailViewController: PhotoBrowserDelegate {
+    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailViewForIndex index: Int) -> UIView? {
+        return self.tempView
+    }
+    
+    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailImageForIndex index: Int) -> UIImage? {
+        return UIImage.Default.empty
+    }
+    
+    func numberOfPhotos(in photoBrowser: PhotoBrowser) -> Int {
+        return self.arrReviewImages.count
+    }
+    
+    func photoBrowser(_ photoBrowser: PhotoBrowser, rawUrlForIndex index: Int) -> URL? {
+        return URL.init(string: self.arrReviewImages[index].zx_BigImage())
+    }
+}

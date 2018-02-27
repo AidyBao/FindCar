@@ -1,0 +1,83 @@
+//
+//  FileManager+ZX.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/11.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import Kingfisher
+
+extension FileManager {
+    struct ZX {
+        @discardableResult static func imageFolderCheck() -> Bool {
+            return createFolder(at: imageCachesPath)
+        }
+        
+        static var imageCachesPath: String {
+            get {
+                return NSHomeDirectory() + "/Library/Caches/ZXImageCaches"
+            }
+        }
+        
+        static func saveImage(_ data:Data,filename:String,folderName:String,completion:((_ success: Bool) -> Void)?) {
+            let queue = DispatchQueue(label: "com.reson.saveImage")
+            var success = true
+            let group = DispatchGroup()
+            queue.async(group: group, qos: .default, flags: [], execute: {
+                do {
+                    try data.write(to: URL(fileURLWithPath: (self.imageCachesPath + "/\(folderName)" + "/\(filename)")))
+                } catch {
+                    success = false
+                }
+            })
+            group.notify(queue: queue, execute: {
+                DispatchQueue.main.async {
+                    completion?(success)
+                }
+            })
+        }
+        
+        static func subFolder(_ folderName:String) -> String{
+            return imageCachesPath + "/" + folderName
+        }
+        
+        @discardableResult static func createFolder(at path:String) -> Bool{
+            let manager = FileManager.default
+            if !manager.fileExists(atPath: path) {
+                do{
+                    try manager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+                    return true
+                } catch {
+                    return false
+                }
+            }
+            return true
+        }
+        
+        
+        static func clearImageCache() {
+            self.removeAll(at: self.imageCachesPath)
+            //let cache = KingfisherManager.shared.cache
+            //cache.clearDiskCache()//清除硬盘缓存
+            //cache.clearMemoryCache()//清理网络缓存
+            //cache.cleanExpiredDiskCache()//清理过期的，或者超过硬盘限制大小的
+        }
+        
+        static func removeAll(at path:String) {
+            let manager = FileManager.default
+            if let fileArray = manager.subpaths(atPath: path) {
+                for fn in fileArray {
+                    try? manager.removeItem(atPath: path + "/\(fn)")
+                }
+            }
+        }
+        
+        static func removeItem(_ path:String) {
+            let manager = FileManager.default
+            try? manager.removeItem(atPath: path)
+        }
+    }
+}
+

@@ -1,0 +1,148 @@
+//
+//  ZXSearchViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSearchViewController: ZXUIViewController {
+    
+    @IBOutlet weak var nav1View: UIView!
+    @IBOutlet weak var nav2View: UIView!
+    @IBOutlet weak var searchView: UIView!
+    @IBOutlet weak var cancelBtn: UIButton!
+    
+    @IBOutlet weak var tabList: UITableView!
+    
+    var isResult: Bool = false
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setUIStyle()
+        
+        self.zx_addKeyboardNotification()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        self.nav1View.backgroundColor = UIColor.white
+        self.nav2View.backgroundColor = UIColor.clear
+
+        self.searchView.backgroundColor = UIColor.clear
+        self.searchView.addSubview(self.searchBar)
+        self.searchBar.delegate = self
+        
+        self.view.backgroundColor = UIColor.zx_tintColor
+        
+        self.cancelBtn.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: String.init(describing: ZXSearchCell.self), bundle: nil), forCellReuseIdentifier: ZXSearchCell.ZXSearchCellID)
+        self.tabList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+    }
+    
+    @IBAction func cancelBtnAction(_ sender: UIButton) {
+        if self.navigationController != nil {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }else{
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.searchBar.becomeFirstResponder()
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.searchBar.frame = CGRect(x: 0, y: 0, width: self.searchView.frame.size.width, height: self.searchView.frame.size.height)
+        
+        if self.searchBar.value(forKey: "searchField") is UITextField {
+            let searchField: UITextField = self.searchBar.value(forKey: "searchField") as! UITextField
+            searchField.backgroundColor = UIColor.zx_subTintColor
+//            searchField.layer.borderColor = UIColor.lightGray.cgColor
+//            searchField.layer.borderWidth = 1.0
+//            searchField.layer.cornerRadius = searchField.frame.size.height*0.5
+//            searchField.layer.masksToBounds = true
+        }
+    }
+    
+    //MARK: - Keyboard Action
+    override func zx_keyboardWillShow(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        self.isResult = false
+        UIView.animate(withDuration: dt, animations: {
+            
+        }, completion: nil)
+    }
+    
+    override func zx_keyboardWillHide(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        self.isResult = true
+        UIView.animate(withDuration: dt, animations: {
+            
+        }, completion: nil)
+    }
+    
+    deinit {
+        self.zx_removeKeyboardNotification()
+    }
+    
+    //MARK: - Lazy
+    lazy var historyArray: Array<String> = {
+        let arr: Array<String> = ZXHistoryCache.getCache()
+        return arr
+    }()
+    
+    lazy var resultArray: Array<String> = {
+        let arr: Array<String> = Array.init()
+        return arr
+    }()
+
+    //MARK: - serach bar
+    let searchBar:UISearchBar = {
+        let _searchBar = UISearchBar.init()
+        let placeHoderlStr = "输入车型 归宿地"
+        _searchBar.barTintColor = UIColor.white
+        _searchBar.searchBarStyle = .default
+        _searchBar.autocapitalizationType = .none
+        _searchBar.autocorrectionType = .no
+//        _searchBar.backgroundImage = UIImage()
+        if #available(iOS 9.0, *) {
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.font.rawValue: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor.rawValue: UIColor.zx_textColorTitle]
+            let attrStr = NSAttributedString.init(string: placeHoderlStr, attributes: [NSAttributedStringKey.font: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor: UIColor.zx_textColorMark])
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = attrStr
+        } else {
+            // Fallback on earlier versions
+            _searchBar.placeholder = placeHoderlStr
+        }
+        return _searchBar
+    }()
+
+}
+
+//MARK: - HTTP
+extension ZXSearchViewController {
+    func requestForQuert(_ search: String) {
+//        ZXNetwork.asyncRequest(withUrl: <#T##String#>, params: <#T##Dictionary<String, Any>?#>, method: <#T##ZXHTTPMethod#>, completion: <#T##ZXAPICompletionAction##ZXAPICompletionAction##(Bool, Int, Dictionary<String, Any>, String, ZXError?) -> Void#>)
+        self.tabList.reloadData()
+    }
+}
+
+
+

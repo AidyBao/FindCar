@@ -1,0 +1,31 @@
+//
+//  ZXSettingCell.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSettingRootCell: UITableViewCell {
+    
+    static let ZXSettingCellID: String = "ZXSettingCell"
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        
+    }
+    
+    override func layoutSubviews() {
+        
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+}
+

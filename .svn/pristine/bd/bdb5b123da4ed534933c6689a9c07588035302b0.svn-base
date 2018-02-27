@@ -1,0 +1,112 @@
+//
+//  ZXSettingViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSettingViewController: ZXUIViewController {
+
+    @IBOutlet weak var tabList: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationItem.title = "设置"
+        
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: String.init(describing: ZXExitCell.self), bundle: nil), forCellReuseIdentifier: ZXExitCell.ZXExitCellID)
+        self.tabList.register(UINib.init(nibName: String.init(describing: ZXSettingRootCell.self), bundle: nil), forCellReuseIdentifier: ZXSettingRootCell.ZXSettingRootCellID)
+        
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+}
+
+extension ZXSettingViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell: ZXSettingRootCell = tableView.dequeueReusableCell(withIdentifier: ZXSettingRootCell.ZXSettingRootCellID, for: indexPath) as! ZXSettingRootCell
+            cell.loadData(indexPath)
+            return cell
+        }
+        let cell: ZXExitCell = tableView.dequeueReusableCell(withIdentifier: ZXExitCell.ZXExitCellID, for: indexPath) as! ZXExitCell
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 2
+        case 1:
+            return 1
+        default:
+            return 0
+        }
+    }
+}
+
+extension ZXSettingViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                let setCell: ZXSettingRootCell = tableView.cellForRow(at: indexPath) as! ZXSettingRootCell
+                if setCell.cacheLB.text == "0.00M" {
+                    ZXHUD.showText(in: self.view, text: "别点了，已经没有缓存了", delay: ZX.HUDDelay)
+                    return
+                }
+                ZXAlertUtils.showAlert(wihtTitle: "提示", message: "确定清除缓存数据吗？", buttonTexts: ["取消","确定"] , action: { (index) in
+                    if index == 1 {
+                        ZXCache.cleanCache(competion: {
+                            setCell.cacheLB.text = "\(ZXCache.returnCacheSize())M"
+                        })
+                    }
+                })
+            case 1:
+                self.navigationController?.pushViewController(ZXAboutViewController(), animated: true)
+            default:
+                break
+            }
+        case 1:
+            switch indexPath.row {
+            case 0:
+                ZXAlertUtils.showAlert(wihtTitle: "提示", message: "确认退出登录？", buttonTexts: ["取消","确定"] , action: { (index) in
+                    if index == 1 {
+                        ZXUser.user.logout()
+                    }
+                })
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55.0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView: UIView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 15.0))
+        headerView.backgroundColor = UIColor.zx_subTintColor
+        return headerView
+    }
+}

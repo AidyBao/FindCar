@@ -1,0 +1,94 @@
+//
+//  ZXCardPlateConfirmViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+
+/// 车牌确认、编辑、提交任务匹配查询
+class ZXCardPlateConfirmViewController: ZXUIViewController {
+
+    var image: UIImage?
+    var model: ZXLicenseModel?
+    //OCR Result
+    @IBOutlet weak var ocrResultView: UIView!
+    @IBOutlet weak var lbPlateNumber1: UILabel!
+    
+    //Edit
+    @IBOutlet weak var editView: UIView!
+    @IBOutlet weak var lbPlateNumber2: UILabel!
+    
+    //UnMatched
+    @IBOutlet weak var unmatchView: UIView!
+    @IBOutlet weak var lbUnMatchedResult: UILabel!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.zx_setNavigationBarHidden(true, animated: true)
+    }
+    
+    @IBAction func backToHomeAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //MARK: - OCR ResutView Action
+    
+    @IBAction func jumpToEditAction(_ sender: Any) {
+        self.showIndex(2)
+    }
+    
+    @IBAction func commitMatch1Action(_ sender: Any) {
+        self.showIndex(3)
+    }
+    
+    //MARK: - Edit View Action
+    @IBAction func backToOCRViewAction(_ sender: Any) {
+        self.showIndex(1)
+    }
+    
+    @IBAction func commitMatch2Action(_ sender: Any) {
+        self.showIndex(3)
+    }
+    
+    //MARK: - UnMatched View Action
+    
+    @IBAction func reTakeAction(_ sender: Any) {
+        self.dismiss(animated: true, completion:({
+            
+        }))
+    }
+    
+    //
+    fileprivate func showIndex(_ index: Int) {
+        self.ocrResultView.isHidden = true
+        self.editView.isHidden = true
+        self.unmatchView.isHidden = true
+        switch index {
+        case 1:
+            self.ocrResultView.isHidden = false
+        case 2:
+            self.editView.isHidden = false
+        case 3:
+            self.unmatchView.isHidden = false
+        default:
+            break
+        }
+    }
+}

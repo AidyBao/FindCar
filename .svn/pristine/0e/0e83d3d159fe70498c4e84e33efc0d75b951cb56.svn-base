@@ -1,0 +1,67 @@
+//
+//  ZXBannerDetailViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/12.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXBannerDetailViewController: ZXUIViewController {
+    @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var titleLB: UILabel!
+    @IBOutlet weak var dateLB: UILabel!
+    @IBOutlet weak var dateLBTopGap: NSLayoutConstraint!
+    var isBanner: Bool = false
+    
+    var contentStr: String  = ""
+    var titleStr: String    = ""
+    var dataStr: String     = ""
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        webView.backgroundColor = UIColor.zx_backgroundColor
+        webView.scrollView.isScrollEnabled = true
+        
+        titleLB.font = UIFont.systemFont(ofSize: 25.0)
+        titleLB.textColor = UIColor.zx_textColorTitle
+        
+        dateLB.font = UIFont.zx_subTitleFont
+        dateLB.textColor = UIColor.zx_textColorBody
+        
+        if isBanner {
+            dateLB.isHidden = true
+            dateLBTopGap.constant = 0
+        }
+        
+        if titleStr.isEmpty == false {
+            titleLB.text = titleStr
+        }
+        
+        if dataStr.isEmpty == false {
+            dateLB.text = dataStr
+        }
+        
+        if contentStr.isEmpty == false {
+            webView.loadHTMLString(contentStr, baseURL: nil)
+        }else{
+            ZXAlertUtils.showAlert(wihtTitle: "提示", message: "访问出错了", buttonText: "确定", action: {
+                
+            })
+        }
+        ZXHUD.showLoading(in: self.view, text: "", delay: 0)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+}
+
+
+extension ZXBannerDetailViewController: UIWebViewDelegate {
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        print(error)
+    }
+}

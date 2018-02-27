@@ -1,0 +1,231 @@
+//
+//  ZXTaskViewModel.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/10.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTaskViewModel: NSObject {
+    ///任务匹配
+    ///
+    /// - Parameters:
+    ///   - ocrNum:     系统识别车牌号
+    ///   - inputNum:   输入的车牌号 可为空
+    ///   - imageUrl:   车牌图片 url
+    ///   - completion: -
+    static func plateMatch(ocrNum: String,
+                           inputNum: String?,
+                           imageUrl: String,
+                           completion:((_ success: Bool, _ code: Int, _ model: ZXTaskModel?, _ msg: String) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["recognizePlateNumber"] = ocrNum
+        if let inputNum = inputNum {
+            params["inputPlateNumber"] = inputNum
+        }
+        params["plateNumberImg"] = imageUrl
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.plateMatch), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS || code == ZXAPI_OTHER_MATCHED {
+                if let data = obj["data"] as? Dictionary<String, Any> {
+                    let model = ZXTaskModel.deserialize(from: data)
+                    model?.extralMsg = obj["msg"] as? String
+                    model?.otherMatched = (code == ZXAPI_OTHER_MATCHED) ? true : false
+                    //if let inputNum = inputNum, inputNum != ocrNum {
+                        //model?.hasBeenModified = true
+                    //}
+                    completion?(true, code, model, "")
+                } else {
+                    completion?(false, code, nil, "数据解析失败")
+                }
+            } else {
+                completion?(false, code, nil, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+    ///校验车牌（验证车辆信息之前
+    ///
+    /// - Parameters:
+    ///   - taskId:     任务id
+    ///   - ocrNum:     识别的车牌号
+    ///   - inputNum:   输入的车牌号 可为空
+    ///   - imageUrl:   车牌照片 url
+    ///   - completion: -
+    static func plateCheck(taskId: String,
+                           ocrNum: String,
+                           inputNum: String?,
+                           imageUrl: String,
+                           completion:((_ success: Bool, _ code: Int, _ msg: String) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["taskId"] = taskId
+        params["recognizePlateNumber"] = ocrNum
+        if let inputNum = inputNum {
+            params["inputPlateNumber"] = inputNum
+        }
+        params["plateNumberImg"] = imageUrl
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.plateCheck), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                completion?(true, code, "")
+            } else {
+                completion?(false, code, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+    // flag
+    //1：补充车辆信息
+    //2：验证车辆信息
+    //3：提交交接单
+    ///补充车辆信息
+    ///
+    /// - Parameters:
+    ///   - taskId:         taskId
+    ///   - VINImgUrl:      车架号照片 url
+    ///   - carImgUrl:      车头或车尾照片 url
+    ///   - problemImgUrl:  重大问题照片 url 可为空
+    ///   - remark:         备注 可为空
+    ///   - completion:     -
+    static func uploadCarInfo(taskId: String,
+                              VINImgUrl: String,
+                              carImgUrl: String,
+                              problemImgUrl: String?,
+                              remark: String?,
+                              completion:((_ success: Bool, _ code: Int,_ msg: String?) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["flag"] = "1"
+        params["taskId"] = taskId
+        params["frameNumberImg"] = VINImgUrl
+        params["carMatchImg"] = carImgUrl
+        if let problemImgUrl = problemImgUrl {
+            params["problemImg"] = problemImgUrl
+        }
+        if let remark = remark {
+            params["remark"] = remark
+        }
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.uploadInfo), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                completion?(true, code, "")
+            } else {
+                completion?(false, code, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+
+    }
+    ///验证车辆信息 上传
+    ///
+    /// - Parameters:
+    ///   - taskId: taskId
+    ///   - plateNumberImg:     匹配的车牌图片路径
+    ///   - frontImageUrl:      车辆正面照片
+    ///   - roomImageUrl:       驾驶室照片
+    ///   - controlImageUrl:    中控照片
+    ///   - backImageUrl:       车辆尾部照片
+    ///   - takeCarAddress:     提车地址
+    ///   - contactName:        联系人
+    ///   - contactTel:         联系电话
+    ///   - ocrNumber:          系统识别车牌
+    ///   - inputNumber:        输入车牌
+    ///   - remark:             备注
+    ///   - completion:         -
+    static func verifyCarInfo(taskId: String,
+                              plateNumberImg: String,
+                              frontImageUrl: String,
+                              roomImageUrl: String,
+                              controlImageUrl: String,
+                              backImageUrl: String,
+                              takeCarAddress: String,
+                              contactName: String,
+                              contactTel: String,
+                              ocrNumber: String,
+                              inputNumber: String?,
+                              remark: String?,
+                              completion:((_ success: Bool, _ code: Int, _ msg: String) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["flag"] = "2"
+        params["taskId"] = taskId
+        params["plateNumberImg"] = plateNumberImg
+        params["validateFrontImg"] = frontImageUrl
+        params["validateOpenImg"] = roomImageUrl
+        params["validateControlImg"] = controlImageUrl
+        params["validateBackImg"] = backImageUrl
+        params["receiveAddress"] = takeCarAddress
+        params["validateContacts"] = contactName
+        params["validateContactsTel"] = contactTel
+        params["recognizePlateNumber"] = ocrNumber
+        if let inputNumber = inputNumber {
+            params["inputPlateNumber"] = inputNumber
+        }
+        if let remark = remark {
+            params["validateRemark"] = remark
+        }
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.uploadInfo), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                completion?(true, code, "")
+            } else {
+                completion?(false, code, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+    
+    /// 验证取车码
+    ///
+    /// - Parameters:
+    ///   - taskId:     taskId
+    ///   - vCode:      取车码
+    ///   - completion: -
+    static func verifyTakeCarCode(taskId: String, vCode: String,
+                                  completion: ((_ success: Bool, _ code: Int,_ errorMsg: String) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["id"] = taskId
+        params["carCheckingCode"] = vCode
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.verifyCode), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                completion?(true, code, "")
+            } else {
+                completion?(false, code, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+    
+    ///上传交接单
+    ///
+    /// - Parameters:
+    ///   - handoverImgUrl: 交接单图片url
+    ///   - completion:     -
+    static func uploadHandOverSheet(taskId: String,
+                                    handoverImgUrl: String?,
+                                    completion:((_ success: Bool, _ code: Int, _ msg: String?) -> Void)?) {
+        var params: Dictionary<String, Any> = [:]
+        params["flag"] = "3"
+        params["taskId"] = taskId
+        params["handoverImg"] = handoverImgUrl
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.uploadInfo), params: params, method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                completion?(true, code, "")
+            } else {
+                completion?(false, code, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+    ///任务详情
+    ///
+    /// - Parameters:
+    ///   - taskId:     taksId
+    ///   - completion: -
+    static func detailInfo(taskId: String,
+                           completion:((_ success: Bool, _ code: Int, _ model: ZXTaskModel?, _ msg: String) -> Void)?) {
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Task.detail), params: ["id": taskId], method: .post) { (success, code, obj, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                if let data = obj["data"] as? Dictionary<String, Any> {
+                    let model = ZXTaskModel.deserialize(from: data)
+                    model?.extralMsg = obj["msg"] as? String
+                    completion?(true, code, model, "")
+                } else {
+                    completion?(false, code, nil, "数据解析失败")
+                }
+            } else {
+                completion?(false, code, nil, error?.description ?? ZX_UNKNOWN_ERROR_TEXT)
+            }
+        }
+    }
+}

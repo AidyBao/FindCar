@@ -1,0 +1,49 @@
+//
+//  ZXMessageViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXMessageViewController: UIViewController {
+    
+    @IBOutlet weak var tabList: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.navigationItem.title = "消息"
+        
+        self.setUIStyle()
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+        self.tabList.register(UINib.init(nibName: String.init(describing: ZXMessageImgCell.ZXMessageImgCellID), bundle: nil), forCellReuseIdentifier: ZXMessageImgCell.reuseIdentifier)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

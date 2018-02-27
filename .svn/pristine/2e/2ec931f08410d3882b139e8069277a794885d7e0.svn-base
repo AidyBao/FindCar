@@ -1,0 +1,98 @@
+//
+//  AppDelegate.swift
+//  FindCar
+//
+//  Created by screson on 2017/12/15.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+import Kingfisher
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.backgroundColor = UIColor.white
+    
+        #if DEBUG
+            ZXNetwork.showRequestLog = true
+        #endif
+        //MARK: - UIConfig
+        ZXStructs.loadUIConfig()
+        //MARK: - Load Tabbar's controllers
+        ZXRootController.reload()
+        //MARK: - Set RootViewController
+        ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+//        ZXRouter.changeRootViewController(ZXLaunchViewController())
+        //MARK: - Request Log
+        //MARK: - OCR Token
+        ZXOCRUtils.getToken(completion: { (_,_) in
+            print(ZXOCRUtils.ACCESS_TOKEN ?? "")
+        })
+        //MARK: - Regist RemoteNotification
+        self.registRemoteNotification()
+        
+        self.window?.makeKeyAndVisible()
+        
+        //
+        self.preloadData()
+        //登录成功
+        NotificationCenter.default.addObserver(self, selector: #selector(zx_loginSuccessAction), name: NSNotification.Name(rawValue: ZXNotification.Login.success), object: nil)
+        //登录失效
+        NotificationCenter.default.addObserver(self, selector: #selector(zx_loginInvalidAction), name: NSNotification.Name(rawValue: ZXNotification.Login.invalid), object: nil)
+        
+        return true
+    }
+
+    func applicationWillResignActive(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+}
+
+extension AppDelegate {
+    
+    func preloadData()  {
+        ZXCommonViewModel.placeBeloningList { (success, code, errorMsg, pList, tList) in
+            if success {
+                ZXGlobalData.placeList = pList
+                ZXGlobalData.typeList = tList
+            }
+        }
+    }
+    
+    @objc func zx_loginSuccessAction() {
+        //
+    }
+    
+    @objc func zx_loginInvalidAction() {
+        
+    }
+}
+
+
+extension AppDelegate: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        return UITabBarController.zx_tabBarController(tabBarController, shouldSelectViewController: viewController)
+    }
+}
+
+

@@ -1,0 +1,67 @@
+//
+//  ZXMsgListModel.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/15.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import HandyJSON
+
+//MARK: - 消息列表
+class ZXMsgListModel: HandyJSON {
+    required init() {}
+    
+    var msgId: Int                  = -1
+    var accountId: Int              = -1
+    var accountName: String         = ""
+    var title: String               = ""
+    var type: Int                   = -1
+    var pushId: Int                 = -1
+    var pushContent: String         = ""
+    var notice: ZXMsgNoticeModel    = ZXMsgNoticeModel.init()
+    var task: ZXTaskModel           = ZXTaskModel.init()
+    var isRead: Int                 = -1
+    var sendTime: TimeInterval      = 0
+    var sendTimeStr: String         = ""
+    var messageTitle: String        = ""
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+                self.msgId <-- "id"
+    }
+}
+
+//MARK: - 活动
+class ZXMsgNoticeModel: HandyJSON {
+    required init() {}
+    
+    var noticeId: Int                  = -1
+    var title: String               = ""
+    var pushTargetType: String      = ""
+    var pushProvinceId: Int         = -1
+    var pushProvinceName: String    = ""
+    var pushCityId: Int             = -1
+    var pushCityName: String        = ""
+    var pushTel: String             = ""
+    var pushContentType: String     = ""
+    var contentImg: String          = ""
+    var plateNumber: Int            = 0
+    var status: String              = ""
+    var sendTime: TimeInterval      = 0
+    var sendTimeStr: String         = ""
+    var operatorId: Int             = -1
+    var operatorName: String        = ""
+    var operationTime: TimeInterval = 0
+    var content: String             = ""
+    var contentImgStr: String       = ""
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.noticeId <-- "id"
+    }
+}
+
+
+

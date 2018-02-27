@@ -1,0 +1,28 @@
+//
+//  ZXTaskToolCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTaskToolCell: UITableViewHeaderFooterView {
+    
+    static let ZXTaskToolCellID: String = "ZXTaskToolCell"
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.contentView.backgroundColor = UIColor.white
+    }
+
+    /*
+    // Only override draw() if you perform custom drawing.
+    // An empty implementation adversely affects performance during animation.
+    override func draw(_ rect: CGRect) {
+        // Drawing code
+    }
+    */
+
+}

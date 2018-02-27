@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXUploadCarInfoViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="btnCommit" destination="6gC-nL-yWs" id="KiY-yz-cal"/>
+                <outlet property="tblList" destination="BNq-bu-1e4" id="Bwx-g7-Nke"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rqy-9s-wua">
+                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6gC-nL-yWs" customClass="ZXCButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="30" y="10" width="315" height="40"/>
+                            <state key="normal" title="提交"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="commitAction:" destination="-1" eventType="touchUpInside" id="Twn-gS-2AM"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="6gC-nL-yWs" firstAttribute="leading" secondItem="Rqy-9s-wua" secondAttribute="leading" constant="30" id="2ic-KL-A6o"/>
+                        <constraint firstAttribute="bottom" secondItem="6gC-nL-yWs" secondAttribute="bottom" constant="10" id="DB7-bo-pFw"/>
+                        <constraint firstAttribute="height" constant="60" id="Faq-kV-Dgz"/>
+                        <constraint firstItem="6gC-nL-yWs" firstAttribute="top" secondItem="Rqy-9s-wua" secondAttribute="top" constant="10" id="bgf-cB-zz6"/>
+                        <constraint firstAttribute="trailing" secondItem="6gC-nL-yWs" secondAttribute="trailing" constant="30" id="kSe-da-VCJ"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="BNq-bu-1e4">
+                    <rect key="frame" x="10" y="0.0" width="355" height="607"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Mi0-a7-UtB"/>
+                        <outlet property="delegate" destination="-1" id="nga-bp-ArT"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="BNq-bu-1e4" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="5C6-ns-UmP"/>
+                <constraint firstItem="BNq-bu-1e4" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="Bew-Sx-nNo"/>
+                <constraint firstItem="Rqy-9s-wua" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="BoN-La-ERr"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="BNq-bu-1e4" secondAttribute="trailing" constant="10" id="Nzq-NV-rH2"/>
+                <constraint firstItem="Rqy-9s-wua" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="SqW-nf-CbM"/>
+                <constraint firstItem="Rqy-9s-wua" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="rGa-SH-xnJ"/>
+                <constraint firstItem="Rqy-9s-wua" firstAttribute="top" secondItem="BNq-bu-1e4" secondAttribute="bottom" id="s3s-3m-0kW"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
+        </view>
+    </objects>
+</document>

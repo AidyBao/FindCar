@@ -1,0 +1,175 @@
+//
+//  ZXAddressView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+typealias ZXAddressViewBlock = (ZXAddressView, Int) -> Void
+
+class ZXAddressView: UIView {
+
+    var block: ZXAddressViewBlock?
+    
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var backViewH: NSLayoutConstraint!
+    
+    @IBOutlet weak var superTableView: UITableView!
+    @IBOutlet weak var superTableViewW: NSLayoutConstraint!
+    
+    @IBOutlet weak var subTableView: UITableView!
+    
+    var proIndex:NSInteger      = 0//选择省份的索引
+    var cityIndex:NSInteger     = 0//选择城市的索引
+    var distrIndex:NSInteger    = 0//选择区（县）的索引
+    
+    var proStr:String           = ""//省份
+    var cityStr:String          = ""//城市
+    var disStr:String           = ""//区（县）
+    
+    var proCode:Int             = -1//省份id
+    var cityCode:Int            = -1//城市id
+    var disCode:Int             = -1//区（县）id
+    
+    static func loadNib() -> ZXAddressView{
+        let nibView:ZXAddressView = Bundle.main.loadNibNamed("ZXAddressView", owner: self, options: nil)?.first as! ZXAddressView
+        return nibView
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        setAnima()
+        
+        setUI()
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    }
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        setAnima()
+        
+        setUI()
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.frame = CGRect.init(x: 0, y: self.frame.origin.y, width: self.frame.size.width, height: self.frame.size.height)
+        
+        self.backView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: 310.0)
+        
+        self.superTableViewW.constant = (ZXBOUNDS_WIDTH - 3)/4 - 5
+    }
+    
+    func setAnima() {
+        self.backViewH.constant = 0
+        self.backView.alpha = 0
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 310.0
+            self.backView.alpha = 1.0
+        }) { (finish) in
+            self.alpha = 1.0
+        }
+    }
+    
+    func setUI() {
+        self.superTableView.delegate = self
+        self.superTableView.dataSource = self
+        self.superTableView.register(UINib.init(nibName: String.init(describing: ZXAddrSuperCell.self), bundle: nil), forCellReuseIdentifier: ZXAddrSuperCell.ZXAddrSuperCellID)
+        
+        self.subTableView.delegate = self
+        self.subTableView.dataSource = self
+        self.subTableView.register(UINib.init(nibName: String.init(describing: ZXAddrSubCell.self), bundle: nil), forCellReuseIdentifier: ZXAddrSubCell.ZXAddrSubCellID)
+    }
+    
+    //MARK: - 加载地址数据
+    func loadAddrData(_ areaArr: Array<ZXArea>) {
+        if areaArr.count > 0 {
+            let areaModel = areaArr[0]
+            provinceArray = areaModel.children
+            //插入"一组数据"到最前面
+            let proModel = ZXProvince()
+            var citChild: Array<ZXCity> = []
+            for _ in 0..<1 {
+                let citModel = ZXCity()
+                citModel.shortName = "全部"
+                citModel.taskNum = areaModel.taskNum
+                citChild.insert(citModel, at: 0)
+            }
+            proModel.children = citChild
+            proModel.shortName = "全部"
+            provinceArray.insert(proModel, at: 0)
+            if provinceArray.count > 0 {
+                let provinceModel: ZXProvince = provinceArray[proIndex]
+                cityArray = provinceModel.children
+                if cityArray.count > 0 {
+                    let cityModel: ZXCity = cityArray[cityIndex]
+                    self.disArray = cityModel.children
+                }
+            }
+            
+            //        self.setFirstDefaultData()
+            //
+            superTableView.reloadData()
+            superTableView.selectRow(at: IndexPath.init(row: 0, section: 0), animated: true, scrollPosition: .none)
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if block != nil {
+            block?(self,0)
+        }
+        
+        self.dismiss()
+    }
+    
+    func dismiss() {
+        
+        self.backViewH.constant = 310.0
+        self.backView.alpha = 1
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 0.0
+            self.backView.alpha = 0.0
+        }) { (finish) in
+            self.alpha = 0.0
+        }
+        
+        self.removeFromSuperview()
+    }
+
+    //省
+    lazy var provinceArray: Array<ZXProvince> = {
+        var provinceArr:Array<ZXProvince> = Array.init()
+        return provinceArr
+    }()
+    
+    //市
+    lazy var cityArray: Array<ZXCity> = {
+        var cityArr:Array<ZXCity> = Array.init()
+        return cityArr
+    }()
+    
+    //区（县）
+    lazy var disArray: Array<ZXRegion> = {
+        var disArray:Array<ZXRegion> = Array.init()
+        return disArray
+    }()
+}

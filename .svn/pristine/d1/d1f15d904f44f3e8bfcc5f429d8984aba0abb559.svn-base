@@ -1,0 +1,62 @@
+//
+//  UIImage+ZX.swift
+//  rbstore
+//
+//  Created by screson on 2017/7/26.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension UIImage {
+    struct Default {
+        static let goods = #imageLiteral(resourceName: "zx-default")
+        static let headerIcon = #imageLiteral(resourceName: "touxiang")
+    }
+    
+        
+    /// Rotate
+    ///
+    /// - Parameters:
+    ///   - radian: radian
+    ///   - isExpand:  是否扩展，如果不扩展，那么图像大小不变，但被截掉一部分
+    /// - Returns: UIImage
+    func zx_rotateByDegree(_ degree: CGFloat, isExpand: Bool) -> UIImage {
+        if degree == 0 {
+            return self
+        }
+        
+        let radian = radians(degree)
+        
+        let imgSize = CGSize(width: self.size.width * scale, height: self.size.height * scale)
+        var outputSize = imgSize
+        
+        if isExpand {
+            var rect = CGRect(x: 0, y: 0, width: imgSize.width, height: imgSize.height)
+            //旋转
+            rect = rect.applying(CGAffineTransform.init(rotationAngle: radian))
+            outputSize = CGSize(width: rect.width, height: rect.height)
+        }
+        //
+        UIGraphicsBeginImageContext(outputSize)
+        let context = UIGraphicsGetCurrentContext()
+        // Move the origin to the middle of the image so we will rotate and scale around the center.
+        context?.translateBy(x: outputSize.width / 2, y: outputSize.height / 2)
+        context?.rotate(by: radian)
+        context?.translateBy(x: -imgSize.width / 2, y: -imgSize.height / 2)
+        self.draw(in: CGRect(x: 0, y: 0, width: imgSize.width, height: imgSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? self
+    }
+    
+    func zx_rescaleToSize(_ size: CGSize) -> UIImage {
+        let rect = CGRect.init(origin: CGPoint.zero, size: size)
+        UIGraphicsBeginImageContext(rect.size)
+        self.draw(in: rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image ?? self
+    }
+    
+}

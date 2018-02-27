@@ -1,0 +1,60 @@
+//
+//  ZXCardPlateConfirmViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXCardPlateConfirmViewController: ZXUIViewController {
+
+    //OCR Result
+    @IBOutlet weak var ocrResultView: UIView!
+    @IBOutlet weak var lbPlateNumber1: UILabel!
+    
+    //Edit
+    @IBOutlet weak var editView: UIView!
+    @IBOutlet weak var lbPlateNumber2: UILabel!
+    
+    //UnMatched
+    @IBOutlet weak var unmatchView: UIView!
+    @IBOutlet weak var lbUnMatchedResult: UILabel!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func backToHomeAction(_ sender: Any) {
+        
+    }
+    
+    
+    //MARK: - OCR ResutView Action
+    
+    @IBAction func jumpToEditAction(_ sender: Any) {
+        
+    }
+    
+    @IBAction func commitMatch1Action(_ sender: Any) {
+        
+    }
+    
+    //MARK: - Edit View Action
+    @IBAction func backToOCRViewAction(_ sender: Any) {
+        
+    }
+    
+    @IBAction func commitMatch2Action(_ sender: Any) {
+        
+    }
+    
+    //MARK: - UnMatched View Action
+    
+    @IBAction func reTakeAction(_ sender: Any) {
+    }
+}

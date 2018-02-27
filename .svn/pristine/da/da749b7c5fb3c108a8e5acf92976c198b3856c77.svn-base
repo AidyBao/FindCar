@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ZXTaskNavView" customModule="FindCar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pr3-SP-Jdr">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="任务" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRt-N6-Bau">
+                            <rect key="frame" x="169" y="11" width="37" height="22"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lmy-Xt-VTD">
+                            <rect key="frame" x="5" y="0.0" width="45" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="45" id="Djk-Ar-Zom"/>
+                            </constraints>
+                            <state key="normal" image="search"/>
+                            <connections>
+                                <action selector="searchAction:" destination="iN0-l3-epB" eventType="touchDragInside" id="Fft-Vy-HwF"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V5O-HF-Qfq">
+                            <rect key="frame" x="325" y="0.0" width="45" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="45" id="Mpi-5p-d1A"/>
+                            </constraints>
+                            <state key="normal" image="xiaoxi"/>
+                            <connections>
+                                <action selector="msgAction:" destination="iN0-l3-epB" eventType="touchDragInside" id="naE-yC-o4x"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aaV-m9-oKs" customClass="ZXUIView" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="354" y="8" width="8" height="8"/>
+                            <color key="backgroundColor" red="1" green="0.27276204799999998" blue="0.25206022989999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="8" id="aZG-mg-cDH"/>
+                                <constraint firstAttribute="height" constant="8" id="q9t-OH-CYa"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="V5O-HF-Qfq" secondAttribute="trailing" constant="5" id="6v5-qr-BfX"/>
+                        <constraint firstItem="Lmy-Xt-VTD" firstAttribute="top" secondItem="pr3-SP-Jdr" secondAttribute="top" id="70j-t1-KMg"/>
+                        <constraint firstItem="V5O-HF-Qfq" firstAttribute="centerY" secondItem="pr3-SP-Jdr" secondAttribute="centerY" id="99t-oI-J82"/>
+                        <constraint firstAttribute="bottom" secondItem="V5O-HF-Qfq" secondAttribute="bottom" id="9Ek-La-2ez"/>
+                        <constraint firstItem="Lmy-Xt-VTD" firstAttribute="leading" secondItem="pr3-SP-Jdr" secondAttribute="leading" constant="5" id="Fkd-LI-oWh"/>
+                        <constraint firstItem="FRt-N6-Bau" firstAttribute="centerY" secondItem="pr3-SP-Jdr" secondAttribute="centerY" id="PWQ-gv-vgm"/>
+                        <constraint firstItem="V5O-HF-Qfq" firstAttribute="top" secondItem="pr3-SP-Jdr" secondAttribute="top" id="ccS-Za-Zyf"/>
+                        <constraint firstItem="FRt-N6-Bau" firstAttribute="centerX" secondItem="pr3-SP-Jdr" secondAttribute="centerX" id="dcw-Nh-tPH"/>
+                        <constraint firstItem="Lmy-Xt-VTD" firstAttribute="centerY" secondItem="pr3-SP-Jdr" secondAttribute="centerY" id="gaD-ic-5Gd"/>
+                        <constraint firstAttribute="bottom" secondItem="Lmy-Xt-VTD" secondAttribute="bottom" id="mBz-hs-78W"/>
+                        <constraint firstItem="aaV-m9-oKs" firstAttribute="top" secondItem="V5O-HF-Qfq" secondAttribute="top" constant="8" id="pJy-9m-BB6"/>
+                        <constraint firstItem="aaV-m9-oKs" firstAttribute="trailing" secondItem="V5O-HF-Qfq" secondAttribute="trailing" constant="-8" id="w08-Z1-hHQ"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="pr3-SP-Jdr" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="6ku-qS-ILl"/>
+                <constraint firstItem="pr3-SP-Jdr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="aVQ-jb-vRS"/>
+                <constraint firstAttribute="bottom" secondItem="pr3-SP-Jdr" secondAttribute="bottom" id="hDo-9B-xpO"/>
+                <constraint firstItem="pr3-SP-Jdr" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="zY8-74-LhU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="redDot" destination="aaV-m9-oKs" id="rTh-pI-WLb"/>
+            </connections>
+            <point key="canvasLocation" x="26.5" y="52"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="search" width="20" height="20"/>
+        <image name="xiaoxi" width="20" height="20"/>
+    </resources>
+</document>

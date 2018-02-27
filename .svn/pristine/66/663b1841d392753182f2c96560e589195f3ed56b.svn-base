@@ -1,0 +1,129 @@
+//
+//  ZXTaskModel.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/10.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import HandyJSON
+
+class ZXTaskModel: HandyJSON {
+    
+    var taskId:String                          = ""
+    var financialBranchId:Int                  = -1
+    var financialCompanyId:Int                 = -1
+    var financialCompanyName:String            = ""
+    var carBranchId:Int                        = -1
+    var carCompanyId:Int                       = -1
+    var carCompanyName:String                  = ""
+    var carBrand:String                        = ""
+    var provinceId:Int                         = -1
+    var provinceName:String                    = ""
+    var cityId:Int                             = -1
+    var cityName:String                        = ""
+    var plateNumber:String                     = ""
+    var frameNumber:Int                        = 0
+    var carOwnerName:String                    = ""
+    var identityCardNumber:Int                 = 0
+    var drivingLicense:Int                     = 0
+    var propertyRightCard:Int                  = 0
+    var vehicleIdentificationNumber:Int        = 0
+    var validateContacts:String                = ""
+    var validateContactsTel:String             = ""
+    var validateRemark:String                  = ""
+    var expectedAgencyCost:String              = ""
+    var actualAmount:Double                    = 0
+    var purchasePrice:String                   = ""
+    var loanAmount:Int                         = 0
+    var surplusLoanAmount:Int                  = 0
+    var spareKey:Int                           = 0
+    var vehicleInvoice:Int                     = 0
+    var loanContract:Int                       = 0
+    var supplementaryInstructions:String       = ""
+    var platformCommission:String              = ""
+    var sendUserId:Int                         = -1
+    var sendUserName:String                    = ""
+    var sendDatetime:String                    = ""
+    var sendDatetimeStr:String                 = ""
+    var isTop:Int                              = 0
+    var submitUserId:Int                       = -1
+    var submitUserName:String                  = ""
+    var submitDatetime:TimeInterval            = 0
+    var submitDatetimeStr:String               = ""
+    var plateNumberImg:String                  = ""
+    var frameNumberImg:String                  = ""
+    var carMatchImg:String                     = ""
+    var problemImg:String                      = ""
+    var authorizationDocumentImg:String        = ""
+    var courierCompany:String                  = ""
+    var courierNumber:Int                      = 0
+    var validateFrontImg:String                = ""
+    var validateOpenImg:String                 = ""
+    var validateControlImg:String              = ""
+    var validateBackImg:String                 = ""
+    var receiveAddress:String                  = ""
+    var receiptVoucherImg:String               = ""
+    var handoverImg:String                     = ""
+    var paymentVoucherImg:String               = ""
+    var carReceiveComfirm:String               = ""
+    var remark:String                          = ""
+    var status:Int                             = 0
+    var isOnAudit:Int                          = 0
+    var isFinished:Int                         = 0
+    var operatorId:String                      = ""
+    var operatorName:String                    = ""
+    var operationTime:TimeInterval             = 0
+    var operationTimeStr:String                = ""
+    var isFollow:Int                           = 0
+    var adress:String                          = ""
+    var submitUserNameStr:String               = ""
+    var plateNumberStr:String                  = ""
+    var taskRemainingTimeStr:String            = ""
+    
+    var isValidateCheckingCode: Int            = 0
+    
+    //图片 小图 （大图去掉 '_smart'）
+    var frameNumberImgSmartStrs: Array<String>           = []//车架号图片
+    var carMatchImgSmartStrs: Array<String>              = []//车头/车尾图片
+    var problemImgSmartStrs: Array<String>               = []//重大问题图片
+    var authorizationDocumentImgSmartStrs: Array<String> = []//授权文件图片
+    var validateFrontImgSmartStrs: Array<String>         = []//车头图片
+    var validateOpenImgSmartStrs: Array<String>          = []//驾驶室图片
+    var validateControlImgSmartStrs: Array<String>       = []//中控图片
+    var validateBackImgSmartStrs: Array<String>          = []//车尾图片
+    var handoverImgSmartStrs: Array<String>              = []//交接单图片
+    
+    ///审核、已领取等附加说明
+    var extralMsg: String?
+    ///任务已被他人领取
+    var otherMatched: Bool      = false//
+    var hasBeenModified: Bool   = false//修改过车牌
+    ///显示额外说明形象
+    var showExtralMsg: Bool {
+        get {
+            if otherMatched {//已被他人领取
+                return true
+            }
+            
+            if isOnAudit == 1 {//审核中
+                if status == 4 || status == 9 {
+                    return true
+                }
+            }
+            
+            if hasBeenModified {//修改过车牌
+                return true
+            }
+            return false
+        }
+    }
+    
+    required init() {}
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.taskId <-- "id"
+    }
+}

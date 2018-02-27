@@ -1,0 +1,100 @@
+//
+//  ZXImageInputCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXImageInputCellDelegate: class {
+    func zxImageInputCellAddPhoto(cell: ZXImageInputCell)
+    func zxImageInputCell(cell: ZXImageInputCell, selectAt index: Int)
+}
+
+class ZXImageInputCell: ZXTableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+    weak var delegate: ZXImageInputCellDelegate?
+    
+    static let height: CGFloat = ceil(75 + ZXImageControlCCVCell.width)
+    
+    @IBOutlet weak var lbTitle: UILabel!
+    @IBOutlet weak var lbSubTitle: UILabel!
+    @IBOutlet weak var lbIsOptional: UILabel!
+    
+    @IBOutlet weak var ccvList: UICollectionView!
+    
+    @IBOutlet weak var ccvHeight: NSLayoutConstraint!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.lbTitle.font = UIFont.zx_titleFont
+        self.lbTitle.textColor = UIColor.zx_textColorTitle
+        self.lbSubTitle.font = UIFont.zx_markFont
+        self.lbSubTitle.textColor = UIColor.zx_textColorMark
+        
+        self.lbIsOptional.font = UIFont.zx_titleFont
+        self.lbIsOptional.textColor = UIColor.zx_textColorMark
+        
+        self.lbIsOptional.isHidden = true
+        
+        self.ccvList.register(UINib.init(nibName: ZXImageControlCCVCell.NibName, bundle: nil), forCellWithReuseIdentifier: ZXImageControlCCVCell.reuseIdentifier)
+        self.ccvList.delegate = self
+        self.ccvList.dataSource = self
+        
+        self.ccvHeight.constant = ZXImageControlCCVCell.width
+    }
+    
+    fileprivate var images: Array<ZXImageInputModel> = []
+    func reloadImages(_ images: [ZXImageInputModel]) {
+        self.images = images
+        self.ccvList.reloadData()
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == self.images.count {//添加图片
+            delegate?.zxImageInputCellAddPhoto(cell: self)
+        } else {//选中图片
+            delegate?.zxImageInputCell(cell: self, selectAt: indexPath.row)
+        }
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZXImageControlCCVCell.reuseIdentifier, for: indexPath) as! ZXImageControlCCVCell
+        if indexPath.row == self.images.count {
+            cell.reloadImage(nil, type: .add)
+        } else {
+            cell.reloadImage(self.images[indexPath.row].url, type: .show)
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if self.images.count < 3 {
+            return self.images.count + 1
+        }
+        return self.images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize.init(width: ZXImageControlCCVCell.width, height: ZXImageControlCCVCell.width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 14
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 14
+    }
+}

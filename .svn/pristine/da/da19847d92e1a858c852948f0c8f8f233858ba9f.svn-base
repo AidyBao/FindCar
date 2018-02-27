@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXLoginViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="geliLine" destination="rFU-yA-Be6" id="HGD-gR-SoM"/>
+                <outlet property="getVerCode" destination="2PK-d6-Qxc" id="sxy-Y0-eB9"/>
+                <outlet property="noteLB" destination="gpo-2L-2sW" id="mfy-SR-t8e"/>
+                <outlet property="telLb" destination="2cF-Nk-zly" id="x4N-DP-TqD"/>
+                <outlet property="telText" destination="Ypp-Hh-Xa6" id="aam-jm-bQb"/>
+                <outlet property="titleLB" destination="WxX-wd-77K" id="tON-3R-NCi"/>
+                <outlet property="userAgreementBtn" destination="iNp-r3-8fW" id="mg8-HA-Baa"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="使用手机号登录" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WxX-wd-77K">
+                    <rect key="frame" x="20" y="74" width="335" height="35"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="29"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="中国+86" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cF-Nk-zly">
+                    <rect key="frame" x="20" y="163" width="333" height="23"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="输入手机号" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Ypp-Hh-Xa6">
+                    <rect key="frame" x="20" y="206" width="333" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="oM4-Na-ki9"/>
+                    </constraints>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="UFA-cH-r94"/>
+                    </connections>
+                </textField>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rFU-yA-Be6">
+                    <rect key="frame" x="20" y="260" width="333" height="1"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="fUM-Jo-FEl"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2PK-d6-Qxc" customClass="ZXCButton" customModule="FindCar" customModuleProvider="target">
+                    <rect key="frame" x="20" y="350.5" width="333" height="44"/>
+                    <color key="backgroundColor" red="0.33929423920000001" green="0.36848663659999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="zFq-FO-jtz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <state key="normal" title="获取验证码">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="22"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="getVerCodeAction:" destination="-1" eventType="touchUpInside" id="361-hL-5cR"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNp-r3-8fW">
+                    <rect key="frame" x="175.5" y="265.5" width="90" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="90" id="Lv3-Zz-9EV"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <state key="normal" title="用户注册协议">
+                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="userAgreementAction:" destination="-1" eventType="touchUpInside" id="0u8-Io-aiw"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="点击获取验证码即代表您同意" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpo-2L-2sW">
+                    <rect key="frame" x="20" y="271" width="159.5" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nAL-j7-HW7">
+                    <rect key="frame" x="177.5" y="288.5" width="86" height="1"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="VaI-RY-ABV"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="2PK-d6-Qxc" firstAttribute="leading" secondItem="WxX-wd-77K" secondAttribute="leading" id="2Q7-px-dQR"/>
+                <constraint firstItem="nAL-j7-HW7" firstAttribute="trailing" secondItem="iNp-r3-8fW" secondAttribute="trailing" constant="-2" id="2WU-c9-2Qh"/>
+                <constraint firstItem="2PK-d6-Qxc" firstAttribute="top" secondItem="iNp-r3-8fW" secondAttribute="bottom" constant="58" id="4A3-Kh-KWq"/>
+                <constraint firstItem="WxX-wd-77K" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="4Z5-zZ-4oF"/>
+                <constraint firstItem="2PK-d6-Qxc" firstAttribute="leading" secondItem="gpo-2L-2sW" secondAttribute="leading" id="4xD-0D-AdV"/>
+                <constraint firstItem="2cF-Nk-zly" firstAttribute="top" secondItem="WxX-wd-77K" secondAttribute="bottom" constant="54" id="87A-EW-1WH"/>
+                <constraint firstItem="rFU-yA-Be6" firstAttribute="top" secondItem="Ypp-Hh-Xa6" secondAttribute="bottom" constant="10" id="Bqf-bH-Vib"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2cF-Nk-zly" secondAttribute="trailing" constant="22" id="EDG-NU-5yd"/>
+                <constraint firstItem="iNp-r3-8fW" firstAttribute="leading" secondItem="gpo-2L-2sW" secondAttribute="trailing" constant="-4" id="IFp-PI-phn"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2PK-d6-Qxc" secondAttribute="trailing" constant="22" id="JOx-n8-J8Q"/>
+                <constraint firstItem="Ypp-Hh-Xa6" firstAttribute="top" secondItem="2cF-Nk-zly" secondAttribute="bottom" constant="20" id="LSx-Op-fPn"/>
+                <constraint firstItem="Ypp-Hh-Xa6" firstAttribute="leading" secondItem="WxX-wd-77K" secondAttribute="leading" id="Xna-8U-TAZ"/>
+                <constraint firstItem="rFU-yA-Be6" firstAttribute="leading" secondItem="WxX-wd-77K" secondAttribute="leading" id="ZME-pS-one"/>
+                <constraint firstItem="nAL-j7-HW7" firstAttribute="top" secondItem="iNp-r3-8fW" secondAttribute="bottom" constant="-4" id="ebs-O4-j3m"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Ypp-Hh-Xa6" secondAttribute="trailing" constant="22" id="kjE-IC-xp5"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="rFU-yA-Be6" secondAttribute="trailing" constant="22" id="mtj-Il-6Yd"/>
+                <constraint firstItem="2cF-Nk-zly" firstAttribute="leading" secondItem="WxX-wd-77K" secondAttribute="leading" id="nfc-af-jdt"/>
+                <constraint firstItem="iNp-r3-8fW" firstAttribute="centerY" secondItem="gpo-2L-2sW" secondAttribute="centerY" id="pE9-qe-zyb"/>
+                <constraint firstItem="nAL-j7-HW7" firstAttribute="leading" secondItem="iNp-r3-8fW" secondAttribute="leading" constant="2" id="sTI-Vj-VHH"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="WxX-wd-77K" secondAttribute="trailing" constant="20" id="ur8-ZT-rJg"/>
+                <constraint firstItem="WxX-wd-77K" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="54" id="vZQ-GG-Vba"/>
+                <constraint firstItem="gpo-2L-2sW" firstAttribute="top" secondItem="rFU-yA-Be6" secondAttribute="bottom" constant="10" id="yAH-M2-4JP"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="26.5" y="51.5"/>
+        </view>
+    </objects>
+</document>

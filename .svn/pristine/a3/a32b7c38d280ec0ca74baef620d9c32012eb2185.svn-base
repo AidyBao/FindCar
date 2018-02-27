@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXShareViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelBtn" destination="LQG-tf-rcj" id="69x-ua-Ne4"/>
+                <outlet property="friendCircleLB" destination="KQR-5e-L16" id="bl9-FF-tW7"/>
+                <outlet property="friendLB" destination="LMn-L3-5nC" id="G0W-eK-lhd"/>
+                <outlet property="geliView" destination="bRW-23-Smf" id="imy-7K-Yxb"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uJe-ds-63Y">
+                    <rect key="frame" x="0.0" y="483" width="375" height="184"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQG-tf-rcj">
+                            <rect key="frame" x="0.0" y="136" width="375" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="48" id="3sq-3n-wW5"/>
+                            </constraints>
+                            <state key="normal" title="取消"/>
+                            <connections>
+                                <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="3CO-NA-hK1"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bRW-23-Smf">
+                            <rect key="frame" x="9" y="135" width="357" height="1"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="XMZ-DP-g8D"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cH6-rP-CQO">
+                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="weixin" translatesAutoresizingMaskIntoConstraints="NO" id="IQz-sG-dBG" customClass="ZXUIImageView" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="61" y="26" width="64" height="64"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="64" id="alc-Su-xsX"/>
+                                        <constraint firstAttribute="height" constant="64" id="ij7-9y-j8v"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="32"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                            <real key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                            <color key="value" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="微信好友" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LMn-L3-5nC">
+                                    <rect key="frame" x="58.5" y="98" width="69.5" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t4N-B1-ewS">
+                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                                    <connections>
+                                        <action selector="friendAction:" destination="-1" eventType="touchUpInside" id="V4G-hV-EnA"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="LMn-L3-5nC" firstAttribute="centerX" secondItem="cH6-rP-CQO" secondAttribute="centerX" id="6dn-bI-dDz"/>
+                                <constraint firstItem="t4N-B1-ewS" firstAttribute="top" secondItem="cH6-rP-CQO" secondAttribute="top" id="CLS-2O-teS"/>
+                                <constraint firstItem="IQz-sG-dBG" firstAttribute="top" secondItem="cH6-rP-CQO" secondAttribute="top" constant="26" id="Fgd-eL-1sc"/>
+                                <constraint firstItem="LMn-L3-5nC" firstAttribute="top" secondItem="IQz-sG-dBG" secondAttribute="bottom" constant="8" id="Nte-Kl-a6V"/>
+                                <constraint firstAttribute="bottom" secondItem="t4N-B1-ewS" secondAttribute="bottom" id="QGZ-Wo-r0T"/>
+                                <constraint firstItem="IQz-sG-dBG" firstAttribute="centerX" secondItem="cH6-rP-CQO" secondAttribute="centerX" id="lCM-ON-X6N"/>
+                                <constraint firstAttribute="trailing" secondItem="t4N-B1-ewS" secondAttribute="trailing" id="lcR-zT-12X"/>
+                                <constraint firstItem="t4N-B1-ewS" firstAttribute="leading" secondItem="cH6-rP-CQO" secondAttribute="leading" id="xT3-Hc-fPa"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ryy-k4-xvG">
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="135"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pyq" translatesAutoresizingMaskIntoConstraints="NO" id="6Me-PI-lyW" customClass="ZXUIImageView" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="62" y="26" width="64" height="64"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="64" id="9cG-oe-FRe"/>
+                                        <constraint firstAttribute="height" constant="64" id="mp4-7m-wZC"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="32"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                            <real key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                            <color key="value" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="微信朋友圈" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQR-5e-L16">
+                                    <rect key="frame" x="50.5" y="98" width="87" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ojl-qA-JlQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                                    <connections>
+                                        <action selector="friendsCircleAction:" destination="-1" eventType="touchUpInside" id="Mkr-y4-ZsM"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="Ojl-qA-JlQ" secondAttribute="bottom" id="CYU-Sk-Qx3"/>
+                                <constraint firstItem="Ojl-qA-JlQ" firstAttribute="leading" secondItem="ryy-k4-xvG" secondAttribute="leading" id="NQS-Jw-3wZ"/>
+                                <constraint firstItem="6Me-PI-lyW" firstAttribute="centerX" secondItem="ryy-k4-xvG" secondAttribute="centerX" id="OKa-FD-Sqg"/>
+                                <constraint firstAttribute="trailing" secondItem="Ojl-qA-JlQ" secondAttribute="trailing" id="Rqe-gl-8sT"/>
+                                <constraint firstItem="KQR-5e-L16" firstAttribute="top" secondItem="6Me-PI-lyW" secondAttribute="bottom" constant="8" id="U7C-j2-1i3"/>
+                                <constraint firstItem="KQR-5e-L16" firstAttribute="centerX" secondItem="ryy-k4-xvG" secondAttribute="centerX" id="bPL-Pe-gd4"/>
+                                <constraint firstItem="6Me-PI-lyW" firstAttribute="top" secondItem="ryy-k4-xvG" secondAttribute="top" constant="26" id="fjI-38-zLC"/>
+                                <constraint firstItem="Ojl-qA-JlQ" firstAttribute="top" secondItem="ryy-k4-xvG" secondAttribute="top" id="mKg-h6-W1W"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ryy-k4-xvG" firstAttribute="leading" secondItem="cH6-rP-CQO" secondAttribute="trailing" id="1ef-YE-mEd"/>
+                        <constraint firstAttribute="trailing" secondItem="bRW-23-Smf" secondAttribute="trailing" constant="9" id="3UB-6v-rOK"/>
+                        <constraint firstItem="cH6-rP-CQO" firstAttribute="leading" secondItem="uJe-ds-63Y" secondAttribute="leading" id="3oy-3L-dxQ"/>
+                        <constraint firstItem="cH6-rP-CQO" firstAttribute="top" secondItem="uJe-ds-63Y" secondAttribute="top" id="CvO-UC-4zl"/>
+                        <constraint firstItem="ryy-k4-xvG" firstAttribute="top" secondItem="uJe-ds-63Y" secondAttribute="top" id="DnN-ZG-5Mx"/>
+                        <constraint firstAttribute="trailing" secondItem="LQG-tf-rcj" secondAttribute="trailing" id="HhI-tE-Yec"/>
+                        <constraint firstItem="bRW-23-Smf" firstAttribute="top" secondItem="ryy-k4-xvG" secondAttribute="bottom" id="HvN-E7-syZ"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="184" id="Ifv-Cm-xWQ"/>
+                        <constraint firstItem="bRW-23-Smf" firstAttribute="leading" secondItem="uJe-ds-63Y" secondAttribute="leading" constant="9" id="Jkr-Fi-1nK"/>
+                        <constraint firstItem="bRW-23-Smf" firstAttribute="top" secondItem="cH6-rP-CQO" secondAttribute="bottom" id="NWk-9M-PQZ"/>
+                        <constraint firstAttribute="bottom" secondItem="LQG-tf-rcj" secondAttribute="bottom" id="VYR-gL-4H3"/>
+                        <constraint firstItem="cH6-rP-CQO" firstAttribute="width" secondItem="ryy-k4-xvG" secondAttribute="width" id="kNq-4I-XFV"/>
+                        <constraint firstAttribute="height" constant="184" id="mmy-ao-mgD"/>
+                        <constraint firstItem="LQG-tf-rcj" firstAttribute="top" secondItem="bRW-23-Smf" secondAttribute="bottom" id="vm3-c1-IfX"/>
+                        <constraint firstItem="LQG-tf-rcj" firstAttribute="leading" secondItem="uJe-ds-63Y" secondAttribute="leading" id="yTu-zQ-9dW"/>
+                        <constraint firstAttribute="trailing" secondItem="ryy-k4-xvG" secondAttribute="trailing" id="zar-a9-QHo"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="uJe-ds-63Y" secondAttribute="trailing" id="BQW-R9-sHV"/>
+                <constraint firstItem="uJe-ds-63Y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="k8D-Ib-PvB"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="uJe-ds-63Y" secondAttribute="bottom" id="zq4-un-2sf"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="pyq" width="60" height="60"/>
+        <image name="weixin" width="60" height="60"/>
+    </resources>
+</document>

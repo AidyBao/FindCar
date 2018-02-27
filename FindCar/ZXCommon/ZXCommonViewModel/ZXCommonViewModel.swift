@@ -1,0 +1,79 @@
+//
+//  ZXCommonViewModel.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/10.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+let ZX_UNKNOWN_ERROR_TEXT   =   "未知错误"
+
+class ZXCommonViewModel: NSObject {
+    
+    /// 获取车牌归属地数据字典
+    ///
+    /// - Parameter completion: -
+    static func placeBeloningList(_ completion:((_ success: Bool, _ code: Int, _ errorMsg: String,_ placeList: Array<String>, _ typeList: Array<String>) -> Void )?) {
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Common.dicList), params: ["types": "1,2"], method: .post) { (success, code, dic, objString, error) in
+            if code == ZXAPI_SUCCESS {
+                if let data = dic["data"] as? Array<Dictionary<String,Any>>, data.count > 0 {
+                    var pList: Array<String> = []
+                    var tList: Array<String> = []
+                    for m in data {
+                        if let m = ZXDictListModel.deserialize(from: m) {
+                            if m.type == 1 {//省
+                                pList.append(m.value)
+                            } else if m.type == 2 {//市编码
+                                tList.append(m.value)
+                            }
+                        }
+                    }
+                    completion?(true, code, "", pList, tList)
+                } else {
+                    completion?(false, code, "无相关数据", [], [])
+                }
+            } else {
+                completion?(false, code, (error?.description) ?? ZX_UNKNOWN_ERROR_TEXT, [], [])
+            }
+        }
+    }
+    
+    static func checkUpdate(_ completion:((_ needUpdate:Bool,_ updateurl:String) -> ())?) {
+        let version = Bundle.zx_bundleVersion
+        let nativeV = version.replacingOccurrences(of: ".", with: "")
+        if let version = Int(nativeV) {
+            self.jsonObjectFrom(url: ZXAPI.api(address: ZXURLConst.Update.enterprise), completion: { (obj) in
+                if let onlineVersion = obj["versionName"] as? String {
+                    let onlineV = onlineVersion.replacingOccurrences(of: ".", with: "")
+                    if let iv = Int(onlineV) {
+                        if iv > version {
+                            completion?(true,obj["apkUrl"] as! String)
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
+    static func jsonObjectFrom(url string:String,completion:((_ obj:Dictionary<String,Any>) -> ())?) {
+        if let url = URL(string: string) {
+            let session = URLSession.shared
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error == nil {
+                    if let data = data {
+                        let obj = try? JSONSerialization.jsonObject(with: data,
+                                                                    options: .mutableContainers)
+                        if let dic = obj as? Dictionary<String,Any> {
+                            DispatchQueue.main.async {
+                                completion?(dic)
+                            }
+                        }
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+
+}

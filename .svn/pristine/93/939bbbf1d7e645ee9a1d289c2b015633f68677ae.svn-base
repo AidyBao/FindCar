@@ -1,0 +1,47 @@
+//
+//  ZXFocusViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXFocusViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationItem.title = "关注"
+
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        
+        self.zx_addNavBarButtonItems(iconFontTexts: ["已结束"], fontSize: UIFont.zx_bodyFontSize, color: UIColor.zx_tintColor, at: .right)
+        
+        self.tableView.backgroundColor = UIColor.zx_subTintColor
+        self.tableView.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        self.navigationController?.pushViewController(ZXFinishedViewController(), animated: true)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

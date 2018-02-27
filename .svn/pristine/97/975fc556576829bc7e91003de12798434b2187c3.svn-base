@@ -1,0 +1,99 @@
+//
+//  ZXLoginViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXLoginViewController: UIViewController {
+    
+    @IBOutlet weak var titleLB: UILabel!
+    @IBOutlet weak var telText: UITextField!
+    @IBOutlet weak var geliLine: UIView!
+    @IBOutlet weak var noteLB: UILabel!
+    @IBOutlet weak var userAgreementBtn: UIButton!
+    @IBOutlet weak var nextBtn: UIButton!
+    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setUIStyle()
+        
+        
+        //self.setCommitButton(false)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        self.titleLB.textColor = UIColor.zx_textColorTitle
+        self.titleLB.font = UIFont.boldSystemFont(ofSize: 29.0)
+        
+        self.telText.textColor = UIColor.zx_subTintColor
+        self.telText.font = UIFont.boldSystemFont(ofSize: 32.0)
+        
+        self.noteLB.textColor = UIColor.zx_subTintColor
+        self.noteLB.font = UIFont.zx_bodyFont
+        
+        self.userAgreementBtn.setTitleColor(UIColor.zx_subTintColor, for: .normal)
+        self.userAgreementBtn.titleLabel?.font = UIFont.zx_bodyFont
+    }
+    
+    //MARK: - 下一步
+    @IBAction func nextAction(_ sender: UIButton) {
+        self.navigationController?.pushViewController(ZXVerificationCodeViewController(), animated: true)
+    }
+    
+    //MARK: - 用户协议
+    @IBAction func userAgreementAction(_ sender: UIButton) {
+        let webVC:ZXWebViewViewController = ZXWebViewViewController.init()
+        webVC.title = "药店云用户协议"
+        webVC.webUrl = String.init(format: "%@%@", ZXURLConst.Web.url,ZXURLConst.Web.serviceItems)
+        self.navigationController?.pushViewController(webVC, animated: true)
+    }
+    
+    fileprivate func setCommitButton(_ enable:Bool) {
+        if enable {
+            self.nextBtn.isEnabled = true
+        } else {
+            self.nextBtn.isEnabled = false
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+}
+
+extension ZXLoginViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == self.telText {
+            let cs = CharacterSet.init(charactersIn: "0123456789").inverted
+            let filtered = string.components(separatedBy: cs).joined(separator: "")
+            if string != filtered {
+                return false
+            }
+            if range.location + string.count > 11 {
+                ZXHUD.showFailure(in: self.view, text: "手机号不能大于11位！", delay: ZX.HUDDelay)
+                return false
+            }
+            let str = textField.text ?? ""
+            let str2 = (str as NSString).replacingCharacters(in: range, with: string)
+            if str2.count == 1 && str2 != "1" {
+                return false
+            }
+        }
+        return true
+    }
+}

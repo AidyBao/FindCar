@@ -1,0 +1,166 @@
+//
+//  ZXSearchViewController+TableView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/5.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXSearchViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        var cellNum: Int = 0
+        if tableView == searchListTab {
+            cellNum = historyArray.count
+        }
+        
+        if tableView == resultListTab {
+            cellNum = resultArray.count
+        }
+        return cellNum
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if tableView == searchListTab {
+            let searchCell: ZXSearchCell = tableView.dequeueReusableCell(withIdentifier: ZXSearchCell.ZXSearchCellID, for: indexPath) as! ZXSearchCell
+            searchCell.delegate = self
+            if self.historyArray.count > 0 {
+                searchCell.loadData(self.historyArray[indexPath.row], indexPath.row)
+            }
+            return searchCell
+        }
+        
+        if tableView == resultListTab {
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            if resultArray.count > 0 {
+                rootCell.reloadData(model: resultArray[indexPath.row])
+            }
+            return rootCell
+        }
+        return UITableViewCell.init()
+    }
+}
+
+extension ZXSearchViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 10.0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0
+        if tableView == searchListTab {
+            cellH = 44.0
+        }
+        if tableView == resultListTab {
+            cellH = ZXTaskTableViewCell.height
+        }
+        return cellH
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if tableView == searchListTab {
+            self.searchBar.resignFirstResponder()
+            if self.historyArray.count > 0 {
+                let searchStr: String = self.historyArray[indexPath.row]
+                self.requestForQuert(true, searchStr)
+            }
+        }
+        
+        if tableView == resultListTab {
+            
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView: UIView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 44.0))
+        headerView.backgroundColor = UIColor.zx_subTintColor
+        return headerView
+    }
+}
+
+//MARK: - UISearchBarDelegate
+extension ZXSearchViewController:UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (searchBar.textInputMode?.primaryLanguage!.isEqual("emoji")) == true || ((searchBar.textInputMode?.primaryLanguage) == nil) {
+            return false
+        }
+        return true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        self.searchBar.resignFirstResponder()
+        
+        let searchKey: String = (searchBar.text?.zx_predicateSearch())!
+        
+        requestForQuert(true, searchKey)
+    }
+    
+    func saveHistorySearchRecord(_ search: String) {
+        
+        let set: CharacterSet = CharacterSet.whitespacesAndNewlines as CharacterSet
+        let trimedString = search.trimmingCharacters(in: set)
+        if !historyArray.contains(trimedString) , trimedString.count != 0 {
+            historyArray.insert(search, at: 0)
+        }
+        
+        while historyArray.count > 5 {
+            historyArray.removeLast()
+        }
+        self.searchListTab.reloadData()
+        
+        ZXHistoryCache.saveCache(self.historyArray)
+    }
+}
+
+extension ZXSearchViewController: ZXSearchCellDelegate {
+    func didSearchCellDeletedAction(_ index: Int) {
+        if self.historyArray.count > 0 {
+            self.historyArray.remove(at: index)
+            self.searchListTab.reloadData()
+            
+            ZXHistoryCache.saveCache(self.historyArray)
+        }
+    }
+}
+
+extension ZXSearchViewController: ZXTaskTableViewCellDelegate {
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell, model: ZXTaskModel?) {
+        if model != nil {
+            ZXShare.shareToWX(model!)
+        }
+    }
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, mark: Bool, model: ZXTaskModel?) {
+        ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: ZX.HUDDelay)
+        ZXFocusCenter.requestForUpdateFocus(focusId: Int((model?.taskId)!)!, taskStatus: mark ? 1 : 0, completion: { (code, succ, str) in
+            ZXHUD.hide(for: self.view, animated: true)
+            if code == ZXAPI_SUCCESS {
+                let succStr = mark ? "收藏成功" : "取消收藏成功"
+                ZXHUD.showSuccess(in: self.view, text: succStr, delay: ZX.HUDDelay)
+            }else{
+                let errStr = mark ? "收藏失败" : "取消收藏失败"
+                ZXHUD.showSuccess(in: self.view, text: errStr, delay: ZX.HUDDelay)
+            }
+        })
+    }
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, marked: Bool) {
+        print("Marked: \(marked)")
+    }
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell) {
+        print("Share Action")
+    }
+}

@@ -1,0 +1,126 @@
+//
+//  ZXPopView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/2/7.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXPopViewDelegate: NSObjectProtocol {
+    func shareWeiXinFriends()
+    func shareWeiXinFriendsCircle()
+}
+
+class ZXPopView: UIView {
+    
+    weak var delegate: ZXPopViewDelegate?
+    
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var backViewH: NSLayoutConstraint!
+    @IBOutlet weak var geliView: UIView!
+    
+    @IBOutlet weak var friendLB: UILabel!
+    @IBOutlet weak var friendCircleLB: UILabel!
+    
+    @IBOutlet weak var cancelBtn: UIButton!
+    
+    static func loadNib() -> ZXPopView{
+        let nibView:ZXPopView = Bundle.main.loadNibNamed("ZXPopView", owner: self, options: nil)?.first as! ZXPopView
+        return nibView
+    }
+    
+    func show() {
+        UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(self)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.frame = CGRect.init(x: 0, y: self.frame.origin.y, width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT)
+    }
+    
+    func setUIStyle() {
+        self.friendLB.font = UIFont.zx_bodyFont
+        self.friendLB.textColor = UIColor.zx_textColorBody
+        
+        self.friendCircleLB.font = UIFont.zx_bodyFont
+        self.friendCircleLB.textColor = UIColor.zx_textColorBody
+        
+        self.cancelBtn.titleLabel?.textColor = UIColor.zx_tintColor
+        self.cancelBtn.titleLabel?.font = UIFont.zx_titleFont
+    }
+    
+    func setAnima() {
+        self.backViewH.constant = 0
+        self.backView.alpha = 0
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 184.0
+            self.backView.alpha = 1.0
+        }) { (finish) in
+            self.alpha = 1.0
+        }
+    }
+    
+    @IBAction func friendAction(_ sender: UIButton) {
+        if delegate != nil {
+            delegate?.shareWeiXinFriends()
+        }
+        self.dismiss()
+    }
+    
+    @IBAction func friendsCircleAction(_ sender: UIButton) {
+        if delegate != nil {
+            delegate?.shareWeiXinFriendsCircle()
+        }
+        self.dismiss()
+    }
+    
+    @IBAction func cancelAction(_ sender: UIButton) {
+        self.dismiss()
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.dismiss()
+    }
+    
+    func dismiss() {
+        self.backViewH.constant = 184.0
+        self.backView.alpha = 1
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 0.0
+            self.backView.alpha = 0.0
+        }) { (finish) in
+            self.alpha = 0.0
+        }
+        self.removeFromSuperview()
+    }
+}

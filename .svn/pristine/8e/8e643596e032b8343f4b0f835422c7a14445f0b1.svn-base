@@ -1,0 +1,172 @@
+//
+//  ZXCardPlateConfirmViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+
+/// 车牌确认、编辑、提交任务匹配查询
+class ZXCardPlateConfirmViewController: ZXUIViewController {
+
+    var image: UIImage?
+    var model: ZXLicenseModel?
+    
+    
+    @IBOutlet weak var imgPlateNumber: UIImageView!
+    
+    //OCR Result
+    @IBOutlet weak var ocrResultView: UIView!
+    @IBOutlet weak var lbPlateNumber1: UILabel!
+    @IBOutlet weak var btnInput: UIButton!
+    
+    //Edit
+    @IBOutlet weak var editView: UIView!
+    @IBOutlet weak var lbErrorNumber: UILabel!
+    @IBOutlet weak var btnLocationSelect: UIButton!
+    @IBOutlet weak var txtInputNumber: UITextField!
+    @IBOutlet weak var btnBack: UIButton!
+    
+    
+    //UnMatched
+    @IBOutlet weak var unmatchView: UIView!
+    @IBOutlet weak var lbUnMatchedNumber: UILabel!
+    
+    //BackToHome
+    @IBOutlet var btnBackToHomes: [UIButton]!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        
+        
+        for button in btnBackToHomes {
+            button.titleLabel?.font = UIFont.zx_bodyFont
+            button.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        }
+        //Image
+        self.imgPlateNumber.backgroundColor = UIColor.zx_emptyColor
+        self.imgPlateNumber.image = self.image
+        //1 - OCR Result View
+        //self.lbPlateNumber1.font = UIFont.zx_numberFont()
+        self.lbPlateNumber1.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.lbPlateNumber1.layer.borderWidth = 2
+        self.lbPlateNumber1.layer.cornerRadius = 2
+        self.lbPlateNumber1.text = model?.number
+        self.btnInput.backgroundColor = UIColor.zx_subTintColor
+        self.btnInput.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        //2
+        
+        self.btnLocationSelect.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.btnLocationSelect.layer.borderWidth = 2
+        self.btnLocationSelect.layer.cornerRadius = 2
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorMark, for: .normal)
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorTitle, for: .highlighted)
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorTitle, for: .selected)
+        
+        self.txtInputNumber.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.txtInputNumber.layer.borderWidth = 2
+        self.txtInputNumber.layer.cornerRadius = 2
+        self.txtInputNumber.textColor = UIColor.zx_textColorMark
+
+        self.btnBack.backgroundColor = UIColor.zx_subTintColor
+        self.btnBack.setTitleColor(UIColor.zx_tintColor, for: .normal)
+
+        self.lbErrorNumber.text = ""
+        self.lbErrorNumber.textColor = UIColor.zx_textColorTitle
+        if let text = model?.number {
+            self.lbErrorNumber.attributedText = NSAttributedString.zx_lineFormat(text, type: .deleteLine, at: NSMakeRange(0, text.count))
+
+        }
+        
+        self.btnLocationSelect.setTitle(model?.zx_location, for: .normal)
+        self.txtInputNumber.text = model?.zx_number
+        //3
+        
+        //
+        self.showIndex(1)
+    }
+    
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.zx_setNavigationBarHidden(false, animated: true)
+    }
+    
+    @IBAction func backToHomeAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //MARK: - OCR ResutView Action
+    
+    @IBAction func jumpToEditAction(_ sender: Any) {
+        self.showIndex(2)
+    }
+    
+    @IBAction func commitMatch1Action(_ sender: Any) {
+        self.showIndex(3)
+    }
+    
+    //MARK: - Edit View Action
+    @IBAction func backToOCRViewAction(_ sender: Any) {
+        self.showIndex(1)
+    }
+    
+    @IBAction func commitMatch2Action(_ sender: Any) {
+        self.showIndex(3)
+    }
+    
+    //MARK: - UnMatched View Action
+    
+    @IBAction func reTakeAction(_ sender: Any) {
+        self.dismiss(animated: true, completion:({
+            
+        }))
+    }
+    
+    //
+    fileprivate func showIndex(_ index: Int) {
+        self.ocrResultView.isHidden = true
+        self.editView.isHidden = true
+        self.unmatchView.isHidden = true
+        switch index {
+        case 1://识别结果
+            self.ocrResultView.isHidden = false
+        case 2://编辑车牌
+            self.editView.isHidden = false
+        case 3://匹配失败
+            self.unmatchView.isHidden = false
+        default:
+            break
+        }
+    }
+    
+    lazy var placeBeloningVC: ZXPlaceBeloningSelectViewController = {
+        let svc = ZXPlaceBeloningSelectViewController()
+        return svc
+    }()
+    
+    @IBAction func locationBelongAction(_ sender: Any) {
+        if self.placeBeloningVC.callBack == nil{
+            self.placeBeloningVC.callBack = { [unowned self] (place,type) in
+                self.btnLocationSelect.setTitle("\(place)\(type)", for: .normal)
+                self.btnLocationSelect.isHighlighted = true
+            }
+        }
+        self.present(placeBeloningVC, animated: true, completion: nil)
+    }
+    
+    
+    
+}

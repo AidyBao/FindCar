@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ZXTaskToolCell" customModule="FindCar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Le-Ta-Ajk">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="34"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jgC-0a-45G">
+                            <rect key="frame" x="93" y="10" width="1" height="14"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="1" id="ajw-cR-wkZ"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VSm-4Y-F9f">
+                            <rect key="frame" x="187" y="10" width="1" height="14"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="1" id="phQ-sf-pkG"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qKO-QC-6ZP">
+                            <rect key="frame" x="281" y="10" width="1" height="14"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="1" id="cjR-J5-8FE"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" tag="1103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ShZ-tZ-BdO" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="188" y="0.0" width="93" height="34"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="归属地">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="toolBtnAction:" destination="-2" eventType="touchUpInside" id="vIs-JR-YKt"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="1102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wkn-01-HkR" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="94" y="0.0" width="93" height="34"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="代理商">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="toolBtnAction:" destination="-2" eventType="touchUpInside" id="w1o-Km-6UI"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="1101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAb-5G-Ocu" customClass="ZXBButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="93" height="34"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="默认排序" image="icon-more"/>
+                            <state key="selected" image="icon-shou">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="toolBtnAction:" destination="-2" eventType="touchUpInside" id="3FK-qz-MPB"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="1104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iL-Jq-YBK" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="282" y="0.0" width="93" height="34"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" title="任务状态">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="toolBtnAction:" destination="-2" eventType="touchUpInside" id="6IS-Vs-hhc"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="qKO-QC-6ZP" firstAttribute="leading" secondItem="ShZ-tZ-BdO" secondAttribute="trailing" id="0FJ-Na-beG"/>
+                        <constraint firstAttribute="bottom" secondItem="9iL-Jq-YBK" secondAttribute="bottom" id="1sc-Py-9x1"/>
+                        <constraint firstItem="wkn-01-HkR" firstAttribute="width" secondItem="SAb-5G-Ocu" secondAttribute="width" id="4X1-9Y-v3Z"/>
+                        <constraint firstItem="ShZ-tZ-BdO" firstAttribute="width" secondItem="SAb-5G-Ocu" secondAttribute="width" id="71T-Jb-Y0n"/>
+                        <constraint firstItem="qKO-QC-6ZP" firstAttribute="width" secondItem="jgC-0a-45G" secondAttribute="width" id="7x2-Js-F5n"/>
+                        <constraint firstAttribute="bottom" secondItem="qKO-QC-6ZP" secondAttribute="bottom" constant="10" id="AYZ-f3-ryM"/>
+                        <constraint firstItem="VSm-4Y-F9f" firstAttribute="width" secondItem="jgC-0a-45G" secondAttribute="width" id="BY1-h7-MOf"/>
+                        <constraint firstItem="VSm-4Y-F9f" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" constant="10" id="Cej-g8-DYp"/>
+                        <constraint firstItem="qKO-QC-6ZP" firstAttribute="height" secondItem="jgC-0a-45G" secondAttribute="height" id="Dn6-gy-bTZ"/>
+                        <constraint firstItem="qKO-QC-6ZP" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" constant="10" id="F7u-fk-saM"/>
+                        <constraint firstItem="SAb-5G-Ocu" firstAttribute="leading" secondItem="6Le-Ta-Ajk" secondAttribute="leading" id="GDf-lI-vEf"/>
+                        <constraint firstItem="ShZ-tZ-BdO" firstAttribute="leading" secondItem="VSm-4Y-F9f" secondAttribute="trailing" id="IIi-ne-vvs"/>
+                        <constraint firstItem="9iL-Jq-YBK" firstAttribute="width" secondItem="SAb-5G-Ocu" secondAttribute="width" id="Su0-su-YII"/>
+                        <constraint firstItem="9iL-Jq-YBK" firstAttribute="leading" secondItem="qKO-QC-6ZP" secondAttribute="trailing" id="WO9-kT-YXw"/>
+                        <constraint firstItem="wkn-01-HkR" firstAttribute="height" secondItem="SAb-5G-Ocu" secondAttribute="height" id="Wnr-PT-cw0"/>
+                        <constraint firstItem="ShZ-tZ-BdO" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" id="YJm-5D-aAM"/>
+                        <constraint firstItem="VSm-4Y-F9f" firstAttribute="height" secondItem="jgC-0a-45G" secondAttribute="height" id="Ylu-IC-q86"/>
+                        <constraint firstAttribute="bottom" secondItem="wkn-01-HkR" secondAttribute="bottom" id="Z7g-0e-gfx"/>
+                        <constraint firstItem="9iL-Jq-YBK" firstAttribute="height" secondItem="SAb-5G-Ocu" secondAttribute="height" id="Zwh-QR-8Zg"/>
+                        <constraint firstItem="wkn-01-HkR" firstAttribute="leading" secondItem="jgC-0a-45G" secondAttribute="trailing" id="b3Z-gL-SHD"/>
+                        <constraint firstAttribute="bottom" secondItem="VSm-4Y-F9f" secondAttribute="bottom" constant="10" id="cFj-ya-8bu"/>
+                        <constraint firstAttribute="bottom" secondItem="jgC-0a-45G" secondAttribute="bottom" constant="10" id="ddb-FS-1De"/>
+                        <constraint firstItem="ShZ-tZ-BdO" firstAttribute="height" secondItem="SAb-5G-Ocu" secondAttribute="height" id="flo-3U-mzs"/>
+                        <constraint firstItem="VSm-4Y-F9f" firstAttribute="leading" secondItem="wkn-01-HkR" secondAttribute="trailing" id="fzo-va-ew6"/>
+                        <constraint firstItem="9iL-Jq-YBK" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" id="odd-ZH-qUo"/>
+                        <constraint firstAttribute="bottom" secondItem="ShZ-tZ-BdO" secondAttribute="bottom" id="qLP-e3-OQr"/>
+                        <constraint firstAttribute="trailing" secondItem="9iL-Jq-YBK" secondAttribute="trailing" id="qPv-Cn-kQN"/>
+                        <constraint firstItem="SAb-5G-Ocu" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" id="qps-Qb-7Sz"/>
+                        <constraint firstAttribute="bottom" secondItem="SAb-5G-Ocu" secondAttribute="bottom" id="tPW-Z5-Qbt"/>
+                        <constraint firstItem="jgC-0a-45G" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" constant="10" id="tRv-7y-NKs"/>
+                        <constraint firstItem="jgC-0a-45G" firstAttribute="leading" secondItem="SAb-5G-Ocu" secondAttribute="trailing" id="tZb-hT-tJ0"/>
+                        <constraint firstItem="wkn-01-HkR" firstAttribute="top" secondItem="6Le-Ta-Ajk" secondAttribute="top" id="whh-8v-qTc"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="6Le-Ta-Ajk" secondAttribute="bottom" constant="15" id="bE9-ML-4wP"/>
+                <constraint firstItem="6Le-Ta-Ajk" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="hNR-74-FgO"/>
+                <constraint firstItem="6Le-Ta-Ajk" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="vbB-ff-hDV"/>
+                <constraint firstItem="6Le-Ta-Ajk" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="wmp-Ik-2uY"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="agentBtn" destination="wkn-01-HkR" id="MdW-94-2VX"/>
+                <outlet property="backView" destination="6Le-Ta-Ajk" id="7op-yT-wSU"/>
+                <outlet property="defaultBtn" destination="SAb-5G-Ocu" id="FFn-YW-t9b"/>
+                <outlet property="locationBtn" destination="ShZ-tZ-BdO" id="m5U-Xr-frz"/>
+                <outlet property="taskBtn" destination="9iL-Jq-YBK" id="hup-PO-xDR"/>
+            </connections>
+            <point key="canvasLocation" x="26.5" y="53"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon-more" width="9" height="5"/>
+        <image name="icon-shou" width="9" height="5"/>
+    </resources>
+</document>

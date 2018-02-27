@@ -1,0 +1,70 @@
+//
+//  ZXAllTaskViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXAllTaskViewController: UIViewController {
+    
+    @IBOutlet weak var tabList: UITableView!
+    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setUIStyle()
+        
+    }
+
+    ////MARK: - UI
+    func setUIStyle() {
+        self.navigationItem.titleView = self.segment
+        self.segment.size = CGSize.init(width: 160, height: 38)
+        self.segment.center = (self.navigationItem.titleView?.center)!
+        self.segment.addTarget(self, action:#selector(segAction(_:)), for: .touchUpInside)
+        
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+    }
+    
+    //MARK: - Segment
+    @objc func segAction(_ seg: UISegmentedControl) {
+        print(seg.selectedSegmentIndex)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    //MARK: - Lazy
+    lazy var segment: UISegmentedControl = {
+        let seg: UISegmentedControl = UISegmentedControl.init(items: ["个人任务","公司任务"])
+        seg.layer.cornerRadius = 5.0
+        seg.layer.masksToBounds = true
+        seg.layer.borderWidth = 1.0
+        seg.layer.borderColor = UIColor.zx_tintColor.cgColor
+        seg.tintColor = UIColor.zx_tintColor
+        seg.selectedSegmentIndex = 0
+        return seg
+    }()
+    
+    lazy var perArray: Array<Any> = {
+        let arr: Array<Any> = Array.init()
+        return arr
+    }()
+    
+    lazy var comArray: Array<Any> = {
+        let arr: Array<Any> = Array.init()
+        return arr
+    }()
+}
+
+
+

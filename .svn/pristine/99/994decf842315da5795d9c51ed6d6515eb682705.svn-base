@@ -1,0 +1,347 @@
+//
+//  ZXCardPlateConfirmViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+
+/// 车牌确认、编辑、提交任务匹配查询
+class ZXCardPlateConfirmViewController: ZXUIViewController {
+
+    var checkType: ZXPlateCheckType = ZXPlateCheckType.match
+    var taskId: String?
+    
+    var image: UIImage?
+    var model: ZXLicenseModel?
+    
+    fileprivate var inputPlateNumber: String? {
+        get {
+            if let place = self.btnLocationSelect.titleLabel?.text, let number = self.txtInputNumber.text, !number.isEmpty {
+                return "\(place)\(number)".zx_trimSpace()
+            }
+            return nil
+        }
+    }
+    
+    @IBOutlet weak var imgPlateNumber: UIImageView!
+    
+    //OCR Result
+    @IBOutlet weak var ocrResultView: UIView!
+    @IBOutlet weak var lbPlateNumber1: UILabel!
+    @IBOutlet weak var btnInput: UIButton!
+    
+    //Edit
+    @IBOutlet weak var editView: UIView!
+    @IBOutlet weak var lbErrorNumber: UILabel!
+    @IBOutlet weak var btnLocationSelect: UIButton!
+    @IBOutlet weak var txtInputNumber: UITextField!
+    @IBOutlet weak var btnBack: UIButton!
+    
+    
+    //UnMatched
+    @IBOutlet weak var unmatchView: UIView!
+    @IBOutlet weak var lbUnMatchedNumber: UILabel!
+    
+    //BackToHome
+    @IBOutlet var btnBackToHomes: [UIButton]!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        
+        
+        for button in btnBackToHomes {
+            button.titleLabel?.font = UIFont.zx_bodyFont
+            button.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        }
+        //Image
+        self.imgPlateNumber.backgroundColor = UIColor.zx_emptyColor
+        self.imgPlateNumber.image = self.image
+        //1 - OCR Result View
+        //self.lbPlateNumber1.font = UIFont.zx_numberFont()
+        self.lbPlateNumber1.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.lbPlateNumber1.layer.borderWidth = 2
+        self.lbPlateNumber1.layer.cornerRadius = 2
+        self.btnInput.backgroundColor = UIColor.zx_subTintColor
+        self.btnInput.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        //2
+        
+        self.btnLocationSelect.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.btnLocationSelect.layer.borderWidth = 2
+        self.btnLocationSelect.layer.cornerRadius = 2
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorMark, for: .normal)
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorTitle, for: .highlighted)
+        self.btnLocationSelect.setTitleColor(UIColor.zx_textColorTitle, for: .selected)
+        
+        self.txtInputNumber.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.txtInputNumber.layer.borderWidth = 2
+        self.txtInputNumber.layer.cornerRadius = 2
+        self.txtInputNumber.textColor = UIColor.zx_textColorMark
+        self.txtInputNumber.delegate = self
+
+        self.btnBack.backgroundColor = UIColor.zx_subTintColor
+        self.btnBack.setTitleColor(UIColor.zx_tintColor, for: .normal)
+
+        self.lbErrorNumber.textColor = UIColor.zx_textColorTitle
+
+        //
+        self.lbPlateNumber1.text = ""
+        self.lbErrorNumber.text = ""
+        self.txtInputNumber.text = ""
+        self.lbUnMatchedNumber.text = ""
+        self.btnLocationSelect.setTitle("", for: .normal)
+        
+        //
+        if let model = model {
+            self.lbPlateNumber1.text = model.number
+            self.lbErrorNumber.attributedText = NSAttributedString.zx_lineFormat(model.number, type: .deleteLine, at: NSMakeRange(0, model.number.count))
+            self.btnLocationSelect.setTitle(model.zx_location, for: .normal)
+            self.txtInputNumber.text = model.zx_number
+            self.lbUnMatchedNumber.text = model.number
+        } else {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "车牌信息为空！", buttonText: "确定", action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+        }
+        //3
+        self.showIndex(1)
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let last = self.navigationController?.viewControllers.last, last != self, !(last is ZXTakePhotoPageViewController) {
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+    }
+    
+    @IBAction func backToHomeAction(_ sender: Any) {
+        if self.navigationController != nil {
+            self.navigationController?.popToRootViewController(animated: false)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    //MARK: - OCR ResutView Action
+    
+    @IBAction func jumpToEditAction(_ sender: Any) {
+        self.showIndex(2)
+    }
+    
+    @IBAction func commitMatch1Action(_ sender: Any) {
+        self.mactchAction(checkInput: false)
+    }
+    
+    //MARK: - Edit View Action
+    @IBAction func backToOCRViewAction(_ sender: Any) {
+        self.view.endEditing(true)
+        self.showIndex(1)
+    }
+    
+    @IBAction func commitMatch2Action(_ sender: Any) {
+        self.mactchAction(checkInput: true)
+    }
+    
+    fileprivate func mactchAction(checkInput: Bool) {
+        self.view.endEditing(true)
+        var inputNumber: String? = nil
+        if checkInput {
+            var valid = false
+            if let text = self.txtInputNumber.text, text.count >= 5 {
+                valid = true
+                inputNumber = self.inputPlateNumber
+                self.lbUnMatchedNumber.text = inputNumber
+            }
+            if !valid{
+                ZXHUD.showFailure(in: self.view, text: "请将车牌号填写完整", delay: ZXHUD.DelayTime)
+                return
+            }
+        } else {
+            self.lbErrorNumber.text = self.model?.number
+        }
+        if self.checkType == .match {//任务匹配
+            if let image = image , let data = UIImageJPEGRepresentation(image, 1.0) {
+                ZXHUD.showLoading(in: self.view, text: "图片上传中...", delay: 0)
+                ZXNetwork.uploadImage(to: ZXAPI.file(address: ZXAPIConst.FileResouce.url), images: [data], params: ["type": "image", "directory": ZXAPIConst.FileResouce.carMatchFolder]) { (success, code, obj, objString, error) in
+                    ZXHUD.hide(for: self.view, animated: true)
+                    if code == ZXAPI_SUCCESS {
+                        if let filePath = obj["filePath"] as? String, !filePath.isEmpty {
+                            
+                            ZXHUD.showLoading(in: self.view, text: "任务匹配中...", delay: 0)
+                            ZXTaskViewModel.plateMatch(ocrNum: self.model!.number.zx_trimSpace(), inputNum: inputNumber, imageUrl: filePath) { (success, code, taskModel, errorMsg) in
+                                ZXHUD.hide(for: self.view, animated: true)
+                                if success {
+                                    if let nav = self.navigationController {
+                                        var controllers = nav.viewControllers
+                                        let _ = controllers.popLast()
+                                        let detail = ZXTaskDetailViewController()
+                                        detail.taskModel = taskModel
+                                        ZXTaskDetailViewController.fromCarMatch = true
+                                        detail.inputPlateNumber = inputNumber
+                                        controllers.append(detail)
+                                        self.navigationController?.setViewControllers(controllers, animated: true)
+                                    } else {
+                                        ZXHUD.showFailure(in: self.view, text: "无法完成跳转操作", delay: ZXHUD.DelayTime)
+                                    }
+                                } else {
+                                    if code == ZXAPI_UNMATCHED_ERROR {
+                                        self.showIndex(3)
+                                    } else {
+                                        if code != ZXAPI_LOGIN_INVALID {
+                                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZXHUD.DelayTime)
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: "图片上传失败", delay: ZXHUD.DelayTime)
+                        }
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: error?.errorMessage ?? ZX_UNKNOWN_ERROR_TEXT, delay: ZXHUD.DelayTime)
+                    }
+                }
+            } else {
+                ZXHUD.showFailure(in: self.view, text: "图片为空", delay: ZXHUD.DelayTime)
+            }
+        } else {//上传信息 车牌校验
+            if let taskId = taskId {
+                if let image = image , let data = UIImageJPEGRepresentation(image, 1.0) {
+                    ZXHUD.showLoading(in: self.view, text: "图片上传中...", delay: 0)
+                    ZXNetwork.uploadImage(to: ZXAPI.file(address: ZXAPIConst.FileResouce.url), images: [data], params: ["type": "image", "directory": ZXAPIConst.FileResouce.carMatchFolder]) { (success, code, obj, objString, error) in
+                        ZXHUD.hide(for: self.view, animated: true)
+                        if code == ZXAPI_SUCCESS {
+                            if let filePath = obj["filePath"] as? String, !filePath.isEmpty {
+                                ZXHUD.showLoading(in: self.view, text: "任务匹配中...", delay: 0)
+                                ZXHUD.showLoading(in: self.view, text: "车牌校验中...", delay: ZXHUD.DelayTime)
+                                ZXTaskViewModel.plateCheck(taskId: taskId, ocrNum: self.model!.number.zx_trimSpace(), inputNum: inputNumber, imageUrl: filePath, completion: { (success, code ,errorMsg) in
+                                    ZXHUD.hide(for: self.view, animated: true)
+                                    if success {
+                                        self.navigationController?.popViewController(animated: false)
+                                        var obj = ["taskId": taskId]
+                                        if let inputNumber = inputNumber {
+                                            obj["inputPlateNumber"] = inputNumber
+                                        }
+                                        NotificationCenter.default.post(name: ZX_PlateChecked_Notice.zx_noticeName(), object: obj)
+                                    } else {
+                                        if code != ZXAPI_LOGIN_INVALID {
+                                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZXHUD.DelayTime)
+                                        }
+                                    }
+                                })
+                            } else {
+                                ZXHUD.showFailure(in: self.view, text: "图片上传失败", delay: ZXHUD.DelayTime)
+                            }
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: error?.errorMessage ?? ZX_UNKNOWN_ERROR_TEXT, delay: ZXHUD.DelayTime)
+                        }
+                    }
+                } else {
+                    ZXHUD.showFailure(in: self.view, text: "图片为空", delay: ZXHUD.DelayTime)
+                }
+            } else {
+                ZXHUD.showFailure(in: self.view, text: "任务ID为空", delay: ZXHUD.DelayTime)
+            }
+        }
+    }
+    
+    //MARK: - UnMatched View Action
+    //MARK: - 重拍
+    @IBAction func reTakeAction(_ sender: Any) {
+        self.view.endEditing(true)
+        if self.navigationController != nil {
+            self.navigationController?.popToRootViewController(animated: false)
+            ZXRouter.tabbarShouldSelected(at: 1)
+        } else {
+            self.dismiss(animated: true, completion:({
+                ZXRouter.tabbarShouldSelected(at: 1)
+            }))
+        }
+    }
+    
+    //
+    fileprivate func showIndex(_ index: Int) {
+        self.ocrResultView.isHidden = true
+        self.editView.isHidden = true
+        self.unmatchView.isHidden = true
+        switch index {
+        case 1://识别结果
+            self.ocrResultView.isHidden = false
+        case 2://编辑车牌
+            self.editView.isHidden = false
+        case 3://匹配失败
+            self.unmatchView.isHidden = false
+        default:
+            break
+        }
+    }
+    
+    lazy var placeBeloningVC: ZXPlaceBeloningSelectViewController = {
+        let svc = ZXPlaceBeloningSelectViewController()
+        return svc
+    }()
+    
+    @IBAction func locationBelongAction(_ sender: Any) {
+        self.view.endEditing(true)
+        if ZXGlobalData.placeList.count > 0 {
+            if self.placeBeloningVC.callBack == nil{
+                self.placeBeloningVC.callBack = { [unowned self] (place,type) in
+                    self.btnLocationSelect.setTitle("\(place)\(type)", for: .normal)
+                    self.btnLocationSelect.isHighlighted = true
+                }
+            }
+            self.placeBeloningVC.arrPlaceList = ZXGlobalData.placeList
+            self.placeBeloningVC.arrTypeList = ZXGlobalData.typeList
+            self.present(placeBeloningVC, animated: true, completion: nil)
+        } else {
+            ZXAlertUtils.showAlert(wihtTitle: "提示", message: "无归属地选择项数据", buttonTexts: ["重新加载", "确定"], action: { (index) in
+                if index == 0 {
+                    ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: 0)
+                    ZXCommonViewModel.placeBeloningList({ (success, code, errorMsg, plist, tList) in
+                        ZXHUD.hide(for: self.view, animated: true)
+                        if success {
+                            ZXGlobalData.placeList = plist
+                            ZXGlobalData.typeList = tList
+                            self.locationBelongAction((Any).self)
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZXHUD.DelayTime)
+                        }
+                    })
+                }
+            })
+        }
+    }
+}
+
+extension ZXCardPlateConfirmViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let cs = CharacterSet.init(charactersIn: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").inverted
+        let filtered = string.components(separatedBy: cs).joined(separator: "")
+        if string != filtered {
+            return false
+        }
+        if range.location > 5 {
+            return false
+        }
+
+        return true
+    }
+}

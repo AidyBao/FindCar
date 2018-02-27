@@ -1,0 +1,123 @@
+//
+//  ZXInputGetCarCodeViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/9.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+/// 输入提车码
+class ZXInputGetCarCodeViewController: ZXUIViewController {
+    
+    @IBOutlet weak var zxContentView: UIView!
+    @IBOutlet weak var btnCancel: UIButton!
+    @IBOutlet weak var txtInput: UITextField!
+    @IBOutlet weak var ccvList: UICollectionView!
+    @IBOutlet weak var btnCommit: ZXRButton!
+    
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("Not init")
+    }
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.view.backgroundColor = .clear
+        self.txtInput.isHidden = true
+        self.txtInput.isEnabled = false
+        self.txtInput.delegate = self
+        self.txtInput.keyboardType = .numberPad
+        
+        self.ccvList.backgroundColor = UIColor.clear
+        self.ccvList.register(UINib.init(nibName: ZXLabelShowCCVCell.NibName, bundle: nil), forCellWithReuseIdentifier: ZXLabelShowCCVCell.reuseIdentifier)
+        self.ccvList.delegate = self
+        self.ccvList.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.txtInput.becomeFirstResponder()
+    }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        
+    }
+    
+    @IBAction func commitAction(_ sender: Any) {
+        
+    }
+    
+    fileprivate var letters: [String] {
+        guard let text = self.txtInput.text else {
+            return []
+        }
+        if text.isEmpty {
+            return []
+        } else {
+            return text.components(separatedBy: "")
+        }
+    }
+}
+
+extension ZXInputGetCarCodeViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let cs = CharacterSet.init(charactersIn: "0123456789").inverted
+        let filtered = string.components(separatedBy: cs).joined(separator: "")
+        if string != filtered {
+            return false
+        }
+        if range.location > 7 {
+            return false
+        }
+        self.ccvList.reloadData()
+        return true
+    }
+}
+
+extension ZXInputGetCarCodeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ZXLabelShowCCVCell.reuseIdentifier, for: indexPath) as! ZXLabelShowCCVCell
+        cell.lbNumber.text = "\(indexPath.row + 1)"
+        let letters = self.letters
+        if indexPath.row < letters.count {
+            cell.lbNumber.text = letters[indexPath.row]
+        } else {
+            cell.lbNumber.text = ""
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: floor((ZXBOUNDS_WIDTH - 30 - 10 * 7) / 8), height: 50)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 8
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+}
+
+extension ZXInputGetCarCodeViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return ZXDimmingPresentationController.init(presentedViewController: presented, presenting: presenting)
+    }
+}

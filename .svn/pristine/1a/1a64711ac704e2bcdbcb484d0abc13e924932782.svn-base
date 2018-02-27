@@ -1,0 +1,220 @@
+//
+//  ZXHomePageViewController.swift
+//  FindCar
+//
+//  Created by screson on 2017/12/15.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+enum ZXScrollDirection {
+    case up
+    case down
+    case none
+}
+
+class ZXHomePageViewController: ZXUIViewController {
+    
+    @IBOutlet weak var listTableView: UITableView!
+    var currentPage = 1
+    var screenViewY: CGFloat = 108.0 + 64.0 + 42.0
+    
+    var defaultView: ZXDefaultView?
+    var sortId: Int = 1
+    
+    var agencyView:  ZXAgencyView?
+    var minValue: String = ""
+    var maxValue: String = ""
+    var agencyIndex: Int = 0
+    
+    var addressView: ZXAddressView?
+    var areaArr: Array<ZXArea> = []
+    var proIndex:Int          = 0//省份索引
+    var cityIndex:Int         = 0//城市索引
+    var proId:Int             = 0//省份id
+    var cityId:Int            = 0//城市id
+    
+    var taskView:    ZXTaskStatusView?
+    var taskId: Int = 0
+   
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nil)
+        self.hidesBottomBarWhenPushed = false
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.hidesBottomBarWhenPushed = false
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+       
+        setUI()
+        
+        addRefresh()
+        
+        requestArea()
+        
+        requestForTaskList(true)
+        
+        requestForBanner()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+    }
+    
+    func setUI() {
+        listTableView.backgroundColor = UIColor.zx_subTintColor
+        view.backgroundColor = UIColor.white
+        //
+        listTableView.register(UINib.init(nibName: String.init(describing: ZXTaskNavCell.self), bundle: nil), forCellReuseIdentifier: ZXTaskNavCell.ZXTaskNavCellID)
+        listTableView.register(UINib.init(nibName: String.init(describing: ZXTaskBannerCell.self), bundle: nil), forCellReuseIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID)
+        listTableView.register(UINib.init(nibName: String.init(describing: ZXTaskToolCell.self), bundle: nil), forHeaderFooterViewReuseIdentifier: ZXTaskToolCell.ZXTaskToolCellID)
+        listTableView.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+
+    }
+    
+    //MARK: - AddRefresh
+    func addRefresh() {
+        //Refresh
+        listTableView.zx_addHeaderRefresh(showGif: false, target: self, action: #selector(zx_refreshForHeader))
+        //LoadMore
+        listTableView.zx_addFooterRefresh(autoRefresh: true, target: self, action: #selector(zx_refreshForFooter))
+    }
+    
+    //MARK: - Refresh
+    @objc func zx_refreshForHeader() {
+        currentPage = 1
+        self.listTableView.mj_header.endRefreshing()
+    }
+    
+    @objc func zx_refreshForFooter() {
+        currentPage += 1
+        self.listTableView.mj_footer.endRefreshing()
+    }
+    
+    //MARK: - Lazy
+    lazy var taskArr: Array<ZXTaskModel> = {
+        let arr: Array<ZXTaskModel> = Array.init()
+        return arr
+    }()
+    
+    lazy var bannerArr: Array<ZXBannerModel> = {
+        let arr: Array<ZXBannerModel> = Array.init()
+        return arr
+    }()
+    
+    //MARK: - ScrollView
+    var direction: ZXScrollDirection = .none
+    var newOffsetY: CGFloat = 0
+    var lastOffsetY: CGFloat = 0
+    var currentOffsetY: CGFloat = 0
+    var isEndDrug: Bool = false
+}
+
+
+extension ZXHomePageViewController: ZXTaskNavCellDelegate {
+    func didSearchAction() {
+        self.navigationController?.present(ZXSearchViewController(), animated: true, completion: nil)
+    }
+    
+    func didMessageAction() {
+        ZXUser.checkLogin {
+            self.navigationController?.pushViewController(ZXMessageViewController(), animated: true)
+        }
+    }
+}
+
+//MARK: - HTTP
+extension ZXHomePageViewController {
+    //MARK:地区
+    func requestArea() {
+        ZXHomeManager.requestForGetArea { (modelArr) in
+            ZXHUD.hide(for: self.view, animated: true)
+            self.areaArr = modelArr
+        }
+    }
+    
+    //MARK:Banner
+    func requestForBanner() {
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.Home.getBanner), params: nil, method: .post) { (succ, code, content, str, zxError) in
+            if succ {
+                if code == ZXAPI_SUCCESS {
+                    if let data = content["data"] as? Array<Any>, data.count > 0 {
+                        self.bannerArr = [ZXBannerModel].deserialize(from: data)! as! Array<ZXBannerModel>
+                        self.listTableView.reloadData()
+                    }
+                }
+            }
+        }
+    }
+    
+    //MARK:任务列表
+    func requestForTaskList(_ showHUD: Bool) {
+        if showHUD {
+            ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: 0)
+        } else {
+            ZXCommonUtils.showNetworkActivityIndicator(true)
+        }
+        
+        ZXHomeManager.requestForTaskList(pageNum: currentPage,pageSize: Int(ZX.PageSize), sortId: sortId, taskId: taskId, minValue: minValue, maxValue: maxValue, proId: proId, cityId: cityId, searchValue: "") { (code, success, listModel, errorMsg) in
+            ZXHUD.hide(for: self.view , animated: true)
+            ZXCommonUtils.showNetworkActivityIndicator(false)
+            ZXEmptyView.hide(from: self.view)
+            ZXEmptyView.hide(from: self.listTableView)
+            self.listTableView.mj_header.endRefreshing()
+            self.listTableView.mj_footer.endRefreshing()
+            self.listTableView.mj_footer.resetNoMoreData()
+            if success {
+                var hasData:Bool = true
+                if self.currentPage == 1 {
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.taskArr = listModel
+                        if listModel.count < ZX.PageSize {
+                            self.listTableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    } else {
+                        self.taskArr.removeAll()
+                        ZXEmptyView.show(in: self.listTableView, type: .noData, text: "当前条件下无搜索内容", subText: "请尝试其他关键词", topOffset: self.screenViewY, retry: {
+                            self.listTableView.mj_footer.endRefreshingWithNoMoreData()
+                            hasData = false
+                        })
+                    }
+                } else{
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.taskArr.append(contentsOf: listModel)
+                        if listModel.count < ZX.PageSize {
+                            self.listTableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    } else {
+                        self.listTableView.mj_footer.endRefreshingWithNoMoreData()
+                    }
+                }
+                self.listTableView.reloadData()
+                if self.currentPage == 1,hasData {
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.listTableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: true)
+                    }
+                }
+            } else if code != ZXAPI_LOGIN_INVALID {
+                if self.currentPage == 1 {
+                    ZXEmptyView.show(in: self.view, type: .networkError, text: nil, subText: "请再次刷新或检查网络", topOffset: 64, retry: {
+                        self.requestForTaskList(true)
+                    })
+                } else {
+                    ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZX.HUDDelay)
+                }
+            }
+        }
+    }
+}
+

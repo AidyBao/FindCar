@@ -1,0 +1,63 @@
+//
+//  ZXImageControlCCVCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+enum ZXImageType {
+    case canDelete
+    case justShow
+    case addImage
+}
+
+protocol ZXImageControlCCVCellDelegate: class {
+    func zxImageControllerCCVCellDeleteAction(cell: ZXImageControlCCVCell)
+}
+
+//
+class ZXImageControlCCVCell: UICollectionViewCell {
+
+    weak var delegate: ZXImageControlCCVCellDelegate?
+    
+    fileprivate var type: ZXImageType = ZXImageType.addImage
+    static let width: CGFloat = floor((ZXBOUNDS_WIDTH - 14 * 4 - 20) / 3.0)
+    
+    @IBOutlet weak var btnDelete: UIButton!
+    @IBOutlet weak var imgView: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.imgView.layer.cornerRadius = 5
+        self.imgView.backgroundColor = UIColor.zx_emptyColor
+        self.imgView.clipsToBounds = true
+        self.btnDelete.isHidden = true
+    }
+    
+    func reloadImage(_ url: URL?, type: ZXImageType) {
+        self.type = type
+        self.imgView.image = nil
+        self.btnDelete.isHidden = true
+        if type == .addImage {
+            self.imgView.contentMode = .center
+            self.imgView.image = #imageLiteral(resourceName: "add_photo")
+        } else {
+            self.imgView.contentMode = .scaleAspectFill
+            if let url = url {
+                self.imgView.kf.setImage(with: url)
+            }
+        }
+        if type == .canDelete {
+            self.btnDelete.isHidden = false
+        }
+    }
+    
+    @IBAction func deleteAction(_ sender: Any) {
+        if self.type == .canDelete {
+            delegate?.zxImageControllerCCVCellDeleteAction(cell: self)
+        }
+    }
+}

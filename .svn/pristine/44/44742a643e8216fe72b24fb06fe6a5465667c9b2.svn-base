@@ -1,0 +1,129 @@
+//
+//  ZXAllTaskViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXAllTaskViewController: UIViewController {
+    
+    struct ZXComButtonType {
+        static let all  = 3121
+        static let succ = 3122
+        static let auth = 3123
+        static let get  = 3124
+    }
+    
+    @IBOutlet weak var toolView: UIView!
+    @IBOutlet weak var toolViewH: NSLayoutConstraint!
+    @IBOutlet weak var allBtn: ZXComButton!
+    @IBOutlet weak var succBtn: ZXComButton!
+    @IBOutlet weak var authBtn: ZXComButton!
+    @IBOutlet weak var getBtn: ZXComButton!
+    var selctedIndex: Int = ZXComButtonType.all
+    
+    @IBOutlet weak var tabList: UITableView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setUIStyle()
+    }
+
+    ////MARK: - UI
+    func setUIStyle() {
+        self.toolViewH.constant = 0
+        
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        
+        self.navigationItem.titleView = self.segment
+        self.segment.size = CGSize.init(width: 160, height: 36)
+        self.segment.center = (self.navigationItem.titleView?.center)!
+        self.segment.addTarget(self, action:#selector(segAction(_:)), for: .valueChanged)
+        
+        self.allBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.succBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.authBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.getBtn.titleLabel?.font = UIFont.zx_titleFont
+        
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+    }
+    
+    //MARK: - Segment
+    @objc func segAction(_ seg: UISegmentedControl) {
+        switch seg.selectedSegmentIndex {
+        case 0:
+            self.toolViewH.constant = 0
+        case 1:
+            self.toolViewH.constant = 50.0
+            
+            self.setButtonStatus(selctedIndex)
+        default:
+            break
+        }
+        self.tabList.reloadData()
+    }
+    
+    //MARK: - 公司任务工具条
+    
+    @IBAction func btnAction(_ sender: ZXComButton) {
+        self.allBtn.zx_isSelected(false)
+        self.authBtn.zx_isSelected(false)
+        self.succBtn.zx_isSelected(false)
+        self.getBtn.zx_isSelected(false)
+        
+        self.selctedIndex = sender.tag
+        
+        self.setButtonStatus(sender.tag)
+    }
+    
+    func setButtonStatus(_ index: Int) {
+        switch index {
+        case ZXComButtonType.all:
+            self.allBtn.zx_isSelected(true)
+        case ZXComButtonType.auth:
+            self.authBtn.zx_isSelected(true)
+        case ZXComButtonType.succ:
+            self.succBtn.zx_isSelected(true)
+        case ZXComButtonType.get:
+            self.getBtn.zx_isSelected(true)
+        default:
+            break
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    //MARK: - Lazy
+    lazy var segment: UISegmentedControl = {
+        let seg: UISegmentedControl = UISegmentedControl.init(items: ["个人任务","公司任务"])
+        seg.setTitleTextAttributes([NSAttributedStringKey.font.rawValue: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor.rawValue: UIColor.zx_tintColor], for: .normal)
+        seg.layer.cornerRadius = 5.0
+        seg.layer.masksToBounds = true
+        seg.layer.borderWidth = 1.0
+        seg.layer.borderColor = UIColor.zx_tintColor.cgColor
+        seg.tintColor = UIColor.zx_tintColor
+        seg.selectedSegmentIndex = 0
+        return seg
+    }()
+    
+    lazy var perArray: Array<Any> = {
+        let arr: Array<Any> = Array.init()
+        return arr
+    }()
+    
+    lazy var comArray: Array<Any> = {
+        let arr: Array<Any> = Array.init()
+        return arr
+    }()
+}
+
+
+

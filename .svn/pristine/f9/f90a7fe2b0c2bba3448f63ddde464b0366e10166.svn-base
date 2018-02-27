@@ -1,0 +1,76 @@
+//
+//  ZXLaunchViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXLaunchViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //获取用户数据
+        ZXUser.user.getUser()
+
+        //判断登录状况
+        rejudgeAutoLogin()
+        
+    }
+    
+    func rejudgeAutoLogin() {
+        ZXUser.zx_AutoLogin { (isAuto) in
+            if isAuto {
+                ZXHUD.showLoading(in: self.view, text: "", delay: nil)
+                ZXLoginManager.requestForLogin(ZXUser.user.registeredTel, success: { (succ, c, content, errMsg) in
+                    ZXHUD.hide(for: self.view, animated: true)
+                    if c == ZXAPI_SUCCESS {
+                        NotificationCenter.zxpost.loginSuccess()
+                        if let data = content["data"] as? Dictionary<String,Any> {
+                            //保存用户登录信息
+                            ZXUser.user.save(data)
+                        }
+                        //更新用户个人信息
+                        self.updateUserInfo()
+                    }
+                    
+                    ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+                    
+                }, failed: { (code, errMsg) in
+                    ZXUser.user.invalid()
+                    ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+                })
+            }else{
+                ZXUser.user.invalid()
+                ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+            }
+        }
+    }
+    
+    func updateUserInfo() {
+        DispatchQueue.main.async {
+            //1.获取设备信息
+            ZXLoginManager.requestForEquipment()
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

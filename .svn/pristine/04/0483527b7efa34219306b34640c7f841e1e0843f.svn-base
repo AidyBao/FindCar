@@ -1,0 +1,24 @@
+//
+//  ZXCountryModel.swift
+//  YDY_GJ_3_5
+//
+//  Created by 120v on 2017/5/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//  镇
+
+import UIKit
+import HandyJSON
+
+@objcMembers class ZXCountryModel: ZXModel {
+    var countryId:Int                            = -1
+    var name:String                             = ""
+    var parentId:Int                            = -1
+    var children:NSMutableArray                 = []
+    
+    required init() {}
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.countryId <-- "id"
+    }
+}

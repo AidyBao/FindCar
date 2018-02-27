@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ZXTaskStatusView" customModule="FindCar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KMD-Ii-cRL">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U1C-Y9-ORG">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="nKb-F5-shb"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cz8-Ig-zU4">
+                            <rect key="frame" x="0.0" y="1" width="375" height="42"/>
+                            <subviews>
+                                <button opaque="NO" tag="1241" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kWd-9G-Wiz" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="80" height="42"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="80" id="OWo-4G-Mlm"/>
+                                    </constraints>
+                                    <state key="normal" title="全部">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="buttonAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="G1P-Ce-uzU"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="1242" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cR8-DI-XBg" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="80" y="0.0" width="80" height="42"/>
+                                    <state key="normal" title="待领取">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="buttonAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="f8T-Cl-EQG"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="1243" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0OQ-L5-quC" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="160" y="0.0" width="80" height="42"/>
+                                    <state key="normal" title="进行中">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="buttonAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4YS-Lw-tkd"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="1244" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6j7-ta-Zik" customClass="ZXStatusButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="240" y="0.0" width="80" height="42"/>
+                                    <state key="normal" title="已完成">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="buttonAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="FIS-Go-nEI"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="kWd-9G-Wiz" firstAttribute="top" secondItem="Cz8-Ig-zU4" secondAttribute="top" id="DGL-rS-a4x"/>
+                                <constraint firstItem="cR8-DI-XBg" firstAttribute="top" secondItem="Cz8-Ig-zU4" secondAttribute="top" id="E8O-oZ-CVI"/>
+                                <constraint firstAttribute="bottom" secondItem="0OQ-L5-quC" secondAttribute="bottom" id="EEZ-dp-C2X"/>
+                                <constraint firstItem="0OQ-L5-quC" firstAttribute="leading" secondItem="cR8-DI-XBg" secondAttribute="trailing" id="Gjr-op-wJa"/>
+                                <constraint firstItem="6j7-ta-Zik" firstAttribute="height" secondItem="kWd-9G-Wiz" secondAttribute="height" id="Gxc-cH-07E"/>
+                                <constraint firstItem="6j7-ta-Zik" firstAttribute="width" secondItem="kWd-9G-Wiz" secondAttribute="width" id="L8m-ZQ-4gO"/>
+                                <constraint firstItem="cR8-DI-XBg" firstAttribute="leading" secondItem="kWd-9G-Wiz" secondAttribute="trailing" id="MoG-HU-qCq"/>
+                                <constraint firstAttribute="bottom" secondItem="cR8-DI-XBg" secondAttribute="bottom" id="b7I-pP-hJY"/>
+                                <constraint firstAttribute="bottom" secondItem="6j7-ta-Zik" secondAttribute="bottom" id="d5T-yR-IFq"/>
+                                <constraint firstItem="6j7-ta-Zik" firstAttribute="top" secondItem="Cz8-Ig-zU4" secondAttribute="top" id="fLg-hh-9B5"/>
+                                <constraint firstItem="cR8-DI-XBg" firstAttribute="width" secondItem="kWd-9G-Wiz" secondAttribute="width" id="g4g-zg-Siq"/>
+                                <constraint firstItem="kWd-9G-Wiz" firstAttribute="leading" secondItem="Cz8-Ig-zU4" secondAttribute="leading" id="jDy-M7-jMf"/>
+                                <constraint firstItem="0OQ-L5-quC" firstAttribute="width" secondItem="kWd-9G-Wiz" secondAttribute="width" id="jtH-Zr-vpH"/>
+                                <constraint firstItem="0OQ-L5-quC" firstAttribute="top" secondItem="Cz8-Ig-zU4" secondAttribute="top" id="qdC-Lz-RfA"/>
+                                <constraint firstItem="cR8-DI-XBg" firstAttribute="height" secondItem="kWd-9G-Wiz" secondAttribute="height" id="vB1-vu-j1F"/>
+                                <constraint firstAttribute="bottom" secondItem="kWd-9G-Wiz" secondAttribute="bottom" id="vDS-5l-zku"/>
+                                <constraint firstItem="0OQ-L5-quC" firstAttribute="height" secondItem="kWd-9G-Wiz" secondAttribute="height" id="vvL-lB-lJq"/>
+                                <constraint firstItem="6j7-ta-Zik" firstAttribute="leading" secondItem="0OQ-L5-quC" secondAttribute="trailing" id="zm3-zL-jVZ"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Cz8-Ig-zU4" firstAttribute="leading" secondItem="KMD-Ii-cRL" secondAttribute="leading" id="3Rx-jd-V6T"/>
+                        <constraint firstAttribute="trailing" secondItem="U1C-Y9-ORG" secondAttribute="trailing" id="C1O-iN-1AP"/>
+                        <constraint firstItem="U1C-Y9-ORG" firstAttribute="top" secondItem="KMD-Ii-cRL" secondAttribute="top" id="FHp-il-dWB"/>
+                        <constraint firstAttribute="bottom" secondItem="Cz8-Ig-zU4" secondAttribute="bottom" id="Sfd-u0-zB0"/>
+                        <constraint firstAttribute="trailing" secondItem="Cz8-Ig-zU4" secondAttribute="trailing" id="Vao-zP-n0r"/>
+                        <constraint firstAttribute="height" constant="43" id="XdA-bP-esD"/>
+                        <constraint firstItem="Cz8-Ig-zU4" firstAttribute="top" secondItem="U1C-Y9-ORG" secondAttribute="bottom" id="jim-md-gzc"/>
+                        <constraint firstItem="U1C-Y9-ORG" firstAttribute="leading" secondItem="KMD-Ii-cRL" secondAttribute="leading" id="qLU-RR-zCg"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="KMD-Ii-cRL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Hug-SO-EGu"/>
+                <constraint firstItem="KMD-Ii-cRL" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="MBi-3F-Che"/>
+                <constraint firstItem="KMD-Ii-cRL" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="hmF-7l-gOp"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="allBtn" destination="kWd-9G-Wiz" id="1jk-DO-awN"/>
+                <outlet property="backView" destination="KMD-Ii-cRL" id="ir5-HN-MQp"/>
+                <outlet property="backViewH" destination="XdA-bP-esD" id="cF2-Ak-upR"/>
+                <outlet property="finishBtn" destination="6j7-ta-Zik" id="7J7-sa-UMl"/>
+                <outlet property="ongoingBtn" destination="0OQ-L5-quC" id="ivS-Sh-hmv"/>
+                <outlet property="waitBtn" destination="cR8-DI-XBg" id="xDX-4h-To3"/>
+            </connections>
+            <point key="canvasLocation" x="26.5" y="52.5"/>
+        </view>
+    </objects>
+</document>

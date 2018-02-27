@@ -1,0 +1,56 @@
+//
+//  ZXSettingViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSettingViewController: ZXUIViewController {
+
+    @IBOutlet weak var tabList: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.tabList.backgroundColor = UIColor.zx_subTintColor
+        self.tabList.register(UINib.init(nibName: String.init(describing: ZXExitCell.self), bundle: nil), forCellReuseIdentifier: ZXExitCell.ZXExitCellID)
+        
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+}
+
+extension ZXSettingViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ZXExitCell = tableView.dequeueReusableCell(withIdentifier: ZXExitCell.ZXExitCellID, for: indexPath) as! ZXExitCell
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 2
+        case 1:
+            return 1
+        default:
+            return 0
+        }
+    }
+}
+
+extension ZXSettingViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+}

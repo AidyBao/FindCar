@@ -1,0 +1,177 @@
+//
+//  ZXScreenView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/2.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXScreenViewDelegate:NSObjectProtocol {
+    func touchesBeganTrainScreeningView() -> Void
+    func didScreenViewCellItem(_ indexPath:IndexPath,_ type:String) -> Void
+}
+
+
+class ZXScreenView: UIView {
+    
+    weak var delegate: ZXScreenViewDelegate?
+    var selectedIndex: IndexPath?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.frame = frame
+        //
+        self.initWithUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.initWithUI()
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.initWithUI()
+    }
+    
+    private func initWithUI() -> Void {
+        self.backgroundColor = UIColor.clear
+        //
+        self.addSubview(self.backView)
+        //
+        self.backView.addSubview(self.collectionView)
+    }
+    
+    func loadData(_ array:Array<Any>) -> Void {
+        self.typeArray = array
+        self.collectionView.reloadData()
+        self.collectionView.selectItem(at: self.selectedIndex, animated: true, scrollPosition: UICollectionViewScrollPosition.centeredVertically)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.frame = CGRect.init(x: 0, y: self.frame.origin.y, width: ZX_BOUNDS_WIDTH, height: self.frame.size.height)
+        //
+        self.backView.frame = CGRect.init(x: 0, y: 0, width: ZX_BOUNDS_WIDTH, height: self.frame.size.height)
+        //
+        self.collectionView.frame = CGRect.init(x: 0, y: 0, width: ZX_BOUNDS_WIDTH, height: 0)
+        
+        UIView.animate(withDuration: 0.35, animations: {
+            self.collectionView.height = 44.0
+        }) { (finished) in
+            self.alpha = 1.0
+        }
+    }
+    
+    func setDefaultSelectItem(_ indexPath:IndexPath) -> Void {
+        self.selectedIndex = indexPath
+    }
+    
+    //MARK: -
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if delegate != nil {
+            delegate?.touchesBeganTrainScreeningView()
+        }
+    }
+    
+    func show() -> Void {
+        UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(self)
+    }
+    
+    func dismiss() -> Void {
+        UIView.animate(withDuration: 0.35, animations: {
+            self.collectionView.height = 0
+        }) { (finished) in
+            self.alpha = 0.0
+        }
+    }
+    
+    deinit {
+        self.removeFromSuperview()
+    }
+    
+    //MARK: - Lazy
+    lazy var backView: UIView = {
+        let view: UIView = UIView.init()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        return view
+    }()
+    
+    lazy var typeArray: Array<Any> = {
+        let array: Array<String> = Array.init(arrayLiteral: "默认","代理费最高","最新发布")
+        return array
+    }()
+    
+    lazy var contentView: UIView = {
+        let contentView: UIView = UIView.init(frame: CGRect.zero)
+        contentView.backgroundColor = UIColor.white
+        return contentView
+    }()
+    
+    lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout.init()
+        layout.scrollDirection = UICollectionViewScrollDirection.vertical
+        let collectionView:UICollectionView = UICollectionView.init(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = UIColor.white
+        collectionView.register(UINib(nibName: String.init(describing: ZXScreenCell.self), bundle: nil), forCellWithReuseIdentifier:ZXScreenCell.ZXScreenCellID)
+        return collectionView
+    }()
+}
+
+extension ZXScreenView:UICollectionViewDelegate{
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if self.typeArray.count > 0 {
+            let name = self.typeArray[indexPath.row]
+//            if delegate != nil {
+//                delegate?.didSelectedCellItem(indexPath,model)
+//            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    }
+}
+
+extension ZXScreenView:UICollectionViewDataSource{
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.typeArray.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let screenCell:ZXScreenCell = collectionView.dequeueReusableCell(withReuseIdentifier: ZXScreenCell.ZXScreenCellID, for: indexPath) as! ZXScreenCell
+        if self.typeArray.count != 0 {
+            screenCell.reloadData(self.typeArray[indexPath.row] as! String)
+        }
+        return screenCell
+    }
+}
+
+extension ZXScreenView:UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var cellW:CGFloat = 0.0
+        var cellH:CGFloat = 0.0
+        cellW = (ZX_BOUNDS_WIDTH - 2*14 - 3*14)/4
+        cellH = 44
+        return CGSize(width: cellW, height: cellH)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.init(top: 0, left: 14, bottom: 0, right: 14)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 14
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 14
+    }
+}

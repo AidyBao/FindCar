@@ -1,0 +1,86 @@
+//
+//  ZXTaskBannerCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTaskBannerCellDelegate: NSObjectProtocol {
+    func didSelectedBannerCell(_ content: String,_ title: String)
+}
+
+class ZXTaskBannerCell: UITableViewCell {
+    
+    static let ZXTaskBannerCellID: String = "ZXTaskBannerCell"
+    weak var delegate: ZXTaskBannerCellDelegate?
+    @IBOutlet weak var collectionView: UICollectionView!
+    var bannerView: ZXBannerScrollView?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        addBannerView()
+
+        self.backgroundColor = UIColor.white
+        
+        self.contentView.layer.masksToBounds = true
+    }
+    
+    func addBannerView() {
+        bannerView = ZXBannerScrollView(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 146.0))
+        bannerView?.clickCompletionHandler = {
+            (view: ZXBannerScrollView, index: Int, urlStr: String) in
+            if self.bannerArr.count > 0 {
+                let model = self.bannerArr[index]
+                if self.delegate != nil {
+                    self.delegate?.didSelectedBannerCell(model.content,model.title)
+                }
+            }
+        }
+        bannerView?.isAuto = false
+        bannerView?.pageControl?.alignment = .center
+        bannerView?.pageControl?.style = .rectangle
+        bannerView?.pageControl?.currentPageIndicatorTintColor = UIColor.blue
+        bannerView?.pageControl?.pageIndicatorTintColor = UIColor.gray
+        contentView.addSubview(bannerView!)
+    }
+    
+    func loadData(_ arr: Array<ZXBannerModel>) {
+        bannerArr = arr
+//        var imgUrls: Array<String> = Array.init()
+//        for (_,model) in arr.enumerated() {
+//            if model.titleUrlStr.isEmpty == false {
+//                imgUrls.append(model.titleUrlStr)
+//            }
+//        }
+//        bannerView?.imageUrls = imgUrls
+        
+        let imgUrls = ["http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075430688640/w800",
+                    "http://pic.qyer.com/ra/img/15064476767054",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075432049166/w800",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/10/15076301267252/w800"
+        ]
+        
+        bannerView?.imageUrls = imgUrls
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.bannerView?.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+    }
+    
+    //MARK: - Lazy
+    lazy var bannerArr: Array<ZXBannerModel> = {
+        let arr: Array<ZXBannerModel> = Array.init()
+        return arr
+    }()
+}
+

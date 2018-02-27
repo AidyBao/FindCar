@@ -1,0 +1,164 @@
+//
+//  ZXPlaceBeloningSelectViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/9.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+typealias ZXPlaceCallBack =  (_ place: String, _ type: String) -> Void
+
+/// 车牌归属地选择
+class ZXPlaceBeloningSelectViewController: ZXUIViewController,UIPickerViewDelegate, UIPickerViewDataSource {
+
+    var callBack: ZXPlaceCallBack?
+    @IBOutlet weak var btnCommit: UIButton!
+    @IBOutlet weak var pickerView: UIPickerView!
+    var arrPlaceList: Array<String> = []
+    var arrTypeList: Array<String> = []
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("Not init")
+    }
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.view.backgroundColor = .clear
+        
+        self.pickerView.delegate = self
+        self.pickerView.dataSource = self
+    }
+
+    fileprivate var placeRow: Int = 0
+    fileprivate var typeRow: Int = 0
+    
+    @IBAction func commitAction(_ sender: Any) {
+        self.callBack?(arrPlaceList[placeRow], arrTypeList[typeRow])
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let point = touch.location(in: self.view)
+            if point.y < (ZXBOUNDS_HEIGHT - 250) {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+}
+
+extension ZXPlaceBeloningSelectViewController {
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch component {
+        case 0:
+            placeRow = row
+        case 1:
+            typeRow = row
+        default:
+            break
+        }
+        self.pickerView.reloadComponent(component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 35
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let label = UILabel()
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .center
+        label.backgroundColor = .clear
+        label.font = UIFont.zx_titleFont
+        var selected = false
+        switch component {
+        case 0:
+            selected = (placeRow == row)
+        case 1:
+            selected = (typeRow == row)
+        default:
+            break
+        }
+        if selected {
+            label.textColor = UIColor.zx_textColorTitle
+        } else {
+            label.textColor = UIColor.zx_textColorMark
+        }
+        
+        label.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
+        return label
+    }
+    
+//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+//        var string = ""
+//        var selected = false
+//        switch component {
+//        case 0:
+//            selected = (placeRow == row)
+//            string = arrPlaceList[row]
+//        case 1:
+//            selected = (typeRow == row)
+//            string = arrTypeList[row]
+//        default:
+//            break
+//        }
+//
+//        let range = NSMakeRange(0, string.count)
+//        let attrString = NSMutableAttributedString.init(string: string)
+//        attrString.zx_appendFont(font: UIFont.zx_titleFont, at: range)
+//
+//        if selected {
+//            attrString.zx_appendColor(color: UIColor.zx_textColorTitle, at: range)
+//        } else {
+//            attrString.zx_appendColor(color: UIColor.zx_textColorMark, at: range)
+//        }
+//        return attrString
+//    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch component {
+        case 0:
+            return arrPlaceList[row]
+        case 1:
+            return arrTypeList[row]
+        default:
+            break
+        }
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch component {
+        case 0:
+            return arrPlaceList.count
+        case 1:
+            return arrTypeList.count
+        default:
+            break
+        }
+        return 0
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
+    }
+}
+
+extension ZXPlaceBeloningSelectViewController:UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return ZXDimmingPresentationController.init(presentedViewController: presented, presenting: presenting)
+    }
+}

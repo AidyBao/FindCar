@@ -1,0 +1,149 @@
+//
+//  ZXLoginViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXLoginViewController: UIViewController {
+    
+    @IBOutlet weak var titleLB: UILabel!    
+    @IBOutlet weak var telLb: UILabel!
+    @IBOutlet weak var telText: UITextField!
+    @IBOutlet weak var geliLine: UIView!
+    @IBOutlet weak var noteLB: UILabel!
+    @IBOutlet weak var userAgreementBtn: UIButton!
+    @IBOutlet weak var getVerCode: UIButton!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setUIStyle()
+        
+        self.setCommitButton(false)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        self.titleLB.textColor = UIColor.zx_textColorTitle
+        self.titleLB.font = UIFont.boldSystemFont(ofSize: 29.0)
+        
+        self.telLb.textColor = UIColor.zx_textColorTitle
+        self.telLb.font = UIFont.boldSystemFont(ofSize: 19.0)
+        
+        self.telText.textColor = UIColor.zx_colorRGB(161, 174, 199, 1.0)
+        self.telText.font = UIFont.boldSystemFont(ofSize: 29.0)
+        
+        self.noteLB.textColor = UIColor.zx_colorRGB(161, 174, 199, 1.0)
+        self.noteLB.font = UIFont.systemFont(ofSize: 12.0)
+        
+        self.userAgreementBtn.setTitleColor(UIColor.zx_colorRGB(161, 174, 199, 1.0), for: .normal)
+        self.userAgreementBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+        
+        self.getVerCode.setTitleColor(UIColor.white, for: .normal)
+        self.getVerCode.titleLabel?.font = UIFont.systemFont(ofSize: 17.0)
+    }
+    
+    //MARK: - 下一步
+    @IBAction func getVerCodeAction(_ sender: UIButton) {
+        self.view.endEditing(true)
+        self.setCommitButton(false)
+        if self.telText.text?.count != 0 {
+            if (self.telText.text?.zx_mobileValid())! {
+//                self.requestForGetCode()
+            }else{
+                ZXHUD.showFailure(in: self.view, text: "请输入正确的手机号", delay: ZX.HUDDelay)
+            }
+        }else{
+            ZXHUD.showFailure(in: self.view, text: "请填写手机号", delay: ZX.HUDDelay)
+        }
+        self.navigationController?.pushViewController(ZXVerificationCodeViewController(), animated: true)
+    }
+    
+    //MARK: - 用户协议
+    @IBAction func userAgreementAction(_ sender: UIButton) {
+        let webVC:ZXWebViewViewController = ZXWebViewViewController.init()
+        webVC.title = "药店云用户协议"
+        webVC.webUrl = String.init(format: "%@%@", ZXURLConst.Web.url,ZXURLConst.Web.serviceItems)
+        self.navigationController?.pushViewController(webVC, animated: true)
+    }
+    
+    fileprivate func setCommitButton(_ enable:Bool) {
+        if enable {
+            self.getVerCode.isEnabled = true
+        } else {
+            self.getVerCode.isEnabled = false
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+    
+    func requestForGetCode() {
+        var dict: Dictionary<String,Any> = Dictionary()
+        if self.telText.text?.count != 0 {
+            dict["tel"] = self.telText.text
+        }
+        ZXHUD.showLoading(in: self.view, text: "", delay: nil)
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.User.getSMSCode), params: dict, method: .post) { (success, status, content, string, errMsg) in
+            ZXHUD.hide(for: self.view, animated: true)
+            self.setCommitButton(true)
+            if status == ZXAPI_SUCCESS {
+                if let codeStr = content["smsCode"] {
+                    ZXHUD.showSuccess(in: self.view, text: "验证码已发送", delay: ZX.HUDDelay)
+                    let verCodeView = ZXVerificationCodeViewController()
+                    
+                   verCodeView.verCode = String(describing: codeStr)
+                   verCodeView.tel = self.telText.text!
+                    self.navigationController?.pushViewController(verCodeView, animated: true)
+                }
+            }else{
+                ZXNetwork.errorCodeParse(status, httpError: {
+                    ZXHUD.showFailure(in: self.view, text: "连接失败请检查网络或重试", delay: ZX.HUDDelay)
+                }, serverError: {
+                    ZXHUD.showFailure(in: self.view, text: (errMsg?.description)!, delay: ZX.HUDDelay)
+                })
+            }
+        }
+    }
+}
+
+extension ZXLoginViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == self.telText {
+            let cs = CharacterSet.init(charactersIn: "0123456789").inverted
+            let filtered = string.components(separatedBy: cs).joined(separator: "")
+            if string != filtered {
+                return false
+            }
+            if range.location + string.count > 11 {
+                ZXHUD.showFailure(in: self.view, text: "手机号不能大于11位！", delay: ZX.HUDDelay)
+                return false
+            }
+            let str = textField.text ?? ""
+            let str2 = (str as NSString).replacingCharacters(in: range, with: string)
+            if str2.count == 1 && str2 != "1" {
+                return false
+            }
+        }
+        
+        if range.location + string.count == 11 {
+            setCommitButton(true)
+        }else{
+            setCommitButton(false)
+        }
+        return true
+    }
+}

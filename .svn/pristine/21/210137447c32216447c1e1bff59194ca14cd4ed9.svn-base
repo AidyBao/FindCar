@@ -1,0 +1,224 @@
+//
+//  ZXSearchViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSearchViewController: ZXUIViewController {
+    
+    @IBOutlet weak var nav1View: UIView!
+    @IBOutlet weak var nav2View: UIView!
+    @IBOutlet weak var searchView: UIView!
+    @IBOutlet weak var cancelBtn: UIButton!
+    
+    @IBOutlet weak var searchListTab: UITableView!
+    @IBOutlet weak var resultListTab: UITableView!
+    
+    var currentPage = 1
+    var searchKey: String = ""
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setUIStyle()
+        
+        zx_addKeyboardNotification()
+        
+        addRefresh()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        nav1View.backgroundColor = UIColor.white
+        nav2View.backgroundColor = UIColor.clear
+
+        searchView.backgroundColor = UIColor.clear
+        searchView.addSubview(searchBar)
+        searchBar.delegate = self
+        
+        view.backgroundColor = UIColor.zx_tintColor
+        
+        cancelBtn.setTitleColor(UIColor.zx_tintColor, for: .normal)
+        
+        resultListTab.backgroundColor = UIColor.zx_subTintColor
+        searchListTab.backgroundColor = UIColor.zx_subTintColor
+        searchListTab.register(UINib.init(nibName: String.init(describing: ZXSearchCell.self), bundle: nil), forCellReuseIdentifier: ZXSearchCell.ZXSearchCellID)
+        resultListTab.register(UINib.init(nibName: ZXTaskTableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTaskTableViewCell.reuseIdentifier)
+    }
+    
+    @IBAction func cancelBtnAction(_ sender: UIButton) {
+        if navigationController != nil {
+            navigationController?.dismiss(animated: true, completion: nil)
+        }else{
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchBar.becomeFirstResponder()
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        searchBar.frame = CGRect(x: 0, y: 0, width: searchView.frame.size.width, height: searchView.frame.size.height)
+        
+        if searchBar.value(forKey: "searchField") is UITextField {
+            let searchField: UITextField = self.searchBar.value(forKey: "searchField") as! UITextField
+            searchField.backgroundColor = UIColor.zx_subTintColor
+//            searchField.layer.borderColor = UIColor.lightGray.cgColor
+//            searchField.layer.borderWidth = 1.0
+//            searchField.layer.cornerRadius = searchField.frame.size.height*0.5
+//            searchField.layer.masksToBounds = true
+        }
+    }
+    
+    //MARK: - Keyboard Action
+    override func zx_keyboardWillShow(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        UIView.animate(withDuration: dt, animations: {
+            self.searchListTab.isHidden = false
+        }, completion: nil)
+    }
+    
+    override func zx_keyboardWillHide(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        UIView.animate(withDuration: dt, animations: {
+            self.searchListTab.isHidden = true
+        }, completion: nil)
+    }
+    
+    //MARK: - AddRefresh
+    func addRefresh() {
+        //Refresh
+        resultListTab.zx_addHeaderRefresh(showGif: true, target: self, action: #selector(zx_refreshForHeader))
+        //LoadMore
+        resultListTab.zx_addFooterRefresh(autoRefresh: true, target: self, action: #selector(zx_refreshForFooter))
+    }
+    
+    //MARK: - Refresh
+    @objc func zx_refreshForHeader() {
+        currentPage = 1
+        requestForQuert(true, searchKey)
+    }
+    
+    @objc func zx_refreshForFooter() {
+        currentPage += 1
+        requestForQuert(false, searchKey)
+    }
+    
+    deinit {
+        zx_removeKeyboardNotification()
+    }
+    
+    //MARK: - Lazy
+    lazy var historyArray: Array<String> = {
+        let arr: Array<String> = ZXHistoryCache.getCache()
+        return arr
+    }()
+    
+    lazy var resultArray: Array<ZXTaskModel> = {
+        let arr: Array<ZXTaskModel> = Array.init()
+        return arr
+    }()
+
+    //MARK: - serach bar
+    let searchBar:UISearchBar = {
+        let _searchBar = UISearchBar.init()
+        let placeHoderlStr = "输入车型 归宿地"
+        _searchBar.barTintColor = UIColor.white
+        _searchBar.searchBarStyle = .default
+        _searchBar.autocapitalizationType = .none
+        _searchBar.autocorrectionType = .no
+//        _searchBar.backgroundImage = UIImage()
+        if #available(iOS 9.0, *) {
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.font.rawValue: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor.rawValue: UIColor.zx_textColorTitle]
+            let attrStr = NSAttributedString.init(string: placeHoderlStr, attributes: [NSAttributedStringKey.font: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor: UIColor.zx_textColorMark])
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = attrStr
+        } else {
+            // Fallback on earlier versions
+            _searchBar.placeholder = placeHoderlStr
+        }
+        return _searchBar
+    }()
+
+}
+
+//MARK: - HTTP
+extension ZXSearchViewController {
+    func requestForQuert(_ showHUD: Bool,_ search: String) {
+        if showHUD {
+            ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: 0)
+        } else {
+            ZXCommonUtils.showNetworkActivityIndicator(true)
+        }
+        ZXHomeManager.requestForTaskList(pageNum: currentPage, pageSize: Int(ZX.PageSize), sortId: 0, taskId: 0, minValue: nil, maxValue: nil, proId: 0, cityId: 0, searchValue: search) { (code, succ, listModel, errorMsg) in
+            ZXHUD.hide(for: self.view , animated: true)
+            ZXCommonUtils.showNetworkActivityIndicator(false)
+            ZXEmptyView.hide(from: self.view)
+            ZXEmptyView.hide(from: self.resultListTab)
+            self.resultListTab.mj_header.endRefreshing()
+            self.resultListTab.mj_footer.endRefreshing()
+            self.resultListTab.mj_footer.resetNoMoreData()
+            if succ {
+                self.saveHistorySearchRecord(search)
+                self.searchKey = search
+                var hasData:Bool = true
+                if self.currentPage == 1 {
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.resultArray = listModel
+                        if listModel.count < ZX.PageSize {
+                            self.resultListTab.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    } else {
+                        ZXEmptyView.show(in: self.view, type: .noData, text: nil, subText: "请尝试其他关键词", topOffset: 64.0, retry: {
+                            self.resultListTab.mj_footer.endRefreshingWithNoMoreData()
+                            hasData = false
+                        })
+                    }
+                } else{
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.resultArray.append(contentsOf: listModel)
+                        if listModel.count < ZX.PageSize {
+                            self.resultListTab.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    } else {
+                        self.resultListTab.mj_footer.endRefreshingWithNoMoreData()
+                    }
+                }
+                self.resultListTab.reloadData()
+                if self.currentPage == 1,hasData {
+                    if let listModel = listModel,listModel.count > 0 {
+                        self.resultListTab.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: true)
+                    }
+                }
+
+            }else if code != ZXAPI_LOGIN_INVALID {
+                if self.currentPage == 1 {
+                    ZXEmptyView.show(in: self.view, type: .networkError, text: nil, subText: "请再次刷新或检查网络", topOffset: 64.0, retry: {
+                        self.requestForQuert(true, search)
+                    })
+                } else {
+                    ZXHUD.showFailure(in: self.view, text: errorMsg, delay: ZX.HUDDelay)
+                }
+            }
+        }
+    }
+}
+
+
+

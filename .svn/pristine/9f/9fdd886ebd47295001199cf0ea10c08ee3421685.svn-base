@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXBannerDetailViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="dateLB" destination="VhL-dq-yUd" id="80d-p8-UMW"/>
+                <outlet property="dateLBTopGap" destination="P1C-v3-qaL" id="n5u-q8-bBj"/>
+                <outlet property="titleLB" destination="18Z-Az-bv9" id="6TF-vp-d6W"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webView" destination="sH7-aw-jhQ" id="z1M-GY-Tjo"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="一直战无不胜还是到付考试的会计反馈记录数据库" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="18Z-Az-bv9">
+                    <rect key="frame" x="15" y="35" width="345" height="60"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1-12 14：32" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VhL-dq-yUd">
+                    <rect key="frame" x="15" y="120" width="345" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sH7-aw-jhQ">
+                    <rect key="frame" x="0.0" y="166" width="375" height="501"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="dcR-6y-mdh"/>
+                    </connections>
+                </webView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="18Z-Az-bv9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="15" id="5FR-kt-hnz"/>
+                <constraint firstItem="sH7-aw-jhQ" firstAttribute="top" secondItem="VhL-dq-yUd" secondAttribute="bottom" constant="25" id="N9b-WK-AR4"/>
+                <constraint firstItem="18Z-Az-bv9" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="15" id="NWU-Cm-aCg"/>
+                <constraint firstItem="VhL-dq-yUd" firstAttribute="top" secondItem="18Z-Az-bv9" secondAttribute="bottom" constant="25" id="P1C-v3-qaL"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="VhL-dq-yUd" secondAttribute="trailing" constant="15" id="S2U-tG-1sx"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="18Z-Az-bv9" secondAttribute="trailing" constant="15" id="dmF-B3-TDJ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="sH7-aw-jhQ" secondAttribute="trailing" id="iRl-pO-gSr"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="sH7-aw-jhQ" secondAttribute="bottom" id="uF6-Oq-PBo"/>
+                <constraint firstItem="VhL-dq-yUd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="15" id="uJj-4g-eZ2"/>
+                <constraint firstItem="sH7-aw-jhQ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="uee-pL-Z0a"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="26.5" y="51.5"/>
+        </view>
+    </objects>
+</document>

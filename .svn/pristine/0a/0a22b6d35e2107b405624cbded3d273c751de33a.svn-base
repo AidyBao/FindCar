@@ -1,0 +1,119 @@
+//
+//  ZXTextInput1TableViewCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTextInputDoneDelegate: class {
+    func zxTextCell(_ cell: UITableViewCell, inputDone text: String?, tag: Int)
+}
+
+class ZXTextInput1TableViewCell: ZXTableViewCell, UITextViewDelegate {
+
+    weak var delegate: ZXTextInputDoneDelegate?
+    @IBOutlet weak var lbTitle: UILabel!
+    @IBOutlet weak var txtvInfo: UITextView!
+    @IBOutlet weak var lbIsOptional: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.lbTitle.font = UIFont.zx_titleFont
+        self.lbTitle.textColor = UIColor.zx_textColorTitle
+        
+        self.lbIsOptional.font = UIFont.zx_titleFont
+        self.lbIsOptional.textColor = UIColor.zx_textColorMark
+
+
+        self.txtvInfo.backgroundColor = UIColor.zx_emptyColor
+        self.txtvInfo.layer.cornerRadius = 5
+        self.txtvInfo.font = UIFont.zx_bodyFont
+        self.txtvInfo.textColor = UIColor.zx_textColorTitle
+        
+        self.txtvInfo.delegate = self
+        
+        self.lbIsOptional.isHidden = true
+        self.lbTitle.text = ""
+        self.txtvInfo.text = ""
+        self.lbIsOptional.text = "(选填)"
+
+        self.txtvInfo.addSubview(lbPlaceHolder)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(textViewTextChanged(_:)), name: NSNotification.Name.UITextViewTextDidChange, object: nil)
+    }
+    
+    fileprivate func markedNSRange(textView: UITextView) -> NSRange? {
+        if let markedRange = textView.markedTextRange {
+            let begining = textView.beginningOfDocument
+            let start = markedRange.start
+            let end = markedRange.end
+            let location = textView.offset(from: begining, to: start)
+            let length = textView.offset(from: start, to: end)
+            return NSMakeRange(location, length)
+        }
+        return nil
+    }
+
+    
+    @objc func textViewTextChanged(_ notice: NSNotification) {
+        if let txtV = notice.object as? UITextView,txtV == self.txtvInfo {
+            if let selectedRange = txtV.markedTextRange,txtV.position(from: selectedRange.start, offset: 0) != nil {//存在高亮则不处理
+                return
+            }
+            if let text = txtV.text, !text.isEmpty {
+                var tempText = text
+                if tempText.count > 128 {
+                    tempText = tempText.substring(to: 128)
+                    self.txtvInfo.text = tempText
+                }
+            }
+        }
+    }
+    
+    func setInputText(_ text: String?, placeholder: String?) {
+        self.txtvInfo.text  = text
+        self.lbPlaceHolder.text = placeholder
+    }
+    
+    fileprivate var lbPlaceHolder: UILabel = {
+        let label = UILabel.init(frame: CGRect(x: 5, y: 5, width: 200, height: 30))
+        label.font = UIFont.zx_bodyFont
+        label.textColor = UIColor.zx_textColorMark
+        return label
+    }()
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.count == 0 {
+            lbPlaceHolder.isHidden = false
+        } else {
+            lbPlaceHolder.isHidden = true
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        delegate?.zxTextCell(self, inputDone: textView.text, tag: 0)
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if !text.isEmpty, range.location > 127 {
+            return false
+        }
+        return true
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextViewTextDidChange, object: nil)
+    }
+    
+}

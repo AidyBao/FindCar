@@ -1,0 +1,48 @@
+//
+//  ZXLoginManager.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXLoginManager: NSObject {
+    
+    //MARK: - 启动登录
+    class func requestForLogin(success:((_ success: Bool,_ code:Int,_ content: Dictionary<String,Any>,_ errMsg: String) -> Void)?,failed:((_ code: Int,_ errMsg: String)->Void)?) {
+        var dic: Dictionary<String,Any> = Dictionary.init()
+        let telePhoneUUID: String = ZXDevice.zx_deviceUUID()
+        if telePhoneUUID.count != 0 {
+            dic["uuid"] = telePhoneUUID
+        }
+        
+        if ZXUser.user.tel.count != 0 {
+            dic["tel"] = ZXUser.user.tel
+        }
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.User.login), params: dic, sign: false, method: .post) { (s, status, content, string, error) in
+            if status == ZXAPI_SUCCESS {
+                success?(s,status,content,(error?.errorMessage)!)
+            }else{
+                failed?(status,(error?.errorMessage)!)
+            }
+        }
+    }
+    
+    //MARK: - 获取设备信息
+    class func requestForEquipment() {
+        var dic: Dictionary<String,Any> = Dictionary.init()
+        dic["uuid"] = ZXDevice.zx_deviceUUID()
+        dic["mobileSystemType"] = ZXDevice.zx_deviceSystem()
+        dic["mobileSystemVersion"] = ZXDevice.zx_deviceVersion()
+        dic["mobileModel"] = ZXDevice.zx_deviceType()
+        if ZXDevice.zx_deviceToken().isEmpty == false {
+            dic["deviceToken"] = ZXDevice.zx_deviceToken()
+        }
+        dic["packageName"] = ZXDevice.zx_getBundleId()
+        dic["appVersion"] = ZXDevice.zx_getBundleVersion()
+        ZXNetwork.asyncRequest(withUrl: ZXAPI.api(address: ZXAPIConst.User.updateEquipmentInfo), params: dic, method: .post, completion: { (success, status, content, string, errMsg) in
+        })
+    }
+}

@@ -1,0 +1,222 @@
+//
+//  ZXTaskModel+Ext.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/12.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTaskOperateTimeModel: ZXModel {
+    var taskStatus: Int = 0
+    var operationTime: TimeInterval = 0
+    var operationTimeStr: String = ""
+}
+
+enum ZXTaskStatus {
+    case none
+    case waitMatch
+    case waitConfirm
+    //case confirmed
+    case waitAuthorize
+    //case authorized
+    case waitVarifyCar
+    //case carVarified
+    case waitTakeCar
+    //case carTaked
+    case waitFinish
+    case finished
+    case closed
+    
+    func description() -> String {
+        switch self {
+        case .waitMatch, .waitConfirm:
+            return "领取任务成功"
+        case .waitAuthorize:
+            return "公司已确认"
+        case .waitVarifyCar:
+            return "已获取授权"
+        case .waitTakeCar:
+            return "已取到车辆"
+        case .waitFinish:
+            return "车辆已交接"
+        case .finished:
+            return "车辆已交接"
+        default:
+            break
+        }
+        return ""
+    }
+}
+
+enum ZXTaskProgressColor {
+    case gray
+    case halfBlue
+    case allBlue
+    case halfYellow
+    case allYellow
+}
+
+extension ZXTaskModel {
+    ///钥匙 、产权、合同等信息
+    var zx_extralTags: Array<Bool> {
+        get {
+            var tags = [false, false, false, false, false]
+            if self.drivingLicense == 1 {
+                tags[0] = true
+            }
+            if self.propertyRightCard == 1 {
+                tags[1] = true
+            }
+            if self.spareKey == 1 {
+                tags[2] = true
+            }
+            if self.vehicleInvoice == 1 {
+                tags[3] = true
+            }
+            if self.loanContract == 1 {
+                tags[4] = true
+            }
+            return tags
+        }
+    }
+    ///上传过内容
+    var zx_hasUploadData: Bool {
+        get {
+            let status = self.zx_status
+            if status == .none || status == .waitMatch || status == .closed {
+                return false
+            }
+            return true
+        }
+    }
+    ///前端对应进度状态
+    var zx_status: ZXTaskStatus {
+        get {
+            switch self.status {
+            case 1,2:   //1：待审核，2：已驳回 (不显示进度条)
+                return .none
+            case 3,4:   //3：待领取，4：待上传车架号
+                return .waitMatch
+            case 5:     //5：待确认领取
+                return .waitConfirm
+            case 6,7:   //6：待确认金融方确认，7：待授权
+                return .waitAuthorize
+            case 8:     //8：待上传验车信息
+                return .waitVarifyCar
+            case 9,10:  //9：待金融机构付款，10：等待交车
+                return .waitTakeCar
+            case 11:    //11：待付款给找车公司
+                return .waitFinish
+            case 12:    //12：完成
+                return .finished
+            case 13:    //13已结束 (不显示进度条)
+                return .closed
+            default:
+                break
+            }
+            return .none
+        }
+    }
+    //zx_status.description() 详情中显示的状态
+    ///列表中显示的状态
+    var zx_statusInfoInList: String {
+        get {
+            switch self.zx_status {
+            case .waitMatch:
+                return "待领取"
+            case .finished:
+                return "已完成"
+            case .closed:
+                return "已结束"
+            case .none:
+                return ""
+            default:
+                break
+            }
+            return "进行中"
+        }
+    }
+    ///任务操作状态
+    var zx_controlType: ZXTaskControlType {
+        get {
+            switch self.zx_status {
+            case .waitMatch:
+                return .uploadCarInfo
+            case .waitConfirm:
+                return .none
+            case .waitAuthorize:
+                return .none
+            case .waitVarifyCar:
+                return .verifyCarInfo
+            case .waitTakeCar:
+                if isValidateCheckingCode == 1 {//已验证取车码
+                    return .uploadSheet
+                }
+                return .handOverCar
+            case .waitFinish:
+                return .none
+            case .finished:
+                return .none
+            default:
+                break
+            }
+            return .none
+        }
+    }
+    ///进度条状态
+    var zx_progressColorList: Array<ZXTaskProgressColor> {
+        get {
+            var list: Array<ZXTaskProgressColor> = [.gray, .gray, .gray, .gray, .gray, .gray]
+            switch self.zx_status {
+            case .waitMatch:
+                list[0] = .allBlue
+            case .waitConfirm:
+                var color = ZXTaskProgressColor.halfBlue
+                if self.isOnAudit == 1 {
+                    color = ZXTaskProgressColor.halfYellow
+                }
+                list[0] = .allBlue
+                list[1] = color
+            case .waitAuthorize:
+                list[0] = .allBlue
+                list[1] = .allBlue
+                list[2] = .halfBlue
+            case .waitVarifyCar:
+                var color = ZXTaskProgressColor.halfBlue
+                if self.isOnAudit == 1 {
+                    color = ZXTaskProgressColor.halfYellow
+                }
+                list[0] = .allBlue
+                list[1] = .allBlue
+                list[2] = .allBlue
+                list[3] = color
+            case .waitTakeCar:
+                list[0] = .allBlue
+                list[1] = .allBlue
+                list[2] = .allBlue
+                list[3] = .allBlue
+                list[4] = .halfBlue
+            case .waitFinish:
+                list[0] = .allBlue
+                list[1] = .allBlue
+                list[2] = .allBlue
+                list[3] = .allBlue
+                list[4] = .allBlue
+                list[5] = .halfBlue
+            case .finished:
+                list[0] = .allBlue
+                list[1] = .allBlue
+                list[2] = .allBlue
+                list[3] = .allBlue
+                list[4] = .allBlue
+                list[5] = .allBlue
+            default:
+                list = []//不显示进度条
+                break
+            }
+            return list
+        }
+    }
+}

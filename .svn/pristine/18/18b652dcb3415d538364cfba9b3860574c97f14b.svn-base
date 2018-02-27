@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ZXImageControlCCVCell" customModule="FindCar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="89" height="85"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="89" height="85"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BTn-rV-L9O">
+                        <rect key="frame" x="0.0" y="0.0" width="89" height="85"/>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZU-aX-FJF">
+                        <rect key="frame" x="54" y="0.0" width="35" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="35" id="5H1-dl-shB"/>
+                            <constraint firstAttribute="width" constant="35" id="vLV-UK-0cI"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="2" minY="-2" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" image="zx-delete"/>
+                        <connections>
+                            <action selector="deleteAction:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Zjc-xd-Fmq"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="BTn-rV-L9O" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="41p-Hr-zKa"/>
+                <constraint firstItem="BTn-rV-L9O" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="9dC-Zh-cAx"/>
+                <constraint firstItem="XZU-aX-FJF" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="CUt-F7-xMZ"/>
+                <constraint firstAttribute="trailing" secondItem="BTn-rV-L9O" secondAttribute="trailing" id="MsD-om-mDn"/>
+                <constraint firstAttribute="trailing" secondItem="XZU-aX-FJF" secondAttribute="trailing" id="Rle-bE-TZk"/>
+                <constraint firstAttribute="bottom" secondItem="BTn-rV-L9O" secondAttribute="bottom" id="co2-54-sz6"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <size key="customSize" width="89" height="85"/>
+            <connections>
+                <outlet property="btnDelete" destination="XZU-aX-FJF" id="TAw-fH-gLz"/>
+                <outlet property="imgView" destination="BTn-rV-L9O" id="7ph-Uc-HAu"/>
+            </connections>
+            <point key="canvasLocation" x="44.5" y="69.5"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="zx-delete" width="25" height="25"/>
+    </resources>
+</document>

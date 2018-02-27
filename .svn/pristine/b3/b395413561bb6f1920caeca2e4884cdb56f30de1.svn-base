@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXAllTaskViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="allBtn" destination="H7j-Rf-7Gy" id="LWl-aR-R3k"/>
+                <outlet property="authBtn" destination="uUw-cY-fFf" id="vEW-Fh-Kgl"/>
+                <outlet property="getBtn" destination="1lg-qn-87h" id="llP-VW-chw"/>
+                <outlet property="succBtn" destination="rln-Cq-JyF" id="irf-Os-kl0"/>
+                <outlet property="tabList" destination="jcq-vh-hqS" id="eME-Mt-Q0c"/>
+                <outlet property="toolView" destination="2me-4t-Vlu" id="BRa-JC-ZIJ"/>
+                <outlet property="toolViewH" destination="YK0-e4-raW" id="GzH-Io-bke"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2me-4t-Vlu">
+                    <rect key="frame" x="0.0" y="20" width="375" height="50"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KsN-hr-aQj">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="yns-JM-ldw"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U7J-Gh-7SR">
+                            <rect key="frame" x="0.0" y="1" width="375" height="49"/>
+                            <subviews>
+                                <button opaque="NO" tag="3121" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7j-Rf-7Gy" customClass="ZXComButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="20" y="10" width="69" height="29"/>
+                                    <state key="normal" title="全部">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="btnAction:" destination="-1" eventType="touchUpInside" id="L00-1w-b8z"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="3123" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uUw-cY-fFf" customClass="ZXComButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="197.5" y="10" width="69" height="29"/>
+                                    <state key="normal" title="获取授权">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="btnAction:" destination="-1" eventType="touchUpInside" id="yCf-3U-5ON"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="3124" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1lg-qn-87h" customClass="ZXComButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="286.5" y="10" width="68.5" height="29"/>
+                                    <state key="normal" title="取到车辆">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="btnAction:" destination="-1" eventType="touchUpInside" id="fCP-zy-A2L"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" tag="3122" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rln-Cq-JyF" customClass="ZXComButton" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="109" y="10" width="68.5" height="29"/>
+                                    <state key="normal" title="匹配成功">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="btnAction:" destination="-1" eventType="touchUpInside" id="QUi-7r-TD3"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="H7j-Rf-7Gy" secondAttribute="bottom" constant="10" id="2DV-lN-Yrr"/>
+                                <constraint firstItem="rln-Cq-JyF" firstAttribute="width" secondItem="H7j-Rf-7Gy" secondAttribute="width" id="6qV-mv-oBx"/>
+                                <constraint firstItem="rln-Cq-JyF" firstAttribute="leading" secondItem="H7j-Rf-7Gy" secondAttribute="trailing" constant="20" id="CuN-AA-tCc"/>
+                                <constraint firstItem="H7j-Rf-7Gy" firstAttribute="centerY" secondItem="U7J-Gh-7SR" secondAttribute="centerY" id="HJ0-GZ-mgc"/>
+                                <constraint firstItem="H7j-Rf-7Gy" firstAttribute="leading" secondItem="U7J-Gh-7SR" secondAttribute="leading" constant="20" id="HY3-rI-ypm"/>
+                                <constraint firstItem="uUw-cY-fFf" firstAttribute="centerY" secondItem="U7J-Gh-7SR" secondAttribute="centerY" id="I3Y-28-bdX"/>
+                                <constraint firstAttribute="trailing" secondItem="1lg-qn-87h" secondAttribute="trailing" constant="20" id="NOR-7k-eiV"/>
+                                <constraint firstItem="uUw-cY-fFf" firstAttribute="height" secondItem="H7j-Rf-7Gy" secondAttribute="height" id="QuI-ea-77V"/>
+                                <constraint firstItem="H7j-Rf-7Gy" firstAttribute="top" secondItem="U7J-Gh-7SR" secondAttribute="top" constant="10" id="TjS-zI-EgJ"/>
+                                <constraint firstItem="uUw-cY-fFf" firstAttribute="width" secondItem="H7j-Rf-7Gy" secondAttribute="width" id="WYS-Dq-Jlm"/>
+                                <constraint firstItem="uUw-cY-fFf" firstAttribute="leading" secondItem="rln-Cq-JyF" secondAttribute="trailing" constant="20" id="YSA-RW-Mg5"/>
+                                <constraint firstItem="1lg-qn-87h" firstAttribute="centerY" secondItem="U7J-Gh-7SR" secondAttribute="centerY" id="ZsK-ae-Y1a"/>
+                                <constraint firstItem="1lg-qn-87h" firstAttribute="width" secondItem="H7j-Rf-7Gy" secondAttribute="width" id="gct-D8-rj4"/>
+                                <constraint firstItem="rln-Cq-JyF" firstAttribute="height" secondItem="H7j-Rf-7Gy" secondAttribute="height" id="lhG-BU-73n"/>
+                                <constraint firstItem="1lg-qn-87h" firstAttribute="height" secondItem="H7j-Rf-7Gy" secondAttribute="height" id="nSp-uk-5ie"/>
+                                <constraint firstItem="rln-Cq-JyF" firstAttribute="centerY" secondItem="U7J-Gh-7SR" secondAttribute="centerY" id="ujk-bn-gxy"/>
+                                <constraint firstItem="1lg-qn-87h" firstAttribute="leading" secondItem="uUw-cY-fFf" secondAttribute="trailing" constant="20" id="vGs-j6-2pZ"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="U7J-Gh-7SR" secondAttribute="bottom" id="7Sp-xq-sUQ"/>
+                        <constraint firstItem="U7J-Gh-7SR" firstAttribute="top" secondItem="KsN-hr-aQj" secondAttribute="bottom" id="WmG-up-Ghg"/>
+                        <constraint firstAttribute="height" constant="50" id="YK0-e4-raW"/>
+                        <constraint firstItem="KsN-hr-aQj" firstAttribute="leading" secondItem="2me-4t-Vlu" secondAttribute="leading" id="YVW-3S-E3e"/>
+                        <constraint firstItem="U7J-Gh-7SR" firstAttribute="leading" secondItem="2me-4t-Vlu" secondAttribute="leading" id="cto-Dg-ACq"/>
+                        <constraint firstAttribute="trailing" secondItem="KsN-hr-aQj" secondAttribute="trailing" id="d41-xQ-zn4"/>
+                        <constraint firstAttribute="trailing" secondItem="U7J-Gh-7SR" secondAttribute="trailing" id="omM-Xe-whJ"/>
+                        <constraint firstItem="KsN-hr-aQj" firstAttribute="top" secondItem="2me-4t-Vlu" secondAttribute="top" id="pqw-mC-xwm"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jcq-vh-hqS">
+                    <rect key="frame" x="0.0" y="70" width="375" height="597"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="wuA-Kl-WIY"/>
+                        <outlet property="delegate" destination="-1" id="HOd-X9-wqY"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="jcq-vh-hqS" secondAttribute="trailing" id="FEj-wA-KYm"/>
+                <constraint firstItem="2me-4t-Vlu" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="OPe-P4-1QA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2me-4t-Vlu" secondAttribute="trailing" id="Y2I-zY-Tq5"/>
+                <constraint firstItem="jcq-vh-hqS" firstAttribute="top" secondItem="2me-4t-Vlu" secondAttribute="bottom" id="ZKH-Rf-aMP"/>
+                <constraint firstItem="2me-4t-Vlu" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="fhi-NN-6E9"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="jcq-vh-hqS" secondAttribute="bottom" id="ms8-ST-bdd"/>
+                <constraint firstItem="jcq-vh-hqS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="nXR-Wb-fMG"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="26.5" y="52.5"/>
+        </view>
+    </objects>
+</document>

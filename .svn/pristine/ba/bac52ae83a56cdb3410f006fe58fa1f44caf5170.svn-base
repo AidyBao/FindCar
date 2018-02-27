@@ -1,0 +1,112 @@
+//
+//  ZXSearchViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/29.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSearchViewController: ZXUIViewController {
+    
+    @IBOutlet weak var nav1View: UIView!
+    @IBOutlet weak var nav2View: UIView!
+    @IBOutlet weak var searchView: UIView!
+    @IBOutlet weak var maskView: UIView!
+    
+    @IBOutlet weak var tabList: UITableView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setUIStyle()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        self.nav1View.backgroundColor = UIColor.zx_tintColor
+        self.nav2View.backgroundColor = UIColor.zx_tintColor
+        
+        self.maskView.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.2)
+        self.maskView.alpha = 0
+        self.maskView.isHidden = true
+        
+        self.searchView.backgroundColor = UIColor.zx_tintColor
+        self.searchView.addSubview(self.searchBar)
+        self.searchBar.delegate = self
+        
+        self.view.backgroundColor = UIColor.zx_tintColor
+        
+         self.tabList.backgroundColor = UIColor.zx_subTintColor
+        
+        self.zx_addKeyboardNotification()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.searchBar.becomeFirstResponder()
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.searchBar.frame = CGRect(x: 0, y: 0, width: self.searchView.frame.size.width, height: self.searchView.frame.size.height)
+    }
+    
+    //MARK: - Keyboard Action
+    override func zx_keyboardWillShow(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        self.maskView.isHidden = false
+        UIView.animate(withDuration: dt, animations: {
+            self.maskView.alpha = 1.0
+        }, completion: nil)
+    }
+    
+    override func zx_keyboardWillHide(duration dt: Double, userInfo: Dictionary<String, Any>) {
+        UIView.animate(withDuration: dt, animations: {
+            self.maskView.alpha = 0
+        }) { (finished) in
+            self.maskView.isHidden = true
+        }
+    }
+    
+    deinit {
+        self.zx_removeKeyboardNotification()
+    }
+
+    //MARK: - serach bar
+    let searchBar:UISearchBar = {
+        let _searchBar = UISearchBar.init()
+        let placeHoderlStr = "搜索"
+        _searchBar.autocapitalizationType = .none
+        _searchBar.autocorrectionType = .no
+        _searchBar.backgroundImage = UIImage()
+        if #available(iOS 9.0, *) {
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.font.rawValue: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor.rawValue: UIColor.zx_textColorTitle]
+            let attrStr = NSAttributedString.init(string: placeHoderlStr, attributes: [NSAttributedStringKey.font: UIFont.zx_titleFont(UIFont.zx_bodyFontSize),NSAttributedStringKey.foregroundColor: UIColor.zx_textColorMark])
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = attrStr
+        } else {
+            // Fallback on earlier versions
+            _searchBar.placeholder = placeHoderlStr
+        }
+        return _searchBar
+    }()
+
+}
+
+extension ZXSearchViewController:UISearchBarDelegate {
+    //MARK: - 搜索
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print(searchBar.text)
+    }
+}

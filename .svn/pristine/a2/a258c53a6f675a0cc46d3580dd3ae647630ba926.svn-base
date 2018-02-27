@@ -1,0 +1,339 @@
+//
+//  ZXAgencyView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+enum ZXAgencyType {
+    case NoLimit
+    case BelowTen
+    case TenToThirty
+    case ThirtyToFifty
+    case AboveFifty
+    
+    func typeValue() -> String {
+        switch self {
+        case .NoLimit:
+            return "不限"
+        case .BelowTen:
+            return "10k以下"
+        case .TenToThirty:
+            return "10k-30k"
+        case .ThirtyToFifty:
+            return "30k-50k"
+        case .AboveFifty:
+            return "50k以上"
+        }
+    }
+}
+
+
+
+
+typealias ZXAgencyViewBlock = (_ agenView: ZXAgencyView, _ minValue: String, _ maxValue: String,_ index: Int) -> Void
+
+class ZXAgencyView: UIView {
+
+    struct ZXAgencyBtnTag {
+        static let NoLimit          = 1221
+        static let BelowTen         = 1222
+        static let TenToThirty      = 1223
+        static let ThirtyToFifty    = 1224
+        static let AboveFifty       = 1225
+    }
+        
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var backViewH: NSLayoutConstraint!
+    @IBOutlet weak var noLimitBtn: ZXStatusButton!
+    @IBOutlet weak var tenBtn: ZXStatusButton!
+    @IBOutlet weak var thirtyBtn: ZXStatusButton!
+    @IBOutlet weak var fiftyBtn: ZXStatusButton!
+    @IBOutlet weak var aboveFiftyBtn: ZXStatusButton!
+    
+    @IBOutlet weak var minText: UITextField!
+    @IBOutlet weak var maxText: UITextField!
+    @IBOutlet weak var confirmBtn: ZXUIButton!
+    
+    @IBOutlet weak var geliViewOne: UIView!
+    @IBOutlet weak var geliViewTwo: UIView!
+    
+    var block: ZXAgencyViewBlock?
+    var minValue: String = ""
+    var maxValue: String = ""
+    
+    static func loadNib() -> ZXAgencyView{
+        let nibView:ZXAgencyView = Bundle.main.loadNibNamed("ZXAgencyView", owner: self, options: nil)?.first as! ZXAgencyView
+        return nibView
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    }
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        self.setAnima()
+        
+        self.setUIStyle()
+        
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.frame = CGRect.init(x: 0, y: self.frame.origin.y, width: self.frame.size.width, height: self.frame.size.height)
+        
+        self.backView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: 101.5)
+    }
+    
+    func setUIStyle() {
+        
+        self.noLimitBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.tenBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.thirtyBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.fiftyBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.aboveFiftyBtn.titleLabel?.font = UIFont.zx_titleFont
+        
+        self.minText.backgroundColor = UIColor.zx_subTintColor
+        self.minText.textColor = UIColor.zx_textColorTitle
+        self.minText.font = UIFont.zx_bodyFont
+        self.maxText.backgroundColor = UIColor.zx_subTintColor
+        self.maxText.textColor = UIColor.zx_textColorTitle
+        self.maxText.font = UIFont.zx_bodyFont
+        self.minText.layer.cornerRadius = 6.0
+        self.minText.layer.masksToBounds = true
+        self.maxText.layer.cornerRadius = 6.0
+        self.maxText.layer.masksToBounds = true
+        
+        self.minText.text = self.minValue
+        self.maxText.text = self.maxValue
+        
+        self.minText.delegate = self
+        self.maxText.delegate = self
+        
+        self.confirmBtn.titleLabel?.font = UIFont.zx_titleFont
+        self.confirmBtn.layer.cornerRadius = 6.0
+        self.confirmBtn.layer.masksToBounds = true
+        
+        self.minText.addTarget(self, action: #selector(textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+        self.maxText.addTarget(self, action: #selector(textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+    }
+    
+    func setAnima() {
+        self.backViewH.constant = 0
+        self.backView.alpha = 0
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 100.0
+            self.backView.alpha = 1.0
+        }) { (finish) in
+            self.alpha = 1.0
+        }
+    }
+    
+    //MARK: - 设置默认值
+    func setDefaultValue(_ minStr: String, _ maxStr: String, _ index: Int) {
+        self.minValue = minStr
+        self.minText.text = minStr
+        
+        self.maxValue = maxStr
+        self.maxText.text = maxStr
+        
+        switch index {
+        case ZXAgencyBtnTag.NoLimit:
+            if minStr == "", maxStr == "" {
+                self.noLimitBtn.zx_isSelected(true)
+            }else{
+                self.noLimitBtn.zx_isSelected(false)
+            }
+        case ZXAgencyBtnTag.BelowTen:
+            if minStr == "", maxStr == "10000" {
+                self.tenBtn.zx_isSelected(true)
+            }else{
+                self.tenBtn.zx_isSelected(false)
+            }
+        case ZXAgencyBtnTag.TenToThirty:
+            if minStr == "10000", maxStr == "30000" {
+                self.thirtyBtn.zx_isSelected(true)
+            }else{
+                self.thirtyBtn.zx_isSelected(false)
+            }
+        case ZXAgencyBtnTag.ThirtyToFifty:
+            if minStr == "30000", maxStr == "50000" {
+                self.fiftyBtn.zx_isSelected(true)
+            }else{
+                self.fiftyBtn.zx_isSelected(false)
+            }
+        case ZXAgencyBtnTag.AboveFifty:
+            if minStr == "50000", maxStr == "" {
+                self.aboveFiftyBtn.zx_isSelected(true)
+            }else{
+                self.aboveFiftyBtn.zx_isSelected(false)
+            }
+        default:
+            break
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if block != nil {
+            block?(self,minValue,maxValue,-1)
+        }
+        
+        self.dismiss()
+    }
+    
+    func dismiss() {
+        self.backViewH.constant = 100
+        self.backView.alpha = 1
+        UIView.animate(withDuration: 0.35, animations: {
+            self.backViewH.constant = 0.0
+            self.backView.alpha = 0.0
+        }) { (finish) in
+            self.alpha = 0.0
+        }
+        
+        self.removeFromSuperview()
+    }
+    
+    @IBAction func buttonAction(_ sender: ZXStatusButton) {
+        sender.zx_isSelected(false)
+        
+        self.setBtnStatus(sender.tag)
+        
+        self.minText.text = minValue
+        self.maxText.text = maxValue
+        
+        if block != nil {
+            block?(self,minValue,maxValue,sender.tag)
+        }
+        
+        self.dismiss()
+    }
+    
+    func setBtnStatus(_ index: Int) {
+        switch index {
+        case ZXAgencyBtnTag.NoLimit:
+            minValue = ""
+            maxValue = ""
+            self.noLimitBtn.zx_isSelected(true)
+        case ZXAgencyBtnTag.BelowTen:
+            minValue = ""
+            maxValue = "10000"
+            self.tenBtn.zx_isSelected(true)
+        case ZXAgencyBtnTag.TenToThirty:
+            minValue = "10000"
+            maxValue = "30000"
+            self.thirtyBtn.zx_isSelected(true)
+        case ZXAgencyBtnTag.ThirtyToFifty:
+            minValue = "30000"
+            maxValue = "50000"
+            self.fiftyBtn.zx_isSelected(true)
+        case ZXAgencyBtnTag.AboveFifty:
+            minValue = "50000"
+            maxValue = ""
+            self.aboveFiftyBtn.zx_isSelected(true)
+        default:
+            break
+        }
+    }
+    
+    
+    @IBAction func confirmBtnAction(_ sender: UIButton) {
+        
+        //如果max<min,交换位置
+        if self.minText.text! > self.maxText.text! {
+            minValue = self.maxText.text!
+            maxValue = self.minText.text!
+        }else{
+            minValue = self.minText.text!
+            maxValue = self.maxText.text!
+        }
+        
+        //判断输入的值是否在这几种情况中
+        let index = self.returnIndex()
+        
+        if block != nil {
+            block?(self,minValue,maxValue,index)
+        }
+        
+        self.dismiss()
+    }
+    
+    //MARK: - 判断输入的值是否在这几种情况中
+    func returnIndex() -> Int {
+        var index: Int = -1
+        if minValue == "", maxValue == "" {
+            index = ZXAgencyBtnTag.NoLimit
+        }
+        
+        if minValue == "", maxValue == "10000" {
+            index = ZXAgencyBtnTag.BelowTen
+        }
+        
+        if minValue == "10000", maxValue == "30000" {
+            index = ZXAgencyBtnTag.TenToThirty
+        }
+        
+        if minValue == "30000", maxValue == "50000" {
+            index = ZXAgencyBtnTag.ThirtyToFifty
+        }
+        
+        if minValue == "50000", maxValue == "" {
+            index = ZXAgencyBtnTag.AboveFifty
+        }
+        
+        return index
+    }
+    
+    @objc fileprivate func textFieldDidChange(_ textField:UITextField) {
+        if textField == minText {
+            minValue = textField.text!
+        }
+        
+        if textField == maxText {
+            maxValue = textField.text!
+        }
+        
+        self.noLimitBtn.zx_isSelected(false)
+        self.tenBtn.zx_isSelected(false)
+        self.thirtyBtn.zx_isSelected(false)
+        self.fiftyBtn.zx_isSelected(false)
+        self.aboveFiftyBtn.zx_isSelected(false)
+        
+        let index = self.returnIndex()
+        
+        self.setBtnStatus(index)
+    }
+}
+
+extension ZXAgencyView: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if range.location + string.count >= 8 {
+            return false
+        }
+        return true
+    }
+}

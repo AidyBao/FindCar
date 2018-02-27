@@ -1,0 +1,45 @@
+//
+//  ZXBaseInfoModel.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/16.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import HandyJSON
+
+class ZXBaseInfoModel: HandyJSON {
+    
+    required init() {}
+    
+    var baseId: Int                 = -1
+    var branchId: Int               = -1
+    var carCompanyId: Int           = -1
+    var carCompanyName: String      = ""
+    var registeredTel: String       = ""
+    var invitationCode: String      = ""
+    var uploadImgTimes: Int         = 0
+    var getTaskNumber: Int          = 0
+    var finishTaskNumber: Int       = 0
+    var sumTaskPrice: Float         = 0
+    var appVersion: String          = ""
+    var mobileSystemVersion: String = ""
+    var mobileSystemType: String    = ""
+    var mobileModel: String         = ""
+    var mobileManufacturers: String = ""
+    var deviceToken: String         = ""
+    var token: String               = ""
+    var remark: String              = ""
+    var status: String              = ""
+    var operatorId: String          = ""
+    var operatorName: String        = ""
+    var operationTime: String       = ""
+    var operationTimeStr: String    = ""
+    var companyStatus: String       = ""
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.baseId <-- "id"
+    }
+}

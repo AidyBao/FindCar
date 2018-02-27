@@ -1,0 +1,296 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            return 59.0
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            let headerView:ZXTaskToolCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskToolCell.ZXTaskToolCellID) as! ZXTaskToolCell
+            headerView.delegate = self
+            return headerView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0.0
+        switch indexPath.section {
+        case 0:
+            if direction == .up, currentOffsetY >= 0 {
+                cellH = 0
+            }else{
+                cellH = 145.0
+            }
+        case 1:
+            cellH = ZXTaskTableViewCell.height
+        default:
+            break
+        }
+        return cellH
+    }
+}
+
+
+extension ZXHomePageViewController: UITableViewDataSource {
+    
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let bannerCell: ZXTaskBannerCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID, for: indexPath) as! ZXTaskBannerCell
+            bannerCell.delegate = self
+            return bannerCell
+        case 1:
+//            let rootCell: ZXTaskRootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskRootCell.ZXTaskRootCellID, for: indexPath) as! ZXTaskRootCell
+            
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            return rootCell
+        default:
+            return UITableViewCell.init(style: .default, reuseIdentifier: "UNKnow")
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var cellCount: Int = 0
+        switch section {
+        case 0:
+            if direction == .up, currentOffsetY >= 0 {
+                cellCount = 0
+            }else{
+                cellCount = 1
+            }
+        case 1:
+            cellCount = 3
+        default:
+            break
+        }
+        return cellCount
+    }
+}
+
+extension ZXHomePageViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        oldOffsetY = scrollView.contentOffset.y
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        newOffsetY = scrollView.contentOffset.y
+        print(newOffsetY - oldOffsetY)
+        if (newOffsetY - oldOffsetY) > 0 {
+            direction = .up
+        }else{
+            direction = .down
+        }
+        
+        let offsetY:CGFloat = scrollView.contentOffset.y;
+        var value = offsetY / 44.0;
+        
+        value = value >= 1 ? 1 : value
+        value = value <= 0 ? 0 : value
+        
+       
+        if direction == .up {
+            if currentOffsetY > 0, self.isEndDrug == false{
+                
+                //        print(value)
+                UIView.animate(withDuration: 0.4, animations: {
+                    self.navView.alpha = 1 - value
+                    self.navViewH.constant = (1 - value)*44
+                    self.tableViewTop.constant = -24
+                    self.listTableView.mj_header.isHidden = true
+                }) { (finish) in
+                   self.listTableView.reloadData()
+                }
+                
+                UIView.animate(withDuration: 0.35, animations: {
+                    self.isEndDrug = true
+                    self.navViewH.constant = 0
+                    self.navView.isHidden = true
+                    self.tableViewTop.constant = -24
+                    self.listTableView.mj_header.isHidden = true
+                }, completion: { (_) in
+                    
+                })
+            }
+        }else{
+            if currentOffsetY <= 0, self.isEndDrug == true {
+                UIView.animate(withDuration: 0.35, animations: {
+                    self.isEndDrug = false
+                    self.navViewH.constant = 44
+                    self.navView.isHidden = false
+                    self.tableViewTop.constant = 0
+                    self.listTableView.mj_header.isHidden = false
+                }, completion: { (_) in
+                    self.listTableView.reloadData()
+                })
+            }
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        currentOffsetY = self.listTableView.contentOffset.y
+
+        if direction == .up {
+            if currentOffsetY >= 44 {
+
+            }else{
+                UIView.animate(withDuration: 0.35, animations: {
+
+                }, completion: { (_) in
+
+                })
+            }
+        }else{
+            if currentOffsetY < 44 {
+                UIView.animate(withDuration: 0.35, animations: {
+
+                }, completion: { (_) in
+                    
+                })
+            }else{
+
+            }
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY:CGFloat = scrollView.contentOffset.y;
+        var value = offsetY / 44.0;
+
+        value = value >= 1 ? 1 : value
+        value = value <= 0 ? 0 : value
+
+//        print(value)
+        UIView.animate(withDuration: 0.4, animations: {
+            self.navView.alpha = 1 - value
+            self.navViewH.constant = (1 - value)*44
+        }) { (finish) in
+//            self.view.layoutSubviews()
+        }
+        
+        currentOffsetY = scrollView.contentOffset.y
+        
+//        print(currentOffsetY)
+        
+
+    }
+}
+
+
+
+extension ZXHomePageViewController: ZXTaskTableViewCellDelegate {
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, marked: Bool) {
+        print("Marked: \(marked)")
+    }
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell) {
+        print("Share Action")
+    }
+}
+
+
+//MARK: - BannerDelegate
+extension ZXHomePageViewController: ZXTaskBannerCellDelegate {
+    func didSelectedBannerCell(_ index: Int) {
+        print(index)
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskToolCellDelegate {
+    func didTaskToolAction(_ sender: UIButton) {
+
+        if self.listTableView.headerView(forSection: 1) is ZXTaskToolCell {
+            let headerView: ZXTaskToolCell = self.listTableView.headerView(forSection: 1) as! ZXTaskToolCell
+            //
+            if headerView.defaultBtn.isSelected {
+                if sender.tag == ZXTaskToolCell.ZXTaskButtonTag.defaultBtn {
+                    headerView.defaultBtn.isSelected = false
+                }
+                self.screenView?.dismiss()
+                return
+            }else{
+                self.screenView?.removeFromSuperview()
+            }
+            
+            //
+            switch sender.tag {
+            case ZXTaskToolCell.ZXTaskButtonTag.defaultBtn:
+
+                headerView.defaultBtn.isSelected = true
+                //
+                self.screenView = ZXScreenView.init(frame: CGRect.init(x: 0, y: self.tableViewTop.constant + (145 + 20), width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT - (self.tableViewTop.constant + (145 + 20))))
+                self.screenView?.show()
+                self.screenView?.delegate = self
+                
+                
+                //
+                //        if self.indexPath == nil {
+                //            self.indexPath = IndexPath(item:0, section:0)
+                //        }
+            //        self.screenView?.setDefaultSelectItem(0)
+            case ZXTaskToolCell.ZXTaskButtonTag.agentBtn:
+                break
+            case ZXTaskToolCell.ZXTaskButtonTag.locationBtn:
+                break
+            case ZXTaskToolCell.ZXTaskButtonTag.taskBtn:
+                break
+            default:
+                break
+            }
+
+        }
+
+    }
+}
+
+extension ZXHomePageViewController: ZXScreenViewDelegate {
+    func didScreenViewCellItem(_ indexPath: IndexPath, _ type: String) {
+        
+        if self.listTableView.headerView(forSection: 1) is ZXTaskToolCell {
+            let headerView: ZXTaskToolCell = self.listTableView.headerView(forSection: 1) as! ZXTaskToolCell
+            headerView.defaultBtn.isSelected = false
+            
+            //
+            UIView.animate(withDuration: 0.35, animations: {
+                self.screenView?.dismiss()
+            }) { (finished) in
+                
+            }
+        }
+    }
+    
+    func touchesBeganTrainScreeningView() {
+ 
+        if self.listTableView.headerView(forSection: 1) is ZXTaskToolCell {
+            let headerView: ZXTaskToolCell = self.listTableView.headerView(forSection: 1) as! ZXTaskToolCell
+            headerView.defaultBtn.isSelected = false
+            //
+            self.screenView?.dismiss()
+        }
+    }
+}
+
+

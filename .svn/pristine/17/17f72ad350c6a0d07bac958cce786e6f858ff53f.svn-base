@@ -1,0 +1,119 @@
+//
+//  ZXUploadCarInfoViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+struct ZXImagePrefix {//保证zip的图片格式，后台解析
+    static let plateNumber      =   "plateNumberImg_"           //车牌号图片
+    static let VIN              =   "frameNumberImg_"           //车架号图片
+    static let carMatch         =   "carMatchImg_"              //车头或车尾图片
+    static let problem          =   "problemImg_"                //重大问题图片
+    static let carFront         =   "validateFrontImg_"          //车辆正面图片
+    static let carRoom          =   "validateOpenImg_"           //打开车门驾驶室图片
+    static let centerControl    =   "validateControlImg_"        //前中控照片
+    static let carBack          =   "validateBackImg_"           //车辆尾部图片
+    static let handoverSheet    =   "handoverImg_"               //交接单
+    
+}
+
+/// 补充车辆信息
+class ZXUploadCarInfoViewController: ZXUIViewController {
+    @IBOutlet weak var tblList: UITableView!
+    @IBOutlet weak var btnCommit: ZXCButton!
+    
+    fileprivate let folderName = ZXDateUtils.zx_serialNumber()
+    fileprivate var zipName: String {
+        return folderName + ".zip"
+    }
+    
+    fileprivate let arrTitles = ["1 车辆车架号", "2 车头或车尾照片", "3 重大问题照片"]
+    fileprivate let arrSubTitles = ["车架号大多在发动机舱、仪表板左侧或挡风玻璃左下方", "将车牌号包含在照片中", "例如车辆验证损坏、部件缺失等"]
+    fileprivate var arrVIN: Array<ZXImageInputModel> = []
+    fileprivate var arrCars: Array<ZXImageInputModel> = []
+    fileprivate var arrProblems: Array<ZXImageInputModel> = []//选填
+    fileprivate var strMark: String?//选填
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.title = "补充车辆信息"
+        self.tblList.showsVerticalScrollIndicator = false
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.zx_addNavBarButtonItems(textNames: ["查看示例"], font: nil, color: UIColor.zx_tintColor, at: .right)
+        self.tblList.register(UINib.init(nibName: ZXImageInputCell.NibName, bundle: nil), forCellReuseIdentifier: ZXImageInputCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput1TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput1TableViewCell.reuseIdentifier)
+        
+        if !FileManager.ZX.imageFolderCheck() {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "创建本地文件目录失败,请清除本地缓存后重试", buttonText: "好的", action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+        }
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        let verifyVC = ZXVerifyCarInfoViewController()
+        self.navigationController?.pushViewController(verifyVC, animated: true)
+    }
+
+    @IBAction func commitAction(_ sender: Any) {
+        
+    }
+    
+    deinit {
+        FileManager.ZX.clearImageCache()
+    }
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return ZXImageInputCell.height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 3 {
+            return 15
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.lbIsOptional.isHidden = false
+            cell.lbTitle.text = "4 备注"
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXImageInputCell.reuseIdentifier, for: indexPath) as! ZXImageInputCell
+            cell.lbTitle.text = arrTitles[indexPath.section]
+            cell.lbSubTitle.text = arrSubTitles[indexPath.section]
+            if indexPath.row == 3 {
+                cell.lbIsOptional.isHidden = false
+            } else {
+                cell.lbIsOptional.isHidden = true
+            }
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+}

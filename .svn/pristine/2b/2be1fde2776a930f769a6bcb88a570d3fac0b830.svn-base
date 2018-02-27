@@ -1,0 +1,25 @@
+//
+//  ZXImageInputModel.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/15.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXImageInputModel: NSObject {
+    var filePath: String?
+    var absolutePath: String? {
+        if let filePath = filePath {
+            return FileManager.ZX.imageCachesPath + "/" + filePath
+        }
+        return nil
+    }
+    var url: URL? {
+        if let aPath = absolutePath {
+            return URL.init(fileURLWithPath: aPath)
+        }
+        return nil
+    }
+}

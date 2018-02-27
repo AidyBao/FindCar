@@ -1,0 +1,904 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00C794CB1506DD7EC241A0E9 /* Pods_FindCar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8DE8F009D9B867E96F93EB7 /* Pods_FindCar.framework */; };
+		6A50C6041FF4966200085FDB /* ZXPersonalInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A50C6021FF4966200085FDB /* ZXPersonalInfoCell.swift */; };
+		6A50C6051FF4966200085FDB /* ZXPersonalInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A50C6031FF4966200085FDB /* ZXPersonalInfoCell.xib */; };
+		6A50C6081FF4967200085FDB /* ZXSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A50C6061FF4967200085FDB /* ZXSettingCell.swift */; };
+		6A50C6091FF4967200085FDB /* ZXSettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A50C6071FF4967200085FDB /* ZXSettingCell.xib */; };
+		6A50C60C1FF4BA3800085FDB /* UIScrollView+ZXRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A50C60B1FF4BA3800085FDB /* UIScrollView+ZXRefresh.swift */; };
+		6A7C0DF81FE8B12D0042291F /* ZXRootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0DF31FE8B12D0042291F /* ZXRootController.swift */; };
+		6A7C0DF91FE8B12D0042291F /* ZXRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0DF51FE8B12D0042291F /* ZXRouter.swift */; };
+		6A7C0DFA1FE8B12D0042291F /* ZXUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0DF61FE8B12D0042291F /* ZXUITableViewController.swift */; };
+		6A7C0DFB1FE8B12D0042291F /* ZXUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0DF71FE8B12D0042291F /* ZXUIViewController.swift */; };
+		6A7C0DFE1FE8E7B80042291F /* ZXConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0DFC1FE8E7B80042291F /* ZXConfirmViewController.swift */; };
+		6A7C0DFF1FE8E7B80042291F /* ZXConfirmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C0DFD1FE8E7B80042291F /* ZXConfirmViewController.xib */; };
+		6A7C0E011FE8ED2C0042291F /* ZXOCRUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C0E001FE8ED2C0042291F /* ZXOCRUtils.swift */; };
+		6A7EE0F11FF2315A00959918 /* ZXAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0ED1FF2315900959918 /* ZXAPI.swift */; };
+		6A7EE0F21FF2315A00959918 /* ZXAPIDataparse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0EE1FF2315900959918 /* ZXAPIDataparse.swift */; };
+		6A7EE0F31FF2315A00959918 /* ZXAPISign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0EF1FF2315900959918 /* ZXAPISign.swift */; };
+		6A7EE0F41FF2315A00959918 /* ZXBase64Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0F01FF2315900959918 /* ZXBase64Utils.swift */; };
+		6A7EE0F61FF2317C00959918 /* ZXConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0F51FF2317B00959918 /* ZXConst.swift */; };
+		6A7EE0F81FF232EF00959918 /* ZXNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7EE0F71FF232EF00959918 /* ZXNotification.swift */; };
+		6AD022071FE3A88300A4E78D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022061FE3A88300A4E78D /* AppDelegate.swift */; };
+		6AD0220E1FE3A88300A4E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AD0220D1FE3A88300A4E78D /* Assets.xcassets */; };
+		6AD022111FE3A88300A4E78D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AD0220F1FE3A88300A4E78D /* LaunchScreen.storyboard */; };
+		6AD0221E1FE3ADE500A4E78D /* ZXHomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0221C1FE3ADE500A4E78D /* ZXHomePageViewController.swift */; };
+		6AD0221F1FE3ADE500A4E78D /* ZXHomePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AD0221D1FE3ADE500A4E78D /* ZXHomePageViewController.xib */; };
+		6AD022221FE3ADF400A4E78D /* ZXTakePhotoPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022201FE3ADF400A4E78D /* ZXTakePhotoPageViewController.swift */; };
+		6AD022231FE3ADF400A4E78D /* ZXTakePhotoPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AD022211FE3ADF400A4E78D /* ZXTakePhotoPageViewController.xib */; };
+		6AD022261FE3AE0000A4E78D /* ZXPersonalCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022241FE3AE0000A4E78D /* ZXPersonalCenterViewController.swift */; };
+		6AD022271FE3AE0000A4E78D /* ZXPersonalCenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AD022251FE3AE0000A4E78D /* ZXPersonalCenterViewController.xib */; };
+		6AD0225E1FE3B21D00A4E78D /* ZXConfigValueProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0223D1FE3B21D00A4E78D /* ZXConfigValueProtocol.swift */; };
+		6AD0225F1FE3B21D00A4E78D /* ZXFontConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0223E1FE3B21D00A4E78D /* ZXFontConfig.swift */; };
+		6AD022601FE3B21D00A4E78D /* ZXNavBarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0223F1FE3B21D00A4E78D /* ZXNavBarConfig.swift */; };
+		6AD022611FE3B21D00A4E78D /* ZXTabbarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022401FE3B21D00A4E78D /* ZXTabbarConfig.swift */; };
+		6AD022621FE3B21D00A4E78D /* ZXTintColorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022411FE3B21D00A4E78D /* ZXTintColorConfig.swift */; };
+		6AD022631FE3B21D00A4E78D /* Bundle+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022431FE3B21D00A4E78D /* Bundle+ZX.swift */; };
+		6AD022641FE3B21D00A4E78D /* NSAttributedString+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022441FE3B21D00A4E78D /* NSAttributedString+ZX.swift */; };
+		6AD022651FE3B21D00A4E78D /* NSObject+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022451FE3B21D00A4E78D /* NSObject+ZX.swift */; };
+		6AD022661FE3B21D00A4E78D /* ResuableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022461FE3B21D00A4E78D /* ResuableView.swift */; };
+		6AD022671FE3B21D00A4E78D /* String+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022471FE3B21D00A4E78D /* String+ZX.swift */; };
+		6AD022681FE3B21D00A4E78D /* UIColor+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022481FE3B21D00A4E78D /* UIColor+ZX.swift */; };
+		6AD022691FE3B21D00A4E78D /* UIDevice+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022491FE3B21D00A4E78D /* UIDevice+ZX.swift */; };
+		6AD0226A1FE3B21D00A4E78D /* UIFont+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0224A1FE3B21D00A4E78D /* UIFont+ZX.swift */; };
+		6AD0226B1FE3B21D00A4E78D /* UITabbarController+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0224B1FE3B21D00A4E78D /* UITabbarController+ZX.swift */; };
+		6AD0226C1FE3B21D00A4E78D /* UIViewController+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0224C1FE3B21D00A4E78D /* UIViewController+ZX.swift */; };
+		6AD0226D1FE3B21D00A4E78D /* UIViewController+ZXNavControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0224D1FE3B21D00A4E78D /* UIViewController+ZXNavControl.swift */; };
+		6AD0226E1FE3B21D00A4E78D /* ZXNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD0224F1FE3B21D00A4E78D /* ZXNetwork.swift */; };
+		6AD0226F1FE3B21D00A4E78D /* ZXStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022501FE3B21D00A4E78D /* ZXStructs.swift */; };
+		6AD022701FE3B21D00A4E78D /* HImagePickerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022521FE3B21D00A4E78D /* HImagePickerUtils.swift */; };
+		6AD022711FE3B21D00A4E78D /* ZXAlertUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022531FE3B21D00A4E78D /* ZXAlertUtils.swift */; };
+		6AD022721FE3B21D00A4E78D /* ZXAudioUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022541FE3B21D00A4E78D /* ZXAudioUtils.swift */; };
+		6AD022731FE3B21D00A4E78D /* ZXCommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022551FE3B21D00A4E78D /* ZXCommonUtils.swift */; };
+		6AD022741FE3B21D00A4E78D /* ZXDateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022561FE3B21D00A4E78D /* ZXDateUtils.swift */; };
+		6AD022751FE3B21D00A4E78D /* ZXLocationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022571FE3B21D00A4E78D /* ZXLocationUtils.swift */; };
+		6AD022761FE3B21D00A4E78D /* ZXUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD022581FE3B21D00A4E78D /* ZXUtils.swift */; };
+		6AD022771FE3B21D00A4E78D /* ZXSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6AD022591FE3B21D00A4E78D /* ZXSettings.bundle */; };
+		6ADE27E61FF48702001488FA /* ZXTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADE27E51FF48702001488FA /* ZXTableViewCell.swift */; };
+		6ADE27EE1FF48A2F001488FA /* ZXTaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADE27EC1FF48A2F001488FA /* ZXTaskTableViewCell.swift */; };
+		6ADE27EF1FF48A2F001488FA /* ZXTaskTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6ADE27ED1FF48A2F001488FA /* ZXTaskTableViewCell.xib */; };
+		6ADE27F11FF48E35001488FA /* UIView+ZX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADE27F01FF48E35001488FA /* UIView+ZX.swift */; };
+		6ADE27F41FF48FD9001488FA /* ZXTaskHeaderInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADE27F21FF48FD9001488FA /* ZXTaskHeaderInfoCell.swift */; };
+		6ADE27F51FF48FD9001488FA /* ZXTaskHeaderInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6ADE27F31FF48FD9001488FA /* ZXTaskHeaderInfoCell.xib */; };
+		6AE727221FE7C1E500BF6C5B /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727161FE7C1E500BF6C5B /* ConfirmViewController.swift */; };
+		6AE727231FE7C1E500BF6C5B /* SingleImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727171FE7C1E500BF6C5B /* SingleImageFetcher.swift */; };
+		6AE727241FE7C1E500BF6C5B /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727181FE7C1E500BF6C5B /* UIButtonExtensions.swift */; };
+		6AE727251FE7C1E500BF6C5B /* CroppingParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727191FE7C1E500BF6C5B /* CroppingParameters.swift */; };
+		6AE727261FE7C1E500BF6C5B /* CameraViewAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AE7271A1FE7C1E500BF6C5B /* CameraViewAssets.xcassets */; };
+		6AE727271FE7C1E500BF6C5B /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE7271B1FE7C1E500BF6C5B /* PermissionsView.swift */; };
+		6AE727281FE7C1E500BF6C5B /* CropOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE7271C1FE7C1E500BF6C5B /* CropOverlay.swift */; };
+		6AE727291FE7C1E500BF6C5B /* ConfirmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AE7271D1FE7C1E500BF6C5B /* ConfirmViewController.xib */; };
+		6AE7272A1FE7C1E500BF6C5B /* PhotoLibraryAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE7271E1FE7C1E500BF6C5B /* PhotoLibraryAuthorizer.swift */; };
+		6AE7272B1FE7C1E500BF6C5B /* CameraView.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AE7271F1FE7C1E500BF6C5B /* CameraView.strings */; };
+		6AE7272C1FE7C1E500BF6C5B /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727201FE7C1E500BF6C5B /* Utilities.swift */; };
+		6AE7272D1FE7C1E500BF6C5B /* CameraGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE727211FE7C1E500BF6C5B /* CameraGlobals.swift */; };
+		6AF888101FE3BB80005D0D32 /* ZXFailure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF888091FE3BB80005D0D32 /* ZXFailure@2x.png */; };
+		6AF888111FE3BB80005D0D32 /* ZXFailure@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8880A1FE3BB80005D0D32 /* ZXFailure@3x.png */; };
+		6AF888121FE3BB80005D0D32 /* ZXHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8880B1FE3BB80005D0D32 /* ZXHUD.swift */; };
+		6AF888131FE3BB80005D0D32 /* ZXLoading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8880C1FE3BB80005D0D32 /* ZXLoading@2x.png */; };
+		6AF888141FE3BB80005D0D32 /* ZXLoading@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8880D1FE3BB80005D0D32 /* ZXLoading@3x.png */; };
+		6AF888151FE3BB80005D0D32 /* ZXSuccess@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8880E1FE3BB80005D0D32 /* ZXSuccess@2x.png */; };
+		6AF888161FE3BB80005D0D32 /* ZXSuccess@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8880F1FE3BB80005D0D32 /* ZXSuccess@3x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6AE726BF1FE78EE300BF6C5B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5D1236A7F09C7C5DF802BBE8 /* Pods-FindCar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindCar.release.xcconfig"; path = "Pods/Target Support Files/Pods-FindCar/Pods-FindCar.release.xcconfig"; sourceTree = "<group>"; };
+		6A50C6021FF4966200085FDB /* ZXPersonalInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXPersonalInfoCell.swift; sourceTree = "<group>"; };
+		6A50C6031FF4966200085FDB /* ZXPersonalInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXPersonalInfoCell.xib; sourceTree = "<group>"; };
+		6A50C6061FF4967200085FDB /* ZXSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXSettingCell.swift; sourceTree = "<group>"; };
+		6A50C6071FF4967200085FDB /* ZXSettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXSettingCell.xib; sourceTree = "<group>"; };
+		6A50C60B1FF4BA3800085FDB /* UIScrollView+ZXRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+ZXRefresh.swift"; sourceTree = "<group>"; };
+		6A7C0DF31FE8B12D0042291F /* ZXRootController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXRootController.swift; sourceTree = "<group>"; };
+		6A7C0DF51FE8B12D0042291F /* ZXRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXRouter.swift; sourceTree = "<group>"; };
+		6A7C0DF61FE8B12D0042291F /* ZXUITableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXUITableViewController.swift; sourceTree = "<group>"; };
+		6A7C0DF71FE8B12D0042291F /* ZXUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXUIViewController.swift; sourceTree = "<group>"; };
+		6A7C0DFC1FE8E7B80042291F /* ZXConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXConfirmViewController.swift; sourceTree = "<group>"; };
+		6A7C0DFD1FE8E7B80042291F /* ZXConfirmViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXConfirmViewController.xib; sourceTree = "<group>"; };
+		6A7C0E001FE8ED2C0042291F /* ZXOCRUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXOCRUtils.swift; sourceTree = "<group>"; };
+		6A7EE0ED1FF2315900959918 /* ZXAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXAPI.swift; sourceTree = "<group>"; };
+		6A7EE0EE1FF2315900959918 /* ZXAPIDataparse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXAPIDataparse.swift; sourceTree = "<group>"; };
+		6A7EE0EF1FF2315900959918 /* ZXAPISign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXAPISign.swift; sourceTree = "<group>"; };
+		6A7EE0F01FF2315900959918 /* ZXBase64Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXBase64Utils.swift; sourceTree = "<group>"; };
+		6A7EE0F51FF2317B00959918 /* ZXConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXConst.swift; sourceTree = "<group>"; };
+		6A7EE0F71FF232EF00959918 /* ZXNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXNotification.swift; sourceTree = "<group>"; };
+		6AD022031FE3A88300A4E78D /* FindCar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindCar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AD022061FE3A88300A4E78D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6AD0220D1FE3A88300A4E78D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6AD022101FE3A88300A4E78D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6AD022121FE3A88300A4E78D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AD0221C1FE3ADE500A4E78D /* ZXHomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXHomePageViewController.swift; sourceTree = "<group>"; };
+		6AD0221D1FE3ADE500A4E78D /* ZXHomePageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXHomePageViewController.xib; sourceTree = "<group>"; };
+		6AD022201FE3ADF400A4E78D /* ZXTakePhotoPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXTakePhotoPageViewController.swift; sourceTree = "<group>"; };
+		6AD022211FE3ADF400A4E78D /* ZXTakePhotoPageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXTakePhotoPageViewController.xib; sourceTree = "<group>"; };
+		6AD022241FE3AE0000A4E78D /* ZXPersonalCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXPersonalCenterViewController.swift; sourceTree = "<group>"; };
+		6AD022251FE3AE0000A4E78D /* ZXPersonalCenterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXPersonalCenterViewController.xib; sourceTree = "<group>"; };
+		6AD0223D1FE3B21D00A4E78D /* ZXConfigValueProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXConfigValueProtocol.swift; sourceTree = "<group>"; };
+		6AD0223E1FE3B21D00A4E78D /* ZXFontConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXFontConfig.swift; sourceTree = "<group>"; };
+		6AD0223F1FE3B21D00A4E78D /* ZXNavBarConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXNavBarConfig.swift; sourceTree = "<group>"; };
+		6AD022401FE3B21D00A4E78D /* ZXTabbarConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXTabbarConfig.swift; sourceTree = "<group>"; };
+		6AD022411FE3B21D00A4E78D /* ZXTintColorConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXTintColorConfig.swift; sourceTree = "<group>"; };
+		6AD022431FE3B21D00A4E78D /* Bundle+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+ZX.swift"; sourceTree = "<group>"; };
+		6AD022441FE3B21D00A4E78D /* NSAttributedString+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+ZX.swift"; sourceTree = "<group>"; };
+		6AD022451FE3B21D00A4E78D /* NSObject+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+ZX.swift"; sourceTree = "<group>"; };
+		6AD022461FE3B21D00A4E78D /* ResuableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResuableView.swift; sourceTree = "<group>"; };
+		6AD022471FE3B21D00A4E78D /* String+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+ZX.swift"; sourceTree = "<group>"; };
+		6AD022481FE3B21D00A4E78D /* UIColor+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+ZX.swift"; sourceTree = "<group>"; };
+		6AD022491FE3B21D00A4E78D /* UIDevice+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+ZX.swift"; sourceTree = "<group>"; };
+		6AD0224A1FE3B21D00A4E78D /* UIFont+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+ZX.swift"; sourceTree = "<group>"; };
+		6AD0224B1FE3B21D00A4E78D /* UITabbarController+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabbarController+ZX.swift"; sourceTree = "<group>"; };
+		6AD0224C1FE3B21D00A4E78D /* UIViewController+ZX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+ZX.swift"; sourceTree = "<group>"; };
+		6AD0224D1FE3B21D00A4E78D /* UIViewController+ZXNavControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+ZXNavControl.swift"; sourceTree = "<group>"; };
+		6AD0224F1FE3B21D00A4E78D /* ZXNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXNetwork.swift; sourceTree = "<group>"; };
+		6AD022501FE3B21D00A4E78D /* ZXStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXStructs.swift; sourceTree = "<group>"; };
+		6AD022521FE3B21D00A4E78D /* HImagePickerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HImagePickerUtils.swift; sourceTree = "<group>"; };
+		6AD022531FE3B21D00A4E78D /* ZXAlertUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXAlertUtils.swift; sourceTree = "<group>"; };
+		6AD022541FE3B21D00A4E78D /* ZXAudioUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXAudioUtils.swift; sourceTree = "<group>"; };
+		6AD022551FE3B21D00A4E78D /* ZXCommonUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXCommonUtils.swift; sourceTree = "<group>"; };
+		6AD022561FE3B21D00A4E78D /* ZXDateUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXDateUtils.swift; sourceTree = "<group>"; };
+		6AD022571FE3B21D00A4E78D /* ZXLocationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXLocationUtils.swift; sourceTree = "<group>"; };
+		6AD022581FE3B21D00A4E78D /* ZXUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXUtils.swift; sourceTree = "<group>"; };
+		6AD022591FE3B21D00A4E78D /* ZXSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZXSettings.bundle; sourceTree = "<group>"; };
+		6ADE27E51FF48702001488FA /* ZXTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXTableViewCell.swift; sourceTree = "<group>"; };
+		6ADE27EC1FF48A2F001488FA /* ZXTaskTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXTaskTableViewCell.swift; sourceTree = "<group>"; };
+		6ADE27ED1FF48A2F001488FA /* ZXTaskTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXTaskTableViewCell.xib; sourceTree = "<group>"; };
+		6ADE27F01FF48E35001488FA /* UIView+ZX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ZX.swift"; sourceTree = "<group>"; };
+		6ADE27F21FF48FD9001488FA /* ZXTaskHeaderInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZXTaskHeaderInfoCell.swift; sourceTree = "<group>"; };
+		6ADE27F31FF48FD9001488FA /* ZXTaskHeaderInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZXTaskHeaderInfoCell.xib; sourceTree = "<group>"; };
+		6AE727161FE7C1E500BF6C5B /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
+		6AE727171FE7C1E500BF6C5B /* SingleImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleImageFetcher.swift; sourceTree = "<group>"; };
+		6AE727181FE7C1E500BF6C5B /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		6AE727191FE7C1E500BF6C5B /* CroppingParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CroppingParameters.swift; sourceTree = "<group>"; };
+		6AE7271A1FE7C1E500BF6C5B /* CameraViewAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CameraViewAssets.xcassets; sourceTree = "<group>"; };
+		6AE7271B1FE7C1E500BF6C5B /* PermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
+		6AE7271C1FE7C1E500BF6C5B /* CropOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropOverlay.swift; sourceTree = "<group>"; };
+		6AE7271D1FE7C1E500BF6C5B /* ConfirmViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfirmViewController.xib; sourceTree = "<group>"; };
+		6AE7271E1FE7C1E500BF6C5B /* PhotoLibraryAuthorizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibraryAuthorizer.swift; sourceTree = "<group>"; };
+		6AE7271F1FE7C1E500BF6C5B /* CameraView.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = CameraView.strings; sourceTree = "<group>"; };
+		6AE727201FE7C1E500BF6C5B /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		6AE727211FE7C1E500BF6C5B /* CameraGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraGlobals.swift; sourceTree = "<group>"; };
+		6AF888091FE3BB80005D0D32 /* ZXFailure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXFailure@2x.png"; sourceTree = "<group>"; };
+		6AF8880A1FE3BB80005D0D32 /* ZXFailure@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXFailure@3x.png"; sourceTree = "<group>"; };
+		6AF8880B1FE3BB80005D0D32 /* ZXHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXHUD.swift; sourceTree = "<group>"; };
+		6AF8880C1FE3BB80005D0D32 /* ZXLoading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXLoading@2x.png"; sourceTree = "<group>"; };
+		6AF8880D1FE3BB80005D0D32 /* ZXLoading@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXLoading@3x.png"; sourceTree = "<group>"; };
+		6AF8880E1FE3BB80005D0D32 /* ZXSuccess@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXSuccess@2x.png"; sourceTree = "<group>"; };
+		6AF8880F1FE3BB80005D0D32 /* ZXSuccess@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZXSuccess@3x.png"; sourceTree = "<group>"; };
+		6AF888171FE3C890005D0D32 /* FindCar-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FindCar-Bridging-Header.h"; sourceTree = "<group>"; };
+		D8DE8F009D9B867E96F93EB7 /* Pods_FindCar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FindCar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD833259D06C0C208C9E2358 /* Pods-FindCar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindCar.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FindCar/Pods-FindCar.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6AD022001FE3A88300A4E78D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00C794CB1506DD7EC241A0E9 /* Pods_FindCar.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A9750C79844C957393ED0FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D8DE8F009D9B867E96F93EB7 /* Pods_FindCar.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6A50C6011FF4964300085FDB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6A50C6021FF4966200085FDB /* ZXPersonalInfoCell.swift */,
+				6A50C6031FF4966200085FDB /* ZXPersonalInfoCell.xib */,
+				6A50C6061FF4967200085FDB /* ZXSettingCell.swift */,
+				6A50C6071FF4967200085FDB /* ZXSettingCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6A50C60A1FF4BA0A00085FDB /* ZXExtension */ = {
+			isa = PBXGroup;
+			children = (
+				6ADE27F01FF48E35001488FA /* UIView+ZX.swift */,
+				6A50C60B1FF4BA3800085FDB /* UIScrollView+ZXRefresh.swift */,
+			);
+			path = ZXExtension;
+			sourceTree = "<group>";
+		};
+		6A7C0DF21FE8B12D0042291F /* ZXTabbar */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C0DF31FE8B12D0042291F /* ZXRootController.swift */,
+				6A7C0DF41FE8B12D0042291F /* ZXRouter */,
+				6A7C0DF61FE8B12D0042291F /* ZXUITableViewController.swift */,
+				6A7C0DF71FE8B12D0042291F /* ZXUIViewController.swift */,
+			);
+			path = ZXTabbar;
+			sourceTree = "<group>";
+		};
+		6A7C0DF41FE8B12D0042291F /* ZXRouter */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C0DF51FE8B12D0042291F /* ZXRouter.swift */,
+			);
+			path = ZXRouter;
+			sourceTree = "<group>";
+		};
+		6A7EE0EC1FF2315900959918 /* ZXNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				6A7EE0ED1FF2315900959918 /* ZXAPI.swift */,
+				6A7EE0EE1FF2315900959918 /* ZXAPIDataparse.swift */,
+				6A7EE0EF1FF2315900959918 /* ZXAPISign.swift */,
+				6A7EE0F01FF2315900959918 /* ZXBase64Utils.swift */,
+			);
+			path = ZXNetwork;
+			sourceTree = "<group>";
+		};
+		6AD021FA1FE3A88300A4E78D = {
+			isa = PBXGroup;
+			children = (
+				6AD022051FE3A88300A4E78D /* FindCar */,
+				6AD022041FE3A88300A4E78D /* Products */,
+				D39DE20454BAA59FBCB9058A /* Pods */,
+				4A9750C79844C957393ED0FB /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		6AD022041FE3A88300A4E78D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022031FE3A88300A4E78D /* FindCar.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6AD022051FE3A88300A4E78D /* FindCar */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022061FE3A88300A4E78D /* AppDelegate.swift */,
+				6AD022181FE3A9AB00A4E78D /* ZXPresentation */,
+				6AF888071FE3BB75005D0D32 /* ZXCommon */,
+				6AD022341FE3B21D00A4E78D /* ZXPrivate */,
+				6AD0220D1FE3A88300A4E78D /* Assets.xcassets */,
+				6AD0220F1FE3A88300A4E78D /* LaunchScreen.storyboard */,
+				6AD022121FE3A88300A4E78D /* Info.plist */,
+				6AF888171FE3C890005D0D32 /* FindCar-Bridging-Header.h */,
+			);
+			path = FindCar;
+			sourceTree = "<group>";
+		};
+		6AD022181FE3A9AB00A4E78D /* ZXPresentation */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C0DF21FE8B12D0042291F /* ZXTabbar */,
+				6AD022191FE3A9D500A4E78D /* ZXHomePage */,
+				6AD0221A1FE3A9DF00A4E78D /* ZXTakePhotoPage */,
+				6AD0221B1FE3A9E700A4E78D /* ZXPersonalCenter */,
+			);
+			path = ZXPresentation;
+			sourceTree = "<group>";
+		};
+		6AD022191FE3A9D500A4E78D /* ZXHomePage */ = {
+			isa = PBXGroup;
+			children = (
+				6AD0221C1FE3ADE500A4E78D /* ZXHomePageViewController.swift */,
+				6AD0221D1FE3ADE500A4E78D /* ZXHomePageViewController.xib */,
+			);
+			path = ZXHomePage;
+			sourceTree = "<group>";
+		};
+		6AD0221A1FE3A9DF00A4E78D /* ZXTakePhotoPage */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022201FE3ADF400A4E78D /* ZXTakePhotoPageViewController.swift */,
+				6AD022211FE3ADF400A4E78D /* ZXTakePhotoPageViewController.xib */,
+				6A7C0DFC1FE8E7B80042291F /* ZXConfirmViewController.swift */,
+				6A7C0DFD1FE8E7B80042291F /* ZXConfirmViewController.xib */,
+				6A7C0E001FE8ED2C0042291F /* ZXOCRUtils.swift */,
+				6AE727151FE7C1D700BF6C5B /* ImageCrop */,
+			);
+			path = ZXTakePhotoPage;
+			sourceTree = "<group>";
+		};
+		6AD0221B1FE3A9E700A4E78D /* ZXPersonalCenter */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022241FE3AE0000A4E78D /* ZXPersonalCenterViewController.swift */,
+				6AD022251FE3AE0000A4E78D /* ZXPersonalCenterViewController.xib */,
+				6A50C6011FF4964300085FDB /* View */,
+			);
+			path = ZXPersonalCenter;
+			sourceTree = "<group>";
+		};
+		6AD022341FE3B21D00A4E78D /* ZXPrivate */ = {
+			isa = PBXGroup;
+			children = (
+				6A7EE0EC1FF2315900959918 /* ZXNetwork */,
+				6AD0223A1FE3B21D00A4E78D /* ZXStructs */,
+			);
+			path = ZXPrivate;
+			sourceTree = "<group>";
+		};
+		6AD0223A1FE3B21D00A4E78D /* ZXStructs */ = {
+			isa = PBXGroup;
+			children = (
+				6AD0223B1FE3B21D00A4E78D /* Classes */,
+				6AD022591FE3B21D00A4E78D /* ZXSettings.bundle */,
+			);
+			path = ZXStructs;
+			sourceTree = "<group>";
+		};
+		6AD0223B1FE3B21D00A4E78D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				6AD0223C1FE3B21D00A4E78D /* ZXConfig */,
+				6AD022421FE3B21D00A4E78D /* ZXExtension */,
+				6AD0224E1FE3B21D00A4E78D /* ZXNetwork */,
+				6AD022501FE3B21D00A4E78D /* ZXStructs.swift */,
+				6AD022511FE3B21D00A4E78D /* ZXUtilityTools */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		6AD0223C1FE3B21D00A4E78D /* ZXConfig */ = {
+			isa = PBXGroup;
+			children = (
+				6AD0223D1FE3B21D00A4E78D /* ZXConfigValueProtocol.swift */,
+				6AD0223E1FE3B21D00A4E78D /* ZXFontConfig.swift */,
+				6AD0223F1FE3B21D00A4E78D /* ZXNavBarConfig.swift */,
+				6AD022401FE3B21D00A4E78D /* ZXTabbarConfig.swift */,
+				6AD022411FE3B21D00A4E78D /* ZXTintColorConfig.swift */,
+			);
+			path = ZXConfig;
+			sourceTree = "<group>";
+		};
+		6AD022421FE3B21D00A4E78D /* ZXExtension */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022431FE3B21D00A4E78D /* Bundle+ZX.swift */,
+				6AD022441FE3B21D00A4E78D /* NSAttributedString+ZX.swift */,
+				6AD022451FE3B21D00A4E78D /* NSObject+ZX.swift */,
+				6AD022461FE3B21D00A4E78D /* ResuableView.swift */,
+				6AD022471FE3B21D00A4E78D /* String+ZX.swift */,
+				6AD022481FE3B21D00A4E78D /* UIColor+ZX.swift */,
+				6AD022491FE3B21D00A4E78D /* UIDevice+ZX.swift */,
+				6AD0224A1FE3B21D00A4E78D /* UIFont+ZX.swift */,
+				6AD0224B1FE3B21D00A4E78D /* UITabbarController+ZX.swift */,
+				6AD0224C1FE3B21D00A4E78D /* UIViewController+ZX.swift */,
+				6AD0224D1FE3B21D00A4E78D /* UIViewController+ZXNavControl.swift */,
+			);
+			path = ZXExtension;
+			sourceTree = "<group>";
+		};
+		6AD0224E1FE3B21D00A4E78D /* ZXNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				6AD0224F1FE3B21D00A4E78D /* ZXNetwork.swift */,
+			);
+			path = ZXNetwork;
+			sourceTree = "<group>";
+		};
+		6AD022511FE3B21D00A4E78D /* ZXUtilityTools */ = {
+			isa = PBXGroup;
+			children = (
+				6AD022521FE3B21D00A4E78D /* HImagePickerUtils.swift */,
+				6AD022531FE3B21D00A4E78D /* ZXAlertUtils.swift */,
+				6AD022541FE3B21D00A4E78D /* ZXAudioUtils.swift */,
+				6AD022551FE3B21D00A4E78D /* ZXCommonUtils.swift */,
+				6AD022561FE3B21D00A4E78D /* ZXDateUtils.swift */,
+				6AD022571FE3B21D00A4E78D /* ZXLocationUtils.swift */,
+				6AD022581FE3B21D00A4E78D /* ZXUtils.swift */,
+			);
+			path = ZXUtilityTools;
+			sourceTree = "<group>";
+		};
+		6ADE27E41FF486E1001488FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6ADE27E51FF48702001488FA /* ZXTableViewCell.swift */,
+				6ADE27E71FF48741001488FA /* ZXTaskCells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6ADE27E71FF48741001488FA /* ZXTaskCells */ = {
+			isa = PBXGroup;
+			children = (
+				6ADE27EC1FF48A2F001488FA /* ZXTaskTableViewCell.swift */,
+				6ADE27ED1FF48A2F001488FA /* ZXTaskTableViewCell.xib */,
+				6ADE27F21FF48FD9001488FA /* ZXTaskHeaderInfoCell.swift */,
+				6ADE27F31FF48FD9001488FA /* ZXTaskHeaderInfoCell.xib */,
+			);
+			path = ZXTaskCells;
+			sourceTree = "<group>";
+		};
+		6AE726B51FE78BCB00BF6C5B /* 3rd */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = 3rd;
+			sourceTree = "<group>";
+		};
+		6AE727151FE7C1D700BF6C5B /* ImageCrop */ = {
+			isa = PBXGroup;
+			children = (
+				6AE727211FE7C1E500BF6C5B /* CameraGlobals.swift */,
+				6AE7271F1FE7C1E500BF6C5B /* CameraView.strings */,
+				6AE7271A1FE7C1E500BF6C5B /* CameraViewAssets.xcassets */,
+				6AE727161FE7C1E500BF6C5B /* ConfirmViewController.swift */,
+				6AE7271D1FE7C1E500BF6C5B /* ConfirmViewController.xib */,
+				6AE7271C1FE7C1E500BF6C5B /* CropOverlay.swift */,
+				6AE727191FE7C1E500BF6C5B /* CroppingParameters.swift */,
+				6AE7271B1FE7C1E500BF6C5B /* PermissionsView.swift */,
+				6AE7271E1FE7C1E500BF6C5B /* PhotoLibraryAuthorizer.swift */,
+				6AE727171FE7C1E500BF6C5B /* SingleImageFetcher.swift */,
+				6AE727181FE7C1E500BF6C5B /* UIButtonExtensions.swift */,
+				6AE727201FE7C1E500BF6C5B /* Utilities.swift */,
+			);
+			path = ImageCrop;
+			sourceTree = "<group>";
+		};
+		6AF888071FE3BB75005D0D32 /* ZXCommon */ = {
+			isa = PBXGroup;
+			children = (
+				6A7EE0F51FF2317B00959918 /* ZXConst.swift */,
+				6A7EE0F71FF232EF00959918 /* ZXNotification.swift */,
+				6A50C60A1FF4BA0A00085FDB /* ZXExtension */,
+				6ADE27E41FF486E1001488FA /* Views */,
+				6AE726B51FE78BCB00BF6C5B /* 3rd */,
+				6AF888081FE3BB80005D0D32 /* ZXHUD */,
+			);
+			path = ZXCommon;
+			sourceTree = "<group>";
+		};
+		6AF888081FE3BB80005D0D32 /* ZXHUD */ = {
+			isa = PBXGroup;
+			children = (
+				6AF888091FE3BB80005D0D32 /* ZXFailure@2x.png */,
+				6AF8880A1FE3BB80005D0D32 /* ZXFailure@3x.png */,
+				6AF8880B1FE3BB80005D0D32 /* ZXHUD.swift */,
+				6AF8880C1FE3BB80005D0D32 /* ZXLoading@2x.png */,
+				6AF8880D1FE3BB80005D0D32 /* ZXLoading@3x.png */,
+				6AF8880E1FE3BB80005D0D32 /* ZXSuccess@2x.png */,
+				6AF8880F1FE3BB80005D0D32 /* ZXSuccess@3x.png */,
+			);
+			path = ZXHUD;
+			sourceTree = "<group>";
+		};
+		D39DE20454BAA59FBCB9058A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DD833259D06C0C208C9E2358 /* Pods-FindCar.debug.xcconfig */,
+				5D1236A7F09C7C5DF802BBE8 /* Pods-FindCar.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6AD022021FE3A88300A4E78D /* FindCar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AD022151FE3A88300A4E78D /* Build configuration list for PBXNativeTarget "FindCar" */;
+			buildPhases = (
+				6FF579CAB0758CE1AED1B34E /* [CP] Check Pods Manifest.lock */,
+				6AD021FF1FE3A88300A4E78D /* Sources */,
+				6AD022001FE3A88300A4E78D /* Frameworks */,
+				6AD022011FE3A88300A4E78D /* Resources */,
+				BF58EB484C1D8C2C9AE84582 /* [CP] Embed Pods Frameworks */,
+				6BACDA2193E1B1E537B1A66A /* [CP] Copy Pods Resources */,
+				6AE726BF1FE78EE300BF6C5B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FindCar;
+			productName = FindCar;
+			productReference = 6AD022031FE3A88300A4E78D /* FindCar.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6AD021FB1FE3A88300A4E78D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0910;
+				LastUpgradeCheck = 0910;
+				ORGANIZATIONNAME = screson;
+				TargetAttributes = {
+					6AD022021FE3A88300A4E78D = {
+						CreatedOnToolsVersion = 9.1;
+						LastSwiftMigration = 0910;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 6AD021FE1FE3A88300A4E78D /* Build configuration list for PBXProject "FindCar" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6AD021FA1FE3A88300A4E78D;
+			productRefGroup = 6AD022041FE3A88300A4E78D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6AD022021FE3A88300A4E78D /* FindCar */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6AD022011FE3A88300A4E78D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF888131FE3BB80005D0D32 /* ZXLoading@2x.png in Resources */,
+				6AF888161FE3BB80005D0D32 /* ZXSuccess@3x.png in Resources */,
+				6A50C6051FF4966200085FDB /* ZXPersonalInfoCell.xib in Resources */,
+				6AE727291FE7C1E500BF6C5B /* ConfirmViewController.xib in Resources */,
+				6AF888111FE3BB80005D0D32 /* ZXFailure@3x.png in Resources */,
+				6AD022111FE3A88300A4E78D /* LaunchScreen.storyboard in Resources */,
+				6ADE27EF1FF48A2F001488FA /* ZXTaskTableViewCell.xib in Resources */,
+				6AD022231FE3ADF400A4E78D /* ZXTakePhotoPageViewController.xib in Resources */,
+				6AF888141FE3BB80005D0D32 /* ZXLoading@3x.png in Resources */,
+				6AD0221F1FE3ADE500A4E78D /* ZXHomePageViewController.xib in Resources */,
+				6A50C6091FF4967200085FDB /* ZXSettingCell.xib in Resources */,
+				6AD022271FE3AE0000A4E78D /* ZXPersonalCenterViewController.xib in Resources */,
+				6AF888151FE3BB80005D0D32 /* ZXSuccess@2x.png in Resources */,
+				6AE727261FE7C1E500BF6C5B /* CameraViewAssets.xcassets in Resources */,
+				6A7C0DFF1FE8E7B80042291F /* ZXConfirmViewController.xib in Resources */,
+				6ADE27F51FF48FD9001488FA /* ZXTaskHeaderInfoCell.xib in Resources */,
+				6AF888101FE3BB80005D0D32 /* ZXFailure@2x.png in Resources */,
+				6AD022771FE3B21D00A4E78D /* ZXSettings.bundle in Resources */,
+				6AE7272B1FE7C1E500BF6C5B /* CameraView.strings in Resources */,
+				6AD0220E1FE3A88300A4E78D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6BACDA2193E1B1E537B1A66A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FindCar/Pods-FindCar-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6FF579CAB0758CE1AED1B34E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FindCar-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BF58EB484C1D8C2C9AE84582 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FindCar/Pods-FindCar-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FindCar/Pods-FindCar-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6AD021FF1FE3A88300A4E78D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AD022751FE3B21D00A4E78D /* ZXLocationUtils.swift in Sources */,
+				6A7EE0F61FF2317C00959918 /* ZXConst.swift in Sources */,
+				6A7C0E011FE8ED2C0042291F /* ZXOCRUtils.swift in Sources */,
+				6A7EE0F81FF232EF00959918 /* ZXNotification.swift in Sources */,
+				6A7EE0F21FF2315A00959918 /* ZXAPIDataparse.swift in Sources */,
+				6AE727231FE7C1E500BF6C5B /* SingleImageFetcher.swift in Sources */,
+				6AD0225E1FE3B21D00A4E78D /* ZXConfigValueProtocol.swift in Sources */,
+				6AE727251FE7C1E500BF6C5B /* CroppingParameters.swift in Sources */,
+				6AD022611FE3B21D00A4E78D /* ZXTabbarConfig.swift in Sources */,
+				6AE727221FE7C1E500BF6C5B /* ConfirmViewController.swift in Sources */,
+				6A50C6081FF4967200085FDB /* ZXSettingCell.swift in Sources */,
+				6AF888121FE3BB80005D0D32 /* ZXHUD.swift in Sources */,
+				6AE7272A1FE7C1E500BF6C5B /* PhotoLibraryAuthorizer.swift in Sources */,
+				6AD022651FE3B21D00A4E78D /* NSObject+ZX.swift in Sources */,
+				6A50C6041FF4966200085FDB /* ZXPersonalInfoCell.swift in Sources */,
+				6A7EE0F11FF2315A00959918 /* ZXAPI.swift in Sources */,
+				6AE727281FE7C1E500BF6C5B /* CropOverlay.swift in Sources */,
+				6AE727271FE7C1E500BF6C5B /* PermissionsView.swift in Sources */,
+				6A7EE0F41FF2315A00959918 /* ZXBase64Utils.swift in Sources */,
+				6AD022641FE3B21D00A4E78D /* NSAttributedString+ZX.swift in Sources */,
+				6AD022221FE3ADF400A4E78D /* ZXTakePhotoPageViewController.swift in Sources */,
+				6A50C60C1FF4BA3800085FDB /* UIScrollView+ZXRefresh.swift in Sources */,
+				6AD022711FE3B21D00A4E78D /* ZXAlertUtils.swift in Sources */,
+				6AD0226A1FE3B21D00A4E78D /* UIFont+ZX.swift in Sources */,
+				6A7C0DFE1FE8E7B80042291F /* ZXConfirmViewController.swift in Sources */,
+				6AD0226C1FE3B21D00A4E78D /* UIViewController+ZX.swift in Sources */,
+				6AE7272D1FE7C1E500BF6C5B /* CameraGlobals.swift in Sources */,
+				6AD022731FE3B21D00A4E78D /* ZXCommonUtils.swift in Sources */,
+				6AD0226E1FE3B21D00A4E78D /* ZXNetwork.swift in Sources */,
+				6ADE27EE1FF48A2F001488FA /* ZXTaskTableViewCell.swift in Sources */,
+				6AD0226B1FE3B21D00A4E78D /* UITabbarController+ZX.swift in Sources */,
+				6AD022671FE3B21D00A4E78D /* String+ZX.swift in Sources */,
+				6AD022741FE3B21D00A4E78D /* ZXDateUtils.swift in Sources */,
+				6A7C0DFB1FE8B12D0042291F /* ZXUIViewController.swift in Sources */,
+				6AD022261FE3AE0000A4E78D /* ZXPersonalCenterViewController.swift in Sources */,
+				6A7C0DF91FE8B12D0042291F /* ZXRouter.swift in Sources */,
+				6AD0221E1FE3ADE500A4E78D /* ZXHomePageViewController.swift in Sources */,
+				6A7C0DFA1FE8B12D0042291F /* ZXUITableViewController.swift in Sources */,
+				6AD022631FE3B21D00A4E78D /* Bundle+ZX.swift in Sources */,
+				6ADE27F41FF48FD9001488FA /* ZXTaskHeaderInfoCell.swift in Sources */,
+				6AD0226D1FE3B21D00A4E78D /* UIViewController+ZXNavControl.swift in Sources */,
+				6AD0225F1FE3B21D00A4E78D /* ZXFontConfig.swift in Sources */,
+				6AD022761FE3B21D00A4E78D /* ZXUtils.swift in Sources */,
+				6AE7272C1FE7C1E500BF6C5B /* Utilities.swift in Sources */,
+				6AD022701FE3B21D00A4E78D /* HImagePickerUtils.swift in Sources */,
+				6AD022681FE3B21D00A4E78D /* UIColor+ZX.swift in Sources */,
+				6ADE27E61FF48702001488FA /* ZXTableViewCell.swift in Sources */,
+				6AD022721FE3B21D00A4E78D /* ZXAudioUtils.swift in Sources */,
+				6ADE27F11FF48E35001488FA /* UIView+ZX.swift in Sources */,
+				6A7EE0F31FF2315A00959918 /* ZXAPISign.swift in Sources */,
+				6AD022071FE3A88300A4E78D /* AppDelegate.swift in Sources */,
+				6AD022601FE3B21D00A4E78D /* ZXNavBarConfig.swift in Sources */,
+				6AD022621FE3B21D00A4E78D /* ZXTintColorConfig.swift in Sources */,
+				6A7C0DF81FE8B12D0042291F /* ZXRootController.swift in Sources */,
+				6AD022661FE3B21D00A4E78D /* ResuableView.swift in Sources */,
+				6AD0226F1FE3B21D00A4E78D /* ZXStructs.swift in Sources */,
+				6AE727241FE7C1E500BF6C5B /* UIButtonExtensions.swift in Sources */,
+				6AD022691FE3B21D00A4E78D /* UIDevice+ZX.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6AD0220F1FE3A88300A4E78D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AD022101FE3A88300A4E78D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6AD022131FE3A88300A4E78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6AD022141FE3A88300A4E78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6AD022161FE3A88300A4E78D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD833259D06C0C208C9E2358 /* Pods-FindCar.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H4384M9Z5J;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = FindCar/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reson.FindCar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c1ba27e6-3e19-4bdb-9975-6d946ae6cff6";
+				PROVISIONING_PROFILE_SPECIFIER = ZXCommonDevelop;
+				SWIFT_OBJC_BRIDGING_HEADER = "FindCar/FindCar-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		6AD022171FE3A88300A4E78D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D1236A7F09C7C5DF802BBE8 /* Pods-FindCar.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H4384M9Z5J;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = FindCar/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reson.FindCar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c1ba27e6-3e19-4bdb-9975-6d946ae6cff6";
+				PROVISIONING_PROFILE_SPECIFIER = ZXCommonDevelop;
+				SWIFT_OBJC_BRIDGING_HEADER = "FindCar/FindCar-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6AD021FE1FE3A88300A4E78D /* Build configuration list for PBXProject "FindCar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AD022131FE3A88300A4E78D /* Debug */,
+				6AD022141FE3A88300A4E78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AD022151FE3A88300A4E78D /* Build configuration list for PBXNativeTarget "FindCar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AD022161FE3A88300A4E78D /* Debug */,
+				6AD022171FE3A88300A4E78D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6AD021FB1FE3A88300A4E78D /* Project object */;
+}

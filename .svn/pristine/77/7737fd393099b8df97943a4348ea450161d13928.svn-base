@@ -1,0 +1,72 @@
+//
+//  ZXExampleShowViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/5.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXExampleShowViewController: ZXUIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return UICollectionViewCell()
+    }
+    
+    
+    fileprivate var callBack: ZXEmptyCallBack?
+    fileprivate var imageNames: Array<String> = []
+    fileprivate var titles: Array<String> = []
+    static func showWithImageNames(_ name: Array<String>, _ titles: Array<String>, upoun vc: UIViewController, finished: ZXEmptyCallBack?) {
+        let showVC = ZXExampleShowViewController()
+        showVC.imageNames = name
+        showVC.titles = titles
+        showVC.callBack = finished
+        showVC.reloadAction()
+        vc.present(showVC, animated: true, completion: nil)
+    }
+    
+    @IBOutlet weak var lbTitle: UILabel!
+    @IBOutlet weak var ccvList: UICollectionView!
+    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var btnKnown: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.pageControl.pageIndicatorTintColor = UIColor.zx_tintColor
+        self.pageControl.tintColor = UIColor.white
+        if self.imageNames.count > 0 {
+            self.pageControl.isHidden = false
+            self.pageControl.numberOfPages = self.imageNames.count
+            self.pageControl.currentPage = 0
+        } else {
+            self.pageControl.isHidden = true
+        }
+        
+        self.btnKnown.backgroundColor = .clear
+        self.btnKnown.layer.cornerRadius = 20
+        self.btnKnown.layer.borderWidth = 1
+        self.btnKnown.layer.borderColor = UIColor.zx_borderColor.cgColor
+        self.btnKnown.titleLabel?.font = UIFont.zx_titleFont
+        self.btnKnown.setTitleColor(UIColor.zx_textColorMark, for: .normal)
+        
+        self.ccvList.delegate = self
+        self.ccvList.dataSource = self
+        self.ccvList.register(UINib.init(nibName: ZXImageControlCCVCell.NibName, bundle: nil), forCellWithReuseIdentifier: ZXImageControlCCVCell.reuseIdentifier)
+    }
+    
+    fileprivate func reloadAction() {
+        self.ccvList.reloadData()
+    }
+    
+    @IBAction func knownAction(_ sender: Any) {
+        
+    }
+    
+}

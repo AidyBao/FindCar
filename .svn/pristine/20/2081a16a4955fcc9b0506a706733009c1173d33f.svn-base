@@ -1,0 +1,344 @@
+//
+//  ZXUploadCarInfoViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import SSZipArchive
+import IQKeyboardManagerSwift
+
+
+struct ZXImagePrefix {//保证zip的图片格式，后台解析
+    static let plateNumber      =   "plateNumberImg_"           //车牌号图片
+    static let VIN              =   "frameNumberImg_"           //车架号图片
+    static let carMatch         =   "carMatchImg_"              //车头或车尾图片
+    static let problem          =   "problemImg_"               //重大问题图片
+    static let carFront         =   "validateFrontImg_"         //车辆正面图片
+    static let carRoom          =   "validateOpenImg_"          //打开车门驾驶室图片
+    static let centerControl    =   "validateControlImg_"       //前中控照片
+    static let carBack          =   "validateBackImg_"          //车辆尾部图片
+    static let handoverSheet    =   "handoverImg_"              //交接单
+    
+}
+
+/// 补充车辆信息
+class ZXUploadCarInfoViewController: ZXUIViewController {
+    var taskId: String?
+    @IBOutlet weak var tblList: UITableView!
+    @IBOutlet weak var btnCommit: ZXCButton!
+    
+    fileprivate let folderName = ZXDateUtils.zx_serialNumber()
+    fileprivate var folderPath: String { return FileManager.ZX.subFolder(folderName) }
+    fileprivate var zipPath: String {
+        return FileManager.ZX.imageCachesPath + "/" + "\(folderName).zip"
+    }
+    
+    fileprivate let arrTitles = ["1 车辆车架号照片", "2 车头或车尾照片", "3 重大问题照片"]
+    fileprivate let arrSubTitles = ["车架号大多在发动机舱、仪表板左侧或挡风玻璃左下方", "将车牌号包含在照片中", "例如车辆验证损坏、部件缺失等"]
+    fileprivate var arrVIN: Array<ZXImageInputModel> = []
+    fileprivate var arrCars: Array<ZXImageInputModel> = []
+    fileprivate var arrProblems: Array<ZXImageInputModel> = []//选填
+    fileprivate var strRemark: String?//选填
+    
+    lazy var imagePicker: HImagePickerUtils  = HImagePickerUtils()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        FileManager.ZX.clearImageCache()
+        // Do any additional setup after loading the view.
+        self.title = "补充车辆信息"
+        self.tblList.showsVerticalScrollIndicator = false
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.zx_addNavBarButtonItems(textNames: ["查看示例"], font: nil, color: UIColor.zx_tintColor, at: .right)
+        self.tblList.register(UINib.init(nibName: ZXImageInputCell.NibName, bundle: nil), forCellReuseIdentifier: ZXImageInputCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput1TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput1TableViewCell.reuseIdentifier)
+        
+        if taskId == nil {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "任务ID为空", buttonText: nil, action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            return
+        }
+        
+        var success = FileManager.ZX.imageFolderCheck()
+        if success {
+            success = FileManager.ZX.createFolder(at: folderPath)
+        }
+        if !success {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "创建本地文件目录失败,请清除本地缓存后重试", buttonText: "好的", action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+        }
+        IQKeyboardManager.sharedManager().enable = true
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        
+    }
+
+    @IBAction func commitAction(_ sender: Any) {
+        if self.arrVIN.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加车架号照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.arrCars.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加车头/车尾照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        ZXAlertUtils.showAlert(wihtTitle: nil, message: "文件上传过程中请勿退出程序", buttonTexts: ["取消","开始上传"], action: { (index) in
+            if index == 1 {
+                let queue = DispatchQueue(label: "com.reson.zipfile")
+                var success = false
+                let group = DispatchGroup()
+                ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在打包文件...", delay: 0)
+                queue.async(group: group, qos: .default, flags: [], execute: {
+                    success = SSZipArchive.createZipFile(atPath: self.zipPath, withContentsOfDirectory: self.folderPath)
+                })
+                group.notify(queue: queue, execute: {
+                    DispatchQueue.main.async {
+                        ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                        if success {
+                            self.uploadCheck()
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: "打包文件失败", delay: ZX.HUDDelay)
+                        }
+                    }
+                })
+            }
+        })
+    }
+    fileprivate var frameNumberImgUploaded: String?
+    fileprivate var carMatchImgUploaded: String?
+    fileprivate var problemImgUploaded: String?
+    
+    fileprivate func uploadCheck() {
+        if frameNumberImgUploaded == nil || carMatchImgUploaded == nil {
+            self.uploadZipFile()
+        } else {
+            self.uploadData()
+        }
+    }
+    
+    //MARK: - 上传zip文件
+    fileprivate func uploadZipFile() {
+        var paramas:Dictionary<String,Any> = [:]
+        paramas["directory"] = ZXAPIConst.FileResouce.carInfoFolder
+        paramas["type"] = "zip"
+        do{
+            let data = try Data.init(contentsOf: URL(fileURLWithPath: zipPath))
+            ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在上传文件...", delay: 0)
+            ZXNetwork.fileupload(to: ZXAPI.file(address: ZXAPIConst.FileResouce.url), name: "file", fileName: "\(folderName).zip", mimeType: "application/zip", fileData: data as Data, params: paramas) { (success, code, content, stringvalue, errorMsg) in
+                ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                if success {
+                    if let data = content["data"] as? Dictionary<String,String> {
+                        self.frameNumberImgUploaded = data["frameNumberImg"]
+                        self.carMatchImgUploaded = data["carMatchImg"]
+                        self.problemImgUploaded = data["problemImg"]
+                        self.uploadData()
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: "无法获取图片路径", delay: ZX.HUDDelay)
+                    }
+                } else {
+                    if code != ZXAPI_LOGIN_INVALID {
+                        ZXHUD.showFailure(in: self.view, text: (errorMsg?.description) ?? "文件上传失败", delay: ZX.HUDDelay)
+                    }
+                }
+            }
+        } catch {
+            ZXHUD.showFailure(in: self.view, text: "获取图片文件包失败,无法上传", delay: ZX.HUDDelay)
+        }
+    }
+    
+    //MARK: - 上传接口数据
+    fileprivate func uploadData() {
+        if let vinImage = frameNumberImgUploaded, let carImage = carMatchImgUploaded {
+            ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在提交数据...", delay: 0)
+            ZXTaskViewModel.uploadCarInfo(taskId: self.taskId!, VINImgUrl: vinImage, carImgUrl: carImage, problemImgUrl: self.problemImgUploaded, remark: self.strRemark, completion: { (success, code, errorMsg) in
+                ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                if success {
+                    FileManager.ZX.clearImageCache()
+                    ZXHUD.showSuccess(in: ZXRootController.appWindow()!, text: "车辆信息上传成功", delay: ZXHUD.DelayTime)
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    if code != ZXAPI_LOGIN_INVALID {
+                        ZXHUD.showFailure(in: self.view, text: errorMsg ?? ZX_UNKNOWN_ERROR_TEXT , delay: ZX.HUDDelay)
+                    }
+                }
+            })
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "无法获取资源文件路径", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    deinit {
+        IQKeyboardManager.sharedManager().enable = false
+        FileManager.ZX.clearImageCache()
+    }
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return ZXImageInputCell.height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 3 {
+            return 15
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.delegate = self
+            cell.lbIsOptional.isHidden = false
+            cell.lbTitle.text = "4 备注"
+            cell.txtvInfo.text = strRemark
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXImageInputCell.reuseIdentifier, for: indexPath) as! ZXImageInputCell
+            cell.lbTitle.text = arrTitles[indexPath.section]
+            cell.lbSubTitle.text = arrSubTitles[indexPath.section]
+            cell.delegate = self
+            if indexPath.section == 2 {
+                cell.lbIsOptional.isHidden = false
+            } else {
+                cell.lbIsOptional.isHidden = true
+            }
+            switch indexPath.section {
+            case 0:
+                cell.reloadImages(arrVIN)
+            case 1:
+                cell.reloadImages(arrCars)
+            case 2:
+                cell.reloadImages(arrProblems)
+            default:
+                break
+            }
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+}
+
+//MARK: - 备注输入
+extension ZXUploadCarInfoViewController: ZXTextInputDoneDelegate {
+    func zxTextCell(_ cell: UITableViewCell, inputDone text: String?, tag: Int) {
+        self.strRemark = text
+    }
+}
+
+//MARK: - 添加、删除、查看图片
+extension ZXUploadCarInfoViewController: ZXImageInputCellDelegate {
+    
+    func zxImageInputCellAddPhoto(cell: UITableViewCell) {
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            //self.imagePicker.takePhoto(presentFrom: self) { [unowned self] (image, status) in
+            self.imagePicker.choosePhoto(presentFrom: self) { [unowned self] (image, status) in
+                if status == .success {
+                    if let image = image {
+                        self.insertImage(image, at: indexPath.section)
+                    }
+                } else {
+                    if status == .notDetermined {
+                        HImagePickerUtils.showTips(at: self, type: .takePhoto)
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: status.description(), delay: ZXHUD.DelayTime)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func insertImage(_ image:UIImage, at index: Int) {
+        var fileName = "\(ZXDateUtils.zx_serialNumber()).jpg"
+        switch index {
+        case 0://车架号
+            fileName = ZXImagePrefix.VIN + fileName
+        case 1://车头或车尾
+            fileName = ZXImagePrefix.carMatch + fileName
+        case 2://重大问题
+            fileName = ZXImagePrefix.problem + fileName
+        default:
+            break
+        }
+        if let data = UIImageJPEGRepresentation(image, 1) {
+            ZXHUD.showLoading(in: self.view, text: "", delay: ZXHUD.DelayTime)
+            FileManager.ZX.saveImage(data, filename: fileName, folderName: self.folderName, completion: { (success) in
+                ZXHUD.hide(for: self.view, animated: true)
+                if success {
+                    let model = ZXImageInputModel()
+                    model.localFilePath = self.folderName + "/" + fileName
+                    switch index {
+                    case 0://车架号
+                        self.arrVIN.append(model)
+                    case 1://车头或车尾
+                        self.arrCars.append(model)
+                    case 2://重大问题
+                        self.arrProblems.append(model)
+                    default:
+                        break
+                    }
+                    self.tblList.reloadData()
+                } else {
+                    ZXHUD.showFailure(in: self.view, text: "缓存图片失败", delay: ZXHUD.DelayTime)
+                }
+            })
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "缓存图片失败", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, selectAt index: Int, pointView: UIView?) {
+        
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, deleteAt index: Int) {
+        self.frameNumberImgUploaded = nil
+        self.carMatchImgUploaded = nil
+        self.problemImgUploaded = nil
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "确定删除该张图片?", buttonTexts: ["取消","确定"], action: { (tag) in
+                if tag == 1 {
+                    var path: String?
+                    switch indexPath.section {
+                    case 0://车架号
+                        path = self.arrVIN[index].absolutePath
+                        self.arrVIN.remove(at: index)
+                    case 1://车头或车尾
+                        path = self.arrCars[index].absolutePath
+                        self.arrCars.remove(at: index)
+                    case 2://重大问题
+                        path = self.arrProblems[index].absolutePath
+                        self.arrProblems.remove(at: index)
+                    default:
+                        break
+                    }
+                    self.tblList.reloadData()
+                    if let path = path {
+                        FileManager.ZX.removeItem(path)
+                    }
+                }
+            })
+        }
+    }
+}

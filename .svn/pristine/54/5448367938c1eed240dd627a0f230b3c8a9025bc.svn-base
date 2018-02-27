@@ -1,0 +1,44 @@
+//
+//  ZXTaskToolCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTaskToolCellDelegate: NSObjectProtocol {
+    func didTaskToolAction(_ sender: UIButton)
+}
+
+class ZXTaskToolCell: UITableViewHeaderFooterView {
+    
+    struct ZXTaskButtonTag {
+        static let defaultBtn   = 1101
+        static let agentBtn     = 1102
+        static let locationBtn  = 1103
+        static let taskBtn      = 1104
+    }
+    
+    static let ZXTaskToolCellID: String = "ZXTaskToolCell"
+    weak var delegate: ZXTaskToolCellDelegate?
+    
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var defaultBtn: ZXBButton!
+    @IBOutlet weak var agentBtn: UIButton!
+    @IBOutlet weak var locationBtn: UIButton!
+    @IBOutlet weak var taskBtn: UIButton!
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.contentView.backgroundColor = UIColor.zx_subTintColor
+    }
+
+    @IBAction func toolBtnAction(_ sender: UIButton) {
+        if delegate != nil {
+            delegate?.didTaskToolAction(sender)
+        }
+    }
+}

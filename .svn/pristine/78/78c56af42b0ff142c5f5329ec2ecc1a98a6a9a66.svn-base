@@ -1,0 +1,274 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        var headerH: CGFloat = 0
+        switch section {
+        case 0:
+            headerH = ZXHomeCellH.navH
+        case 1:
+            headerH = ZXHomeCellH.toolH + 10
+        default:
+            break
+        }
+      return headerH
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch section {
+        case 0:
+            let headerView:ZXTaskNavView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskNavView.ZXTaskNavViewID) as! ZXTaskNavView
+            headerView.delegate = self
+            headerView.reload(msgCount)
+            return headerView
+        case 1:
+            let headerView:ZXTaskToolCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskToolCell.ZXTaskToolCellID) as! ZXTaskToolCell
+            //上滑动后增加一个状态栏的高度
+            //            if direction == .up {
+            //                headerView.setTopGap(true)
+            //            }else{
+            //                headerView.setTopGap(false)
+            //            }
+            headerView.delegate = self
+            return headerView
+        default:
+            return nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0.0
+        switch indexPath.section {
+        case 0:
+//            if direction == .up {
+//                cellH = 0
+//            }else if direction == .down {
+//                if indexPath.row == 0 {
+//                    cellH = ZXHomeCellH.navH
+//                }else{
+                    cellH = ZXHomeCellH.bannerH
+//                }
+//            }
+        case 1:
+            cellH = ZXTaskTableViewCell.height
+        default:
+            break
+        }
+        return cellH
+    }
+}
+
+extension ZXHomePageViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+//            if indexPath.row == 0 {
+//                let navCell: ZXTaskNavCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskNavCell.ZXTaskNavCellID, for: indexPath) as! ZXTaskNavCell
+//                navCell.delegate = self
+//                return navCell
+//            }else{
+                let bannerCell: ZXTaskBannerCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID, for: indexPath) as! ZXTaskBannerCell
+                bannerCell.delegate = self
+                if bannerArr.count > 0 {
+                    bannerCell.loadData(bannerArr)
+                }
+                return bannerCell
+//            }
+        case 1:
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            if taskArr.count > 0 {
+                rootCell.reloadData(model: taskArr[indexPath.row])
+            }
+            return rootCell
+        default:
+            return UITableViewCell.init(style: .default, reuseIdentifier: "UNKnow")
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var cellCount: Int = 0
+        switch section {
+        case 0:
+//            if direction == .up {
+//                cellCount = 0
+//            }else if direction == .down {
+                cellCount = 1
+//            }
+        case 1:
+            cellCount = taskArr.count
+        default:
+            break
+        }
+        return cellCount
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskTableViewCellDelegate {
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell, model: ZXTaskModel?) {
+        ZXUser.checkLogin {
+            if model != nil {
+                ZXShare.shareToWX(model!)
+            }
+        }
+    }
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, mark: Bool, model: ZXTaskModel?) {
+        ZXUser.checkLogin {
+            ZXHUD.showLoading(in: self.view, text: ZX_LOADING_TEXT, delay: ZX.HUDDelay)
+            ZXFocusCenter.requestForUpdateFocus(focusId: Int((model?.taskId)!)!, taskStatus: mark ? 1 : 0, completion: { (code, succ, str) in
+                ZXHUD.hide(for: self.view, animated: true)
+                if code == ZXAPI_SUCCESS {
+                    let succStr = mark ? "关注成功" : "取消关注成功"
+                    ZXHUD.showSuccess(in: self.view, text: succStr, delay: ZX.HUDDelay)
+                    let indexPath = self.listTableView.indexPath(for: cell)
+                    if self.taskArr.count > 0 {
+                        let cellModel = self.taskArr[(indexPath?.row)!]
+                        cellModel.isFollow = mark ? 1 : 0
+                        self.listTableView.reloadRows(at: [indexPath!], with: .none)
+                    }
+                }else{
+                    let errStr = mark ? "关注失败" : "取消关注失败"
+                    ZXHUD.showSuccess(in: self.view, text: errStr, delay: ZX.HUDDelay)
+                }
+            })
+        }
+    }
+}
+
+
+//MARK: - BannerDelegate
+extension ZXHomePageViewController: ZXTaskBannerCellDelegate {
+    func didSelectedBannerCell(_ content: String,_ title: String) {
+        
+        self.dismiss(ZXStatusButton())
+        
+        let bannerDetail: ZXBannerDetailViewController = ZXBannerDetailViewController()
+        bannerDetail.contentStr = content
+        bannerDetail.titleStr = title
+        bannerDetail.isBanner = true
+        self.navigationController?.pushViewController(bannerDetail, animated: false)
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskToolCellDelegate {
+    func didTaskToolAction(_ sender: ZXStatusButton) {
+        
+        //
+        let rc = sender.superview?.convert(sender.frame, to: self.view)
+        screenViewY = (rc?.origin.y)! + (rc?.size.height)! 
+        let viewF: CGRect = CGRect.init(x: 0, y: screenViewY, width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT - screenViewY)
+        
+        ZXUser.checkLogin {
+            
+            self.dismiss(sender)
+            
+            //
+            switch sender.tag {
+            case ZXTaskToolCell.ZXTaskButtonTag.defaultBtn: //默认排序
+                sender.zx_isSelected(true)
+                self.defaultView = ZXDefaultView.loadNib()
+                self.defaultView?.frame = viewF
+                ZXRootController.appWindow()?.addSubview(self.defaultView!)
+                self.defaultView?.setDefaultValue(self.sortId)
+                self.defaultView?.block = {isDismiss,seleId in
+                    self.defaultView?.dismiss()
+                    sender.zx_isSelected(false)
+                    
+                    if self.sortId != seleId {
+                        self.sortId = seleId
+                        
+                        self.currentPage = 1
+                        self.requestForTaskList(true)
+                    }
+                }
+                
+            case ZXTaskToolCell.ZXTaskButtonTag.agentBtn://代理费
+                sender.zx_isSelected(true)
+                self.agencyView = ZXAgencyView.loadNib()
+                self.agencyView?.frame = viewF
+                ZXRootController.appWindow()?.addSubview(self.agencyView!)
+                self.agencyView?.setDefaultValue(self.minValue, self.maxValue,self.agencyIndex)
+                self.agencyView?.block = {agView,minVal,maxVal,btnInx in
+                    self.agencyView?.dismiss()
+                    sender.zx_isSelected(false)
+                    
+                    if self.agencyIndex != btnInx {
+                        
+                        self.minValue = minVal
+                        self.maxValue = maxVal
+                        
+                        self.agencyIndex = btnInx
+                        
+                        self.currentPage = 1
+                        self.requestForTaskList(true)
+                    }
+                }
+            case ZXTaskToolCell.ZXTaskButtonTag.locationBtn://归属地
+                
+                if self.areaArr.count == 0 {
+                    ZXHUD.showFailure(in: self.view, text: "暂无相关数据", delay: ZXHUD.DelayTime)
+                    return
+                }
+                
+                sender.zx_isSelected(true)
+                self.addressView = ZXAddressView.loadNib()
+                self.addressView?.frame = viewF
+                ZXRootController.appWindow()?.addSubview(self.addressView!)
+                self.addressView?.loadAddrData(self.areaArr,self.proId,self.proIndex,self.cityId,self.cityIndex)
+                self.addressView?.block = {agView,provinceId,provinceIndex,citId,citIndex in
+                    self.addressView?.dismiss()
+                    sender.zx_isSelected(false)
+                    
+                    if self.proId != provinceId || self.cityId != citId {
+                        self.proId = provinceId
+                        self.proIndex = provinceIndex
+                        
+                        self.cityId = citId
+                        self.cityIndex = citIndex
+                        self.currentPage = 1
+                        self.requestForTaskList(true)
+                    }
+                }
+            case ZXTaskToolCell.ZXTaskButtonTag.taskBtn://任务状态
+                sender.zx_isSelected(true)
+                self.taskView = ZXTaskStatusView.loadNib()
+                self.taskView?.frame = viewF
+                ZXRootController.appWindow()?.addSubview(self.taskView!)
+                self.taskView?.setDefaultValue(self.taskId)
+                self.taskView?.block = {agView,seleId in
+                    self.taskView?.dismiss()
+                    sender.zx_isSelected(false)
+                    
+                    if self.taskId != seleId {
+                        self.taskId = seleId
+                        
+                        self.currentPage = 1
+                        self.requestForTaskList(true)
+                    }
+                }
+            default:
+                break
+            }
+        }
+    }
+}
+
+

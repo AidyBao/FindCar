@@ -1,0 +1,45 @@
+//
+//  ZXShare.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/15.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+//分享帮助：http://115.182.15.118:9092/pages/help.html?plate_number=川A5****&car_brand=2015款 起亚K2 三厢 1.4L MT GL
+//分享炫耀：http://115.182.15.118:9092/pages/flaunt.html?plate_number=川A5****&car_brand=2015款 起亚K2 三厢 1.4L MT GL
+//分享下载：http://115.182.15.118:9092/pages/download.html
+
+class ZXShare: NSObject {
+    
+    //MARK: -
+    class func shareToWX(taskModel: ZXTaskModel,wxScene: WXScene) {
+        let wxMsg = WXMediaMessage()
+        wxMsg.title = "专访张小龙：产品之上的世界观"
+        wxMsg.description = "微信的平台化发展方向是否真的会让这个原本简洁的产品变得臃肿？在国际化发展方向上，微信面临的问题真的是文化差异壁垒吗？腾讯高级副总裁、微信产品负责人张小龙给出了自己的回复。"
+        wxMsg.setThumbImage(UIImage.init())
+        
+        let page = WXWebpageObject()
+        page.webpageUrl = "http://tech.qq.com/zt2012/tmtdecode/252.htm"
+        wxMsg.mediaObject = page
+        
+        let req = SendMessageToWXReq()
+        req.bText = false
+        req.message = wxMsg
+        
+        switch wxScene {
+        case WXSceneSession://发送至微信的会话内
+            req.scene = Int32(WXSceneSession.rawValue)
+        case WXSceneTimeline://发送至朋友圈
+            req.scene = Int32(WXSceneTimeline.rawValue)
+        case WXSceneFavorite://发送到“我的收藏”中
+            req.scene = Int32(WXSceneFavorite.rawValue)
+        default:
+            req.scene = Int32(WXSceneSession.rawValue)
+        }
+        
+        WXApi.send(req)        
+    }
+}

@@ -1,0 +1,96 @@
+//
+//  ZXURLConst.swift
+//  YDY_GJ_3_5
+//
+//  Created by screson on 2017/4/17.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+let ZXBOUNDS_WIDTH      =   UIScreen.main.bounds.size.width
+let ZXBOUNDS_HEIGHT     =   UIScreen.main.bounds.size.height
+
+class ZX {
+    
+    static let PageSize:Int             =   12
+    static let HUDDelay                 =   1.2
+    static let CallDelay                =   0.5
+    
+    //定位失败 默认位置
+    struct Location {
+        static let latitude             =   30.592061
+        static let longitude            =   104.063396
+    }
+}
+
+
+/// 接口地址
+class ZXURLConst {
+    struct Api {
+        static let url                  =   "http://192.168.0.171"
+        static let port                 =   "80"
+    }
+    
+    struct Resource {
+        static let url                  =   "https://techydy.120v.cn"
+        static let port                 =   "443"
+    }
+    
+    struct Web {
+        static let url                  =   "https://htmlydy.120v.cn/"          //Web
+        static let about                =   "hyk/about/index.html?app_version=" //关于H5
+        static let serviceItems         =   "hyk/licenseAgreement/index.html"   //服务条款H5
+    }
+    
+    struct Update {
+        static let enterprise           =   "https://dl.120v.cn/iOS/ydy_hyk_version.js"
+        static let appstore             =   "https://itunes.apple.com/cn/lookup?id=1075692786"
+
+    }
+}
+
+/// 功能模块接口
+class ZXAPIConst {
+    struct FileResouce {
+        static let url                  =   "hyk/pages/uploadFileApp"           //文件上传接口
+        static let portraitFolder       =   "member"                            //头像存储文件夹
+        static let chuFFolder           =   "prescription"                      //处方存储文件夹
+        static let reportFolder         =   "laboratorySheet"                   //化验单存储文件夹
+    }
+    
+    /// 消息
+    struct Message {
+        static let list                 =   "message/list"
+        static let detail               =   "message/view"
+    }
+   
+    //MARK: - User
+    struct User {
+        static let getSMSCode                   =   "member/SMSVerificationCode" //获取验证码URL
+        static let login                        =   "member/login"               //登录URL
+        static let updateEquipmentInfo          =   "member/updateEquipmentInfo" //更新设备信息URL
+        static let getFlashScreen               =   "flashScreen/getFlashScreen" //获取闪屏数据
+        static let updatePosition               =   "member/updatePosition"      //更新会员信息
+        static let getDictList                  =   "dict/getDictList"           //获取年龄段
+        static let updateSex                    =   "member/updateSex"           //更新性别
+        static let updateAgeGroups              =   "member/updateAgeGroups"     //更新年龄段
+    }
+    
+    //MARK: - 个人
+    struct Personal {
+        static let repeatedReminder     =   "member/updateRepeatedReminders"    //开启关闭重复提醒
+        static let updateSex            =   "member/updateSex"                  //修改性别
+        static let updateAgeGroups      =   "member/updateAgeGroups"            //修改年龄段
+        static let updateHeadPortrait   =   "member/updateHeadPortrait"         //更新会员头像
+        static let addressList          =   "memberAddress/getListByMemberId"   //收货地址清单
+        static let removeAddress        =   "memberAddress/remove"              //移除收货地址
+        static let defaultAddress       =   "memberAddress/setDefault"          //设置默认收货地址
+        static let updateAddress        =   "memberAddress/update"              // 修改收货地址
+        static let addAddress           =   "memberAddress/add"                 //新增收货地址
+        static let updateName           =   "member/updateName"                 //修改用户名字
+        static let voiceRemind          =   "member/updateVoiceRemind"          //推送用药语音提醒
+        static let getAreaList          =   "area/getAreaList"                 //获取区域
+    }
+}

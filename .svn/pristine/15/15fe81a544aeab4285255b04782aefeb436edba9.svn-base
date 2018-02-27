@@ -1,0 +1,41 @@
+//
+//  ZXImageControlCCVCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+enum ZXImageType {
+    case show
+    case add
+}
+
+//
+class ZXImageControlCCVCell: UICollectionViewCell {
+
+    fileprivate var type: ZXImageType = ZXImageType.add
+    static let width: CGFloat = floor((ZXBOUNDS_WIDTH - 14 * 4 - 20) / 3.0)
+    @IBOutlet weak var imgView: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.imgView.layer.cornerRadius = 5
+        self.imgView.backgroundColor = UIColor.zx_emptyColor
+        self.imgView.clipsToBounds = true
+    }
+    
+    func reloadImage(_ image: String?, type: ZXImageType) {
+        self.type = type
+        self.imgView.image = nil
+        if type == .add {
+            self.imgView.image = #imageLiteral(resourceName: "add")
+        } else {
+            if let image = image {
+                self.imgView.kf.setImage(with: URL.init(string: image))
+            }
+        }
+    }
+}

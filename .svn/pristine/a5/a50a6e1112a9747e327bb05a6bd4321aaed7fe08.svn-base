@@ -1,0 +1,78 @@
+//
+//  ZXTextInput1TableViewCell.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTextInputDoneDelegate: class {
+    func zxTextCell(_ cell: UITableViewCell, inputDone text: String?, tag: Int)
+}
+
+class ZXTextInput1TableViewCell: ZXTableViewCell, UITextViewDelegate {
+
+    weak var delegate: ZXTextInputDoneDelegate?
+    @IBOutlet weak var lbTitle: UILabel!
+    @IBOutlet weak var txtvInfo: UITextView!
+    @IBOutlet weak var lbIsOptional: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.lbTitle.font = UIFont.zx_titleFont
+        self.lbTitle.textColor = UIColor.zx_textColorTitle
+        
+        self.lbIsOptional.font = UIFont.zx_titleFont
+        self.lbIsOptional.textColor = UIColor.zx_textColorMark
+
+
+        self.txtvInfo.backgroundColor = UIColor.zx_emptyColor
+        self.txtvInfo.layer.cornerRadius = 5
+        self.txtvInfo.font = UIFont.zx_bodyFont
+        self.txtvInfo.textColor = UIColor.zx_textColorTitle
+        
+        self.txtvInfo.delegate = self
+        
+        self.lbIsOptional.isHidden = true
+        self.lbTitle.text = ""
+        self.txtvInfo.text = ""
+        self.lbIsOptional.text = ""
+    }
+    
+    func setInputText(_ text: String?) {
+        if let text = text {
+            self.txtvInfo.textColor = UIColor.zx_textColorMark
+            self.txtvInfo.text = text
+        } else {
+            self.txtvInfo.textColor = UIColor.zx_textColorTitle
+            self.txtvInfo.text = "请输入类容"
+        }
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == "请输入类容" {
+            textView.text = ""
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        delegate?.zxTextCell(self, inputDone: textView.text, tag: 0)
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if range.location > 127 {
+            return false
+        }
+        return true
+    }
+    
+}

@@ -1,0 +1,71 @@
+//
+//  ZXHomePageViewController+UIScrollView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/3.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastOffsetY = scrollView.contentOffset.y
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        newOffsetY = scrollView.contentOffset.y
+        if (newOffsetY - lastOffsetY) > 0 {
+            direction = .up
+        }else{
+            direction = .down
+        }
+    }
+    
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        if direction == .up {
+            if currentOffsetY > 0, self.isEndDrug == false{
+                UIView.animate(withDuration: 0.0, animations: {
+                    self.isEndDrug = true
+                    self.navViewH.constant = 0
+                    self.navView.alpha = 0
+                    self.tableViewTop.constant = -24
+                    self.listTableView.mj_header.isHidden = true
+                }, completion: { (_) in
+                    self.listTableView.reloadData()
+                })
+            }
+        }else{
+            if currentOffsetY < 0, self.isEndDrug == true {
+                UIView.animate(withDuration: 0.0, animations: {
+                    self.isEndDrug = false
+                    self.navViewH.constant = 44
+                    self.navView.alpha = 1
+                    self.tableViewTop.constant = 0
+                    self.listTableView.mj_header.isHidden = false
+                }, completion: { (_) in
+                    self.listTableView.reloadData()
+                })
+            }
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY:CGFloat = scrollView.contentOffset.y;
+        
+        currentOffsetY = scrollView.contentOffset.y
+        
+        var value = offsetY / 44.0;
+        
+        value = value >= 1 ? 1 : value
+        value = value <= 0 ? 0 : value
+        
+        print(currentOffsetY)
+        UIView.animate(withDuration: 0.4, animations: {
+            
+            //            self.navView.alpha = 1 - value
+            //            self.navViewH.constant = (1 - value)*44
+        }) { (finish) in
+        }
+    }
+}

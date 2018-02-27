@@ -1,0 +1,96 @@
+//
+//  ZXTaskBannerCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXTaskBannerCell: UITableViewCell {
+    
+    static let ZXTaskBannerCellID: String = "ZXTaskBannerCell"
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.test()
+
+        self.backgroundColor = UIColor.white
+        
+//        self.setUIStyle()
+    }
+    
+    func setUIStyle() {
+        self.selectionStyle = .none
+        self.contentView.backgroundColor = UIColor.white
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.indicatorStyle = .white
+        self.collectionView.register(UINib(nibName: String.init(describing: ZXBannerImgCell.self), bundle: nil), forCellWithReuseIdentifier: ZXBannerImgCell.ZXBannerImgCellID)
+    }
+    
+    func test() {
+        let urls = ["http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075430688640/w800",
+                    "http://pic.qyer.com/ra/img/15064476767054",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075432049166/w800",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/10/15076301267252/w800"
+        ]
+        
+        let cycleView = ZXBannerScrollView(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 146.0))
+        cycleView.clickCompletionHandler = {
+            (view: ZXBannerScrollView, index: Int) in
+            print("view--->\(view), index-->\(index)")
+        }
+        cycleView.imageUrls = urls
+//        cycleView.interval = 3
+        cycleView.pageControl?.alignment = .center
+        cycleView.pageControl?.style = .rectangle
+        cycleView.pageControl?.currentPageIndicatorTintColor = UIColor.blue
+        cycleView.pageControl?.pageIndicatorTintColor = UIColor.gray
+        contentView.addSubview(cycleView)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+    }
+}
+
+extension ZXTaskBannerCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
+}
+
+extension ZXTaskBannerCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: ZXBannerImgCell = collectionView.dequeueReusableCell(withReuseIdentifier: ZXBannerImgCell.ZXBannerImgCellID, for: indexPath) as! ZXBannerImgCell
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+}
+
+extension ZXTaskBannerCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: ZXBOUNDS_WIDTH, height: 270)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+}

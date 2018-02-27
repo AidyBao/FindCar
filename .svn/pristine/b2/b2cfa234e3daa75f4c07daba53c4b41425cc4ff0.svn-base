@@ -1,0 +1,58 @@
+//
+//  ZXSearchViewController+TableView.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/5.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXSearchViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.historyArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let searchCell: ZXSearchCell = tableView.dequeueReusableCell(withIdentifier: ZXSearchCell.ZXSearchCellID, for: indexPath) as! ZXSearchCell
+        searchCell.delegate = self
+        if self.historyArray.count > 0 {
+            searchCell.loadData(self.historyArray[indexPath.row], indexPath.row)
+        }
+        return searchCell
+    }
+}
+
+extension ZXSearchViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44.0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView: UIView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 44.0))
+        headerView.backgroundColor = UIColor.zx_subTintColor
+        
+        let headerLB: UILabel = UILabel.init(frame: CGRect.init(x: 14, y: 0, width: 150.0, height: 44.0))
+        headerLB.text = "历史搜索"
+        headerLB.font = UIFont.zx_titleFont
+        headerLB.textColor = UIColor.zx_textColorTitle
+        headerView.addSubview(headerLB)
+        
+        return headerView
+    }
+}
+
+extension ZXSearchViewController: ZXSearchCellDelegate {
+    func didSearchCellDeletedAction(_ index: Int) {
+        if self.historyArray.count > 0 {
+            self.historyArray.remove(at: index)
+            self.tabList.reloadData()
+            
+            ZXHistoryCache.saveCache(self.historyArray)
+        }
+    }
+}

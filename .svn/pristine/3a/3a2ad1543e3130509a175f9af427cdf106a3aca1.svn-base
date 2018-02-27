@@ -1,0 +1,61 @@
+//
+//  ZXSettingCell.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXSettingRootCell: UITableViewCell {
+    
+    static let ZXSettingRootCellID: String = "ZXSettingRootCell"
+    
+    @IBOutlet weak var nameLb: UILabel!
+    @IBOutlet weak var cacheLB: UILabel!
+    @IBOutlet weak var geliLine: UIView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.nameLb.font = UIFont.zx_bodyFont
+        self.nameLb.textColor = UIColor.zx_textColorBody
+        
+        self.cacheLB.font = UIFont.zx_bodyFont
+        self.cacheLB.textColor = UIColor.zx_textColorBody
+        
+        
+    }
+    
+    override func layoutSubviews() {
+        
+    }
+    
+    func loadData(_ indexPath: IndexPath) {
+
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                self.nameLb.text = "清理缓存"
+                self.cacheLB.text = ZXCache.returnCacheSize()
+            case 1:
+                self.nameLb.text = "关于"
+                self.cacheLB.isHidden = true
+                self.geliLine.isHidden = true
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+}
+

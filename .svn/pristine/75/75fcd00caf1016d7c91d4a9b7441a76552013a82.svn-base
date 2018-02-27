@@ -1,0 +1,88 @@
+//
+//  ZXPlaceBeloningSelectViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/9.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+
+/// 车牌归属地选择
+class ZXPlaceBeloningSelectViewController: ZXUIViewController,UIPickerViewDelegate, UIPickerViewDataSource {
+
+    @IBOutlet weak var btnCommit: UIButton!
+    @IBOutlet weak var pickerView: UIPickerView!
+    
+    fileprivate var selectedRow: Int = 0
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("Not init")
+    }
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.pickerView.delegate = self
+        self.pickerView.dataSource = self
+    }
+
+    
+    @IBAction func commitAction(_ sender: Any) {
+        
+    }
+}
+
+extension ZXPlaceBeloningSelectViewController {
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.selectedRow = row
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 35
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let string = "A"
+        let range = NSMakeRange(0, string.count)
+        let attrString = NSMutableAttributedString.init(string: string)
+        attrString.zx_appendFont(font: UIFont.zx_titleFont, at: range)
+        if row == self.selectedRow {
+            attrString.zx_appendColor(color: UIColor.zx_textColorTitle, at: range)
+        } else {
+            attrString.zx_appendColor(color: UIColor.zx_textColorMark, at: range)
+        }
+        return attrString
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "A"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return 34
+        }
+        return 24
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
+    }
+}
+
+extension ZXPlaceBeloningSelectViewController:UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return ZXDimmingPresentationController.init(presentedViewController: presented, presenting: presenting)
+    }
+}

@@ -1,0 +1,104 @@
+//
+//  ZXVerifyCarInfoViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+/// 验证车辆信息
+class ZXVerifyCarInfoViewController: ZXUIViewController {
+
+    @IBOutlet weak var tblList: UITableView!
+    @IBOutlet weak var btnCommit: ZXCButton!
+    
+    fileprivate let arrTitles = ["1 车辆正面照片", "2 驾驶室照", "3 车辆中控照", "4 车辆尾部照"]
+    fileprivate let arrSubTitles = ["将车牌包含在照片中", "在打开的车门外拍摄车辆内部", "在车辆内部拍摄完整的车辆中控照", "将车牌包含在照片中"]
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.title = "验证车辆信息"
+        self.tblList.showsVerticalScrollIndicator = false
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.zx_addNavBarButtonItems(textNames: ["查看示例"], font: nil, color: UIColor.zx_tintColor, at: .right)
+        
+        self.tblList.register(UINib.init(nibName: ZXImageInputCell.NibName, bundle: nil), forCellReuseIdentifier: ZXImageInputCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput2TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput2TableViewCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput1TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput1TableViewCell.reuseIdentifier)
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        
+    }
+    
+    @IBAction func commitAction(_ sender: Any) {
+    }
+}
+
+extension ZXVerifyCarInfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 4 {//地址
+            return 130
+        } else if indexPath.section == 5 {//联方式
+            return ZXTextInput2TableViewCell.height
+        }
+        return ZXImageInputCell.height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 6 {
+            return 15
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+}
+
+extension ZXVerifyCarInfoViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section < 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXImageInputCell.reuseIdentifier, for: indexPath) as! ZXImageInputCell
+            cell.lbTitle.text = arrTitles[indexPath.section]
+            cell.lbSubTitle.text = arrSubTitles[indexPath.section]
+            if indexPath.row == 3 {
+                cell.lbIsOptional.isHidden = false
+            } else {
+                cell.lbIsOptional.isHidden = true
+            }
+            return cell
+        } else if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.lbIsOptional.isHidden = true
+            cell.lbTitle.text = "5 提车地址"
+            return cell
+        } else if indexPath.section == 5 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput2TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput2TableViewCell
+            cell.lbTitle.text = "6 联系人及联系方式"
+            return cell
+        } else if indexPath.section == 6 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.lbIsOptional.isHidden = false
+            cell.lbTitle.text = "7 备注"
+            return cell
+        }
+        return UITableViewCell.init()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 7
+    }
+}

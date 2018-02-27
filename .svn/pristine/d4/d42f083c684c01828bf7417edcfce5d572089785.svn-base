@@ -1,0 +1,47 @@
+//
+//  ZXMessageImgCell.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/8.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXMessageImgCell: UITableViewCell {
+    
+    static let ZXMessageImgCellID: String = "ZXMessageImgCell"
+
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var detailLB: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.backgroundColor = UIColor.zx_subTintColor
+        
+        self.backView.backgroundColor = UIColor.white
+
+        
+        self.backView.layer.cornerRadius = 10.0
+        self.backView.layer.masksToBounds = false
+        self.backView.clipsToBounds = true
+        self.backView.layer.shadowColor = UIColor.darkGray.cgColor
+        self.backView.layer.shadowRadius = 3.0
+        self.backView.layer.shadowOffset = CGSize.init(width: 0, height: 0.0)
+        self.backView.layer.shadowOpacity = 1.0
+        
+        
+    }
+    
+    override func layoutSubviews() {
+
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+    
+}

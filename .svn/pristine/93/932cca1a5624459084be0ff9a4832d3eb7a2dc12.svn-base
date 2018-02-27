@@ -1,0 +1,115 @@
+//
+//  AppDelegate.swift
+//  FindCar
+//
+//  Created by screson on 2017/12/15.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+import Kingfisher
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.backgroundColor = UIColor.white
+    
+        //WX
+        WXApiRegist()
+        
+        #if DEBUG
+            ZXNetwork.showRequestLog = true
+        #endif
+        //MARK: - UIConfig
+        ZXStructs.loadUIConfig()
+        //MARK: - Load Tabbar's controllers
+        ZXRootController.reload()
+        //MARK: - Set RootViewController
+        ZXRouter.changeRootViewController(ZXLaunchViewController())
+        //MARK: - Request Log
+        //MARK: - OCR Token
+        ZXOCRUtils.getToken(completion: { (_,_) in
+            print(ZXOCRUtils.ACCESS_TOKEN ?? "")
+        })
+        //MARK: - Regist RemoteNotification
+        self.registRemoteNotification()
+        //MARK: - Regesit
+        self.zx_addNotice()
+        
+        self.window?.makeKeyAndVisible()
+        //
+        self.preloadData()
+        
+        return true
+    }
+
+    func applicationWillResignActive(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        ZXUser.user.sync()
+    }
+}
+
+extension AppDelegate {
+    
+    func preloadData()  {
+        ZXCommonViewModel.placeBeloningList { (success, code, errorMsg, pList, tList) in
+            if success {
+                ZXGlobalData.placeList = pList
+                ZXGlobalData.typeList = tList
+            }
+        }
+    }
+}
+
+
+extension AppDelegate: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        
+        guard let sIndex = tabBarController.viewControllers?.index(of: viewController) else {
+            return true
+        }
+        if sIndex == 1 || sIndex == 2 {
+            if !ZXUser.user.isLogin {
+                ZXLoginViewController.show({
+                    ZXRouter.tabbarSelect(at: sIndex)
+                })
+                return false
+            }
+        }
+
+        if sIndex == 1 {
+            ZXTakePhotoPageViewController.checkType = .match
+            if !ZXExampleShowViewController.showedBefore {
+                ZXExampleShowViewController.showWithImageNames(["shotpic1", "shotpic2", "shotpic3", "shotpic4"], ["正确拍摄操作示例", "正确拍摄操作示例", "错误拍摄操作示例", "错误拍摄操作示例"], upoun: ZXRootController.zx_tabbarVC()) {
+                    ZXExampleShowViewController.showed()
+                    ZXRouter.tabbarShouldSelected(at: 1)
+                }
+                return false
+            }
+        }
+        
+        return UITabBarController.zx_tabBarController(tabBarController, shouldSelectViewController: viewController)
+    }
+}
+
+

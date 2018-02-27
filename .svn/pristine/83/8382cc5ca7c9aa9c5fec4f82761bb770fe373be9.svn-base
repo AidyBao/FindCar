@@ -1,0 +1,469 @@
+//
+//  ZXVerifyCarInfoViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import SSZipArchive
+import IQKeyboardManagerSwift
+import JXPhotoBrowser
+
+/// 验证车辆信息
+class ZXVerifyCarInfoViewController: ZXUIViewController {
+
+    var taskId: String?
+    var ocrNumber: String?
+    var inputNumber: String?
+    
+    @IBOutlet weak var tblList: UITableView!
+    @IBOutlet weak var btnCommit: ZXCButton!
+    
+    fileprivate let arrTitles = ["1 车辆正面照片", "2 驾驶室照片", "3 车辆中控照片", "4 车辆尾部照片"]
+    fileprivate let arrSubTitles = ["将车牌包含在照片中", "在打开的车门外拍摄车辆内部", "在车辆内部拍摄完整的车辆中控照", "将车牌包含在照片中"]
+    
+    fileprivate let folderName = ZXDateUtils.zx_serialNumber()
+    fileprivate var folderPath: String { return FileManager.ZX.subFolder(folderName) }
+    fileprivate var zipPath: String {
+        return FileManager.ZX.imageCachesPath + "/" + "\(folderName).zip"
+    }
+    fileprivate var arrFrontImages: Array<ZXImageInputModel> = []//车头照片
+    fileprivate var arrRoomImages: Array<ZXImageInputModel> = []//驾驶室照片
+    fileprivate var arrCenterControlImages: Array<ZXImageInputModel> = []//中控照片
+    fileprivate var arrBackImages: Array<ZXImageInputModel> = []//车尾照片
+    fileprivate var strTakeCarAddress: String?//提车地址
+    fileprivate var strName: String?//联系人
+    fileprivate var strTel: String?//联系点
+    fileprivate var strRemark: String?//备注 选填
+
+    lazy var imagePicker: HImagePickerUtils  = HImagePickerUtils()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        FileManager.ZX.clearImageCache()
+        // Do any additional setup after loading the view.
+        self.title = "验证车辆信息"
+        self.tblList.showsVerticalScrollIndicator = false
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.zx_addNavBarButtonItems(textNames: ["查看示例"], font: nil, color: UIColor.zx_tintColor, at: .right)
+        
+        self.tblList.register(UINib.init(nibName: ZXImageInputCell.NibName, bundle: nil), forCellReuseIdentifier: ZXImageInputCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput2TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput2TableViewCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput1TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput1TableViewCell.reuseIdentifier)
+        
+        if taskId == nil {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "任务ID为空", buttonText: nil, action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            return
+        }
+        
+        if ocrNumber == nil {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "车牌号为空", buttonText: nil, action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            return
+        }
+        
+        var success = FileManager.ZX.imageFolderCheck()
+        if success {
+            success = FileManager.ZX.createFolder(at: folderPath)
+        }
+        if !success {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "创建本地文件目录失败,请清除本地缓存后重试", buttonText: "好的", action: {
+                self.navigationController?.popViewController(animated: true)
+            })
+        }
+        IQKeyboardManager.sharedManager().enable = true
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        ZXExampleShowViewController.showWithImageNames(["shotpic8", "shotpic9", "shotpic10", "shotpic11"], ["车辆正面照示例", "驾驶室照示例", "车辆中控照示例", "车辆尾部照示例"], upoun: self) {
+            
+        }
+    }
+    
+    @IBAction func commitAction(_ sender: Any) {
+        if self.arrFrontImages.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加车辆正面照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.arrRoomImages.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加驾驶室照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.arrCenterControlImages.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加车辆中控照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.arrBackImages.count == 0 {
+            ZXHUD.showFailure(in: self.view, text: "请添加车辆尾部照片", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.strTakeCarAddress == nil || self.strTakeCarAddress!.isEmpty {
+            ZXHUD.showFailure(in: self.view, text: "请填写提车地址", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.strName == nil || self.strName!.isEmpty {
+            ZXHUD.showFailure(in: self.view, text: "请填写联系人姓名", delay: ZXHUD.DelayTime)
+            return
+        }
+        if self.strTel == nil || self.strTel!.isEmpty {
+            ZXHUD.showFailure(in: self.view, text: "请填写联系人电话", delay: ZXHUD.DelayTime)
+            return
+        }
+        ZXAlertUtils.showAlert(wihtTitle: nil, message: "文件上传过程中请勿退出程序", buttonTexts: ["取消","开始上传"], action: { (index) in
+            if index == 1 {
+                let queue = DispatchQueue(label: "com.reson.zipfile")
+                var success = false
+                let group = DispatchGroup()
+                ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在打包文件...", delay: 0)
+                queue.async(group: group, qos: .default, flags: [], execute: {
+                    success = SSZipArchive.createZipFile(atPath: self.zipPath, withContentsOfDirectory: self.folderPath)
+                })
+                group.notify(queue: queue, execute: {
+                    DispatchQueue.main.async {
+                        ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                        if success {
+                            self.uploadCheck()
+                        } else {
+                            ZXHUD.showFailure(in: self.view, text: "打包文件失败", delay: ZX.HUDDelay)
+                        }
+                    }
+                })
+            }
+        })
+    }
+    fileprivate var frontImgUploaded: String?
+    fileprivate var roomImgUploaded: String?
+    fileprivate var controlImgUploaded: String?
+    fileprivate var backImgUploaded: String?
+    
+    fileprivate func uploadCheck() {
+        if frontImgUploaded == nil
+            || roomImgUploaded == nil
+            || controlImgUploaded == nil
+            || backImgUploaded == nil{
+            self.uploadZipFile()
+        } else {
+            self.uploadData()
+        }
+    }
+    
+    //MARK: - 上传zip文件
+    fileprivate func uploadZipFile() {
+        var paramas:Dictionary<String,Any> = [:]
+        paramas["directory"] = ZXAPIConst.FileResouce.verifyCarInfoFolder
+        paramas["type"] = "zip"
+        do{
+            let data = try Data.init(contentsOf: URL(fileURLWithPath: zipPath))
+            ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在上传文件...", delay: 0)
+            ZXNetwork.fileupload(to: ZXAPI.file(address: ZXAPIConst.FileResouce.url), name: "file", fileName: "\(folderName).zip", mimeType: "application/zip", fileData: data as Data, params: paramas) { (success, code, content, stringvalue, errorMsg) in
+                ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                if success {
+                    if let data = content["data"] as? Dictionary<String,String> {
+                        self.frontImgUploaded = data["validateFrontImg"]
+                        self.roomImgUploaded = data["validateOpenImg"]
+                        self.controlImgUploaded = data["validateControlImg"]
+                        self.backImgUploaded = data["validateBackImg"]
+                        self.uploadData()
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: "无法获取图片路径", delay: ZX.HUDDelay)
+                    }
+                } else {
+                    if code != ZXAPI_LOGIN_INVALID {
+                        ZXHUD.showFailure(in: self.view, text: (errorMsg?.description) ?? "文件上传失败", delay: ZX.HUDDelay)
+                    }
+                }
+            }
+        } catch {
+            ZXHUD.showFailure(in: self.view, text: "获取图片文件包失败,无法上传", delay: ZX.HUDDelay)
+        }
+    }
+    
+    //MARK: - 上传接口数据
+    fileprivate func uploadData() {
+        if let frontImgUploaded = frontImgUploaded, let roomImgUploaded = roomImgUploaded, let controlImgUploaded = controlImgUploaded, let backImgUploaded = backImgUploaded {
+            ZXHUD.showLoading(in: ZXRootController.appWindow()!, text: "正在提交数据...", delay: 0)
+            ZXTaskViewModel.verifyCarInfo(taskId: self.taskId!, frontImageUrl: frontImgUploaded, roomImageUrl: roomImgUploaded, controlImageUrl: controlImgUploaded, backImageUrl: backImgUploaded, takeCarAddress: self.strTakeCarAddress ?? "", contactName: self.strName ?? "", contactTel: self.strTel ?? "", ocrNumber: ocrNumber ?? "", inputNumber: inputNumber, remark: self.strRemark, completion: { (success, code, errorMsg) in
+                ZXHUD.hide(for: ZXRootController.appWindow()!, animated: true)
+                if success {
+                    FileManager.ZX.clearImageCache()
+                    ZXHUD.showSuccess(in: ZXRootController.appWindow()!, text: "车辆信息上传成功", delay: ZXHUD.DelayTime)
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    if code != ZXAPI_LOGIN_INVALID {
+                        ZXHUD.showFailure(in: self.view, text: errorMsg , delay: ZX.HUDDelay)
+                    }
+                }
+            })
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "无法获取资源文件路径", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    deinit {
+        IQKeyboardManager.sharedManager().enable = false
+        FileManager.ZX.clearImageCache()
+    }
+    
+    //
+    fileprivate var arrReviewImages: Array<ZXImageInputModel> = []
+    fileprivate var tempView: UIView?
+
+}
+
+extension ZXVerifyCarInfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 4 {//地址
+            return 130
+        } else if indexPath.section == 5 {//联方式
+            return ZXTextInput2TableViewCell.height
+        }
+        return ZXImageInputCell.height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 6 {
+            return 15
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+}
+
+extension ZXVerifyCarInfoViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section < 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXImageInputCell.reuseIdentifier, for: indexPath) as! ZXImageInputCell
+            cell.delegate = self
+            cell.lbTitle.text = arrTitles[indexPath.section]
+            cell.lbSubTitle.text = arrSubTitles[indexPath.section]
+            if indexPath.row == 3 {
+                cell.lbIsOptional.isHidden = false
+            } else {
+                cell.lbIsOptional.isHidden = true
+            }
+            switch indexPath.section {
+            case 0://车头
+                cell.reloadImages(arrFrontImages)
+            case 1://驾驶室
+                cell.reloadImages(arrRoomImages)
+            case 2://中控
+                cell.reloadImages(arrCenterControlImages)
+            case 3://车尾
+                cell.reloadImages(arrBackImages)
+            default:
+                break
+            }
+            return cell
+        } else if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.delegate = self
+            cell.lbIsOptional.isHidden = true
+            cell.lbTitle.text = "5 提车地址"
+            cell.setInputText(self.strTakeCarAddress, placeholder: "请填写提车地址")
+            return cell
+        } else if indexPath.section == 5 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput2TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput2TableViewCell
+            cell.delegate = self
+            cell.lbTitle.text = "6 联系人及联系方式"
+            cell.txtf1.placeholder = "填写联系人姓名"
+            cell.txtf2.placeholder = "填写联系人电话"
+            cell.txtf1.text = self.strName
+            cell.txtf2.text = self.strTel
+            return cell
+        } else if indexPath.section == 6 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.delegate = self
+            cell.lbIsOptional.isHidden = false
+            cell.lbTitle.text = "7 备注"
+            cell.setInputText(self.strRemark, placeholder: "备注信息")
+            return cell
+        }
+        return UITableViewCell.init()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 7
+    }
+}
+
+//MARK: - 备注输入
+extension ZXVerifyCarInfoViewController: ZXTextInputDoneDelegate {
+    func zxTextCell(_ cell: UITableViewCell, inputDone text: String?, tag: Int) {
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            switch indexPath.section {
+            case 4://停车场地址
+                self.strTakeCarAddress = text
+            case 5:
+                if tag == 0 {
+                    self.strName = text
+                } else if tag == 1 {
+                    self.strTel = text
+                }
+            case 6:
+                self.strRemark = text
+            default: break
+            }
+        }
+
+    }
+}
+
+//MARK: - 添加、删除、查看图片
+extension ZXVerifyCarInfoViewController: ZXImageInputCellDelegate {
+    
+    func zxImageInputCellAddPhoto(cell: UITableViewCell) {
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            //choosePhoto takePhoto
+            self.imagePicker.takePhoto(presentFrom: self) { [unowned self] (image, status) in
+                if status == .success {
+                    if let image = image {
+                        self.insertImage(image, at: indexPath.section)
+                    }
+                } else {
+                    if status == .notDetermined {
+                        HImagePickerUtils.showTips(at: self, type: .takePhoto)
+                    } else {
+                        ZXHUD.showFailure(in: self.view, text: status.description(), delay: ZXHUD.DelayTime)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func insertImage(_ image:UIImage, at index: Int) {
+        var fileName = "\(ZXDateUtils.zx_serialNumber()).jpg"
+        switch index {
+        case 0://车头
+            fileName = ZXImagePrefix.carFront + fileName
+        case 1://驾驶室
+            fileName = ZXImagePrefix.carRoom + fileName
+        case 2://中控
+            fileName = ZXImagePrefix.centerControl + fileName
+        case 3://车尾
+            fileName = ZXImagePrefix.carBack + fileName
+        default:
+            break
+        }
+        if let data = UIImageJPEGRepresentation(image, 1) {
+            ZXHUD.showLoading(in: self.view, text: "", delay: ZXHUD.DelayTime)
+            FileManager.ZX.saveImage(data, filename: fileName, folderName: self.folderName, completion: { (success) in
+                ZXHUD.hide(for: self.view, animated: true)
+                if success {
+                    let model = ZXImageInputModel()
+                    model.localFilePath = self.folderName + "/" + fileName
+                    switch index {
+                    case 0://车头
+                        self.arrFrontImages.append(model)
+                    case 1://驾驶室
+                        self.arrRoomImages.append(model)
+                    case 2://中控
+                        self.arrCenterControlImages.append(model)
+                    case 3://车尾
+                        self.arrBackImages.append(model)
+                    default:
+                        break
+                    }
+                    self.tblList.reloadSections(IndexSet.init(integer: index), with: .none)
+                } else {
+                    ZXHUD.showFailure(in: self.view, text: "缓存图片失败", delay: ZXHUD.DelayTime)
+                }
+            })
+        } else {
+            ZXHUD.showFailure(in: self.view, text: "缓存图片失败", delay: ZXHUD.DelayTime)
+        }
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, selectAt index: Int, pointView: UIView?) {
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            self.arrReviewImages.removeAll()
+            switch indexPath.section {
+            case 0://车头
+                self.arrReviewImages = self.arrFrontImages
+            case 1://驾驶室
+                self.arrReviewImages = self.arrRoomImages
+            case 2://中控
+                self.arrReviewImages = self.arrCenterControlImages
+            case 3://车尾
+                self.arrReviewImages = self.arrBackImages
+            default:
+                break
+            }
+            if self.arrReviewImages.count > 0 {
+                self.tempView = pointView
+                let browser = PhotoBrowser(showByViewController: self, delegate: self)
+                let pDelegate = PhotoBrowserNumberPageControlDelegate(numberOfPages: self.arrReviewImages.count)
+                //pDelegate.centerY = ZXBOUNDS_HEIGHT - 60
+                browser.pageControlDelegate = pDelegate
+                browser.show(index: index)
+            }
+        }
+
+    }
+    
+    func zxImageInputCell(cell: UITableViewCell, deleteAt index: Int) {
+        self.frontImgUploaded = nil
+        self.roomImgUploaded = nil
+        self.controlImgUploaded = nil
+        self.backImgUploaded = nil
+        if let indexPath = self.tblList.indexPath(for: cell) {
+            ZXAlertUtils.showAlert(wihtTitle: nil, message: "确定删除该张图片?", buttonTexts: ["取消","确定"], action: { (tag) in
+                if tag == 1 {
+                    var path: String?
+                    switch indexPath.section {
+                    case 0://车头
+                        path = self.arrFrontImages[index].absolutePath
+                        self.arrFrontImages.remove(at: index)
+                    case 1://驾驶室
+                        path = self.arrRoomImages[index].absolutePath
+                        self.arrRoomImages.remove(at: index)
+                    case 2://中控
+                        path = self.arrCenterControlImages[index].absolutePath
+                        self.arrCenterControlImages.remove(at: index)
+                    case 3://车尾
+                        path = self.arrBackImages[index].absolutePath
+                        self.arrBackImages.remove(at: index)
+                    default:
+                        break
+                    }
+                    self.tblList.reloadSections(IndexSet.init(integer: indexPath.section), with: .none)
+                    if let path = path {
+                        FileManager.ZX.removeItem(path)
+                    }
+                }
+            })
+        }
+    }
+}
+
+extension ZXVerifyCarInfoViewController: PhotoBrowserDelegate {
+    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailViewForIndex index: Int) -> UIView? {
+        return self.tempView
+    }
+    
+    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailImageForIndex index: Int) -> UIImage? {
+        return UIImage.Default.empty
+    }
+    
+    func numberOfPhotos(in photoBrowser: PhotoBrowser) -> Int {
+        return self.arrReviewImages.count
+    }
+    
+    func photoBrowser(_ photoBrowser: PhotoBrowser, rawUrlForIndex index: Int) -> URL? {
+        return self.arrReviewImages[index].url
+    }
+}
+

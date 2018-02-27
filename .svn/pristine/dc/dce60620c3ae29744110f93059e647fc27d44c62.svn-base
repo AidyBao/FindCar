@@ -1,0 +1,81 @@
+//
+//  ZXTaskToolCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTaskToolCellDelegate: NSObjectProtocol {
+    func didTaskToolAction(_ sender: ZXStatusButton)
+}
+
+class ZXTaskToolCell: UITableViewHeaderFooterView {
+    
+    struct ZXTaskButtonTag {
+        static let defaultBtn   = 1101
+        static let agentBtn     = 1102
+        static let locationBtn  = 1103
+        static let taskBtn      = 1104
+    }
+    
+    static let ZXTaskToolCellID: String = "ZXTaskToolCell"
+    weak var delegate: ZXTaskToolCellDelegate?
+    
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var defaultBtn: ZXStatusButton!
+    @IBOutlet weak var agentBtn: ZXStatusButton!
+    @IBOutlet weak var locationBtn: ZXStatusButton!
+    @IBOutlet weak var taskBtn: ZXStatusButton!
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var statusViewH: NSLayoutConstraint!
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.backgroundColor = UIColor.zx_subTintColor
+        
+        setUIStyle()
+    }
+    
+    //MARK: - UI
+    func setUIStyle() {
+        self.defaultBtn.titleLabel?.font = UIFont.zx_subTitleFont
+        self.agentBtn.titleLabel?.font = UIFont.zx_subTitleFont
+        self.locationBtn.titleLabel?.font = UIFont.zx_subTitleFont
+        self.taskBtn.titleLabel?.font = UIFont.zx_subTitleFont
+    }
+    
+    func setDefaultSelected(_ index: Int) {
+        switch index {
+        case ZXTaskButtonTag.defaultBtn:
+            defaultBtn.zx_isSelected(true)
+        case ZXTaskButtonTag.agentBtn:
+            agentBtn.zx_isSelected(true)
+        case ZXTaskButtonTag.locationBtn:
+            locationBtn.zx_isSelected(true)
+        case ZXTaskButtonTag.taskBtn:
+            taskBtn.zx_isSelected(true)
+        default:
+            break
+        }
+    }
+    
+    //MARK: - 取消所有选中状态
+    func cancelSelected(_ isCancel: Bool) {
+        if isCancel {
+            self.defaultBtn.zx_isSelected(false)
+            self.agentBtn.zx_isSelected(false)
+            self.locationBtn.zx_isSelected(false)
+            self.taskBtn.zx_isSelected(false)
+        }
+    }
+
+    @IBAction func toolBtnAction(_ sender: ZXStatusButton) {
+        if delegate != nil {
+            delegate?.didTaskToolAction(sender)
+        }
+    }
+}

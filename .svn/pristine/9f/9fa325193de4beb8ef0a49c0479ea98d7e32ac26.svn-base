@@ -1,0 +1,168 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            return 59.0
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            let headerView:ZXTaskToolCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskToolCell.ZXTaskToolCellID) as! ZXTaskToolCell
+            headerView.delegate = self
+            return headerView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0.0
+        switch indexPath.section {
+        case 0:
+            if direction == .up, currentOffsetY >= 0 {
+                cellH = 0
+            }else{
+                cellH = 145.0
+            }
+        case 1:
+            cellH = ZXTaskTableViewCell.height
+        default:
+            break
+        }
+        return cellH
+    }
+}
+
+
+extension ZXHomePageViewController: UITableViewDataSource {
+    
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let bannerCell: ZXTaskBannerCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID, for: indexPath) as! ZXTaskBannerCell
+            bannerCell.delegate = self
+            return bannerCell
+        case 1:
+//            let rootCell: ZXTaskRootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskRootCell.ZXTaskRootCellID, for: indexPath) as! ZXTaskRootCell
+            
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            return rootCell
+        default:
+            return UITableViewCell.init(style: .default, reuseIdentifier: "UNKnow")
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var cellCount: Int = 0
+        switch section {
+        case 0:
+            if direction == .up, currentOffsetY >= 0 {
+                cellCount = 0
+            }else{
+                cellCount = 1
+            }
+        case 1:
+            cellCount = 3
+        default:
+            break
+        }
+        return cellCount
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskTableViewCellDelegate {
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, marked: Bool) {
+        print("Marked: \(marked)")
+    }
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell) {
+        print("Share Action")
+    }
+}
+
+
+//MARK: - BannerDelegate
+extension ZXHomePageViewController: ZXTaskBannerCellDelegate {
+    func didSelectedBannerCell(_ index: Int) {
+        print(index)
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskToolCellDelegate {
+    func didTaskToolAction(_ sender: UIButton) {
+        
+        //
+        var screenViewY: CGFloat = 145 + 64 + 44
+        if self.tableViewTop.constant == -24 {
+            screenViewY = 64.0
+        }else {
+            screenViewY = 145 + 64 + 44
+        }
+        
+        
+        //
+        if sender.isSelected{
+            sender.isSelected = false
+            self.defaultView?.dismiss()
+            self.agencyView?.dismiss()
+            return
+        }else{
+            self.defaultView?.dismiss()
+            self.agencyView?.dismiss()
+        }
+        
+        //
+        switch sender.tag {
+        case ZXTaskToolCell.ZXTaskButtonTag.defaultBtn: //默认排序
+            sender.isSelected = true
+            self.defaultView = ZXDefaultView.loadNib()
+            self.defaultView?.frame = CGRect.init(x: 0, y: screenViewY, width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT - screenViewY)
+            ZXRootController.appWindow()?.addSubview(self.defaultView!)
+            self.defaultView?.defaultBlock = {sortView,type in
+                self.defaultView?.dismiss()
+                sender.isSelected = false
+                print(type)
+            }
+
+        case ZXTaskToolCell.ZXTaskButtonTag.agentBtn://代理商
+            sender.isSelected = true
+            self.agencyView = ZXAgencyView.loadNib()
+            self.agencyView?.frame = CGRect.init(x: 0, y: screenViewY, width: ZXBOUNDS_WIDTH, height: ZXBOUNDS_HEIGHT - screenViewY)
+            ZXRootController.appWindow()?.addSubview(self.agencyView!)
+            self.agencyView?.defaultBlock = {agView,type in
+                self.agencyView?.dismiss()
+                sender.isSelected = false
+                print(type)
+            }
+        case ZXTaskToolCell.ZXTaskButtonTag.locationBtn://归属地
+            break
+        case ZXTaskToolCell.ZXTaskButtonTag.taskBtn://任务状态
+            break
+        default:
+            break
+        }
+    }
+}
+
+

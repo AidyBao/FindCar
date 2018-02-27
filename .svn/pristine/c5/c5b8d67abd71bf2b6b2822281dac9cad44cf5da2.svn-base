@@ -1,0 +1,108 @@
+//
+//  ZXHomePageViewController+Table.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+extension ZXHomePageViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            return 59.0
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            let headerView:ZXTaskToolCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: ZXTaskToolCell.ZXTaskToolCellID) as! ZXTaskToolCell
+            return headerView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var cellH: CGFloat = 0.0
+        switch indexPath.section {
+        case 0:
+            cellH = 145.0
+        case 1:
+            cellH = ZXTaskTableViewCell.height
+        default:
+            break
+        }
+        return cellH
+    }
+}
+
+
+extension ZXHomePageViewController: UITableViewDataSource {
+    
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let bannerCell: ZXTaskBannerCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskBannerCell.ZXTaskBannerCellID, for: indexPath) as! ZXTaskBannerCell
+            return bannerCell
+        case 1:
+//            let rootCell: ZXTaskRootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskRootCell.ZXTaskRootCellID, for: indexPath) as! ZXTaskRootCell
+            
+            let rootCell = tableView.dequeueReusableCell(withIdentifier: ZXTaskTableViewCell.reuseIdentifier, for: indexPath) as! ZXTaskTableViewCell
+            rootCell.delegate = self
+            return rootCell
+        default:
+            return UITableViewCell.init(style: .default, reuseIdentifier: "UNKnow")
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var cellCount: Int = 0
+        switch section {
+        case 0:
+            cellCount = 1
+        case 1:
+            cellCount = 3
+        default:
+            break
+        }
+        return cellCount
+    }
+}
+
+extension ZXHomePageViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY:CGFloat = scrollView.contentOffset.y;
+        var value = offsetY / 64.0;
+        value = value > 1 ? 1 : value;
+        UIView.animate(withDuration: 0.4, animations: {
+            self.navView.alpha = 1 - value
+            self.navViewH.constant = (1 - value)*64
+        }) { (finish) in
+            
+        }
+    }
+}
+
+extension ZXHomePageViewController: ZXTaskTableViewCellDelegate {
+    
+    func zxTaskTableViewCell(_ cell: ZXTaskTableViewCell, marked: Bool) {
+        print("Marked: \(marked)")
+    }
+    
+    func zxTaskTableViewCellShareAction(_ cell: ZXTaskTableViewCell) {
+        print("Share Action")
+    }
+}
+
+

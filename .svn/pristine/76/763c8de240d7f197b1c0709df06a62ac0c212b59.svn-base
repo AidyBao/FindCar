@@ -1,0 +1,59 @@
+//
+//  ZXTaskBannerCell.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/28.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+protocol ZXTaskBannerCellDelegate: NSObjectProtocol {
+    func didSelectedBannerCell(_ index: Int)
+}
+
+class ZXTaskBannerCell: UITableViewCell {
+    
+    static let ZXTaskBannerCellID: String = "ZXTaskBannerCell"
+    weak var delegate: ZXTaskBannerCellDelegate?
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.test()
+
+        self.backgroundColor = UIColor.white
+    }
+    
+    func test() {
+        let urls = ["http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075430688640/w800",
+                    "http://pic.qyer.com/ra/img/15064476767054",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/09/15075432049166/w800",
+                    "http://pic.qyer.com/public/mobileapp/homebanner/2017/10/10/15076301267252/w800"
+        ]
+        
+        let bannerView = ZXBannerScrollView(frame: CGRect.init(x: 0, y: 0, width: ZXBOUNDS_WIDTH, height: 146.0))
+        bannerView.clickCompletionHandler = {
+            (view: ZXBannerScrollView, index: Int) in
+            print("view--->\(view), index-->\(index)")
+            
+            if self.delegate != nil {
+                self.delegate?.didSelectedBannerCell(index)
+            }
+        }
+        bannerView.imageUrls = urls
+        bannerView.interval = 3
+        bannerView.pageControl?.alignment = .center
+        bannerView.pageControl?.style = .rectangle
+        bannerView.pageControl?.currentPageIndicatorTintColor = UIColor.blue
+        bannerView.pageControl?.pageIndicatorTintColor = UIColor.gray
+        contentView.addSubview(bannerView)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+    }
+}
+

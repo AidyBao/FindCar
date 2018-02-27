@@ -1,0 +1,91 @@
+//
+//  ZXTaskModel.swift
+//  FindCar
+//
+//  Created by 120v on 2018/1/10.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+import HandyJSON
+
+class ZXTaskModel: HandyJSON {
+    
+    var taskId:String                          = ""
+    var financialBranchId:String               = ""
+    var financialCompanyId:String              = ""
+    var financialCompanyName:String            = ""
+    var carBranchId:String                     = ""
+    var carCompanyId:String                    = ""
+    var carCompanyName:String                  = ""
+    var carBrand:String                        = ""
+    var provinceId:String                      = ""
+    var provinceName:String                    = ""
+    var cityId:String                          = ""
+    var cityName:String                        = ""
+    var plateNumber:String                     = ""
+    var frameNumber:Int                        = 0
+    var carOwnerName:String                    = ""
+    var identityCardNumber:Int                 = 0
+    var drivingLicense:Int                     = 0
+    var propertyRightCard:Int                  = 0
+    var vehicleIdentificationNumber:Int        = 0
+    var validateContacts:String                = ""
+    var validateContactsTel:String             = ""
+    var validateRemark:String                  = ""
+    var expectedAgencyCost:String              = ""
+    var actualAmount:Int                       = 0
+    var purchasePrice:String                   = ""
+    var loanAmount:Int                         = 0
+    var surplusLoanAmount:Int                  = 0
+    var spareKey:Int                           = 0
+    var vehicleInvoice:Int                     = 0
+    var loanContract:Int                       = 0
+    var supplementaryInstructions:String       = ""
+    var platformCommission:String              = ""
+    var sendUserId:String                      = ""
+    var sendUserName:String                    = ""
+    var sendDatetime:String                    = ""
+    var sendDatetimeStr:String                 = ""
+    var isTop:String                           = ""
+    var submitUserId:String                    = ""
+    var submitUserName:String                  = ""
+    var submitDatetime:String                  = ""
+    var submitDatetimeStr:String               = ""
+    var plateNumberImg:String                  = ""
+    var frameNumberImg:String                  = ""
+    var carMatchImg:String                     = ""
+    var problemImg:String                      = ""
+    var authorizationDocumentImg:String        = ""
+    var courierCompany:String                  = ""
+    var courierNumber:Int                      = 0
+    var validateFrontImg:String                = ""
+    var validateOpenImg:String                 = ""
+    var validateControlImg:String              = ""
+    var validateBackImg:String                 = ""
+    var receiveAddress:String                  = ""
+    var receiptVoucherImg:String               = ""
+    var handoverImg:String                     = ""
+    var paymentVoucherImg:String               = ""
+    var carReceiveComfirm:String               = ""
+        var remark:String                      = ""
+        var status:String                      = ""
+    var isOnAudit:String                       = ""
+    var isFinished:String                      = ""
+    var operatorId:String                      = ""
+    var operatorName:String                    = ""
+    var operationTime:String                   = ""
+    var operationTimeStr:String                = ""
+    var isFollow:String                        = ""
+    var adress:String                          = ""
+    var submitUserNameStr:String               = ""
+    var plateNumberStr:String                  = ""
+    var taskRemainingTimeStr:String            = ""
+    
+    required init() {}
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.taskId <-- "id"
+    }
+}

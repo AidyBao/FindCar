@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ZXPopView" customModule="FindCar" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ANP-dK-uTg">
+                    <rect key="frame" x="0.0" y="667" width="375" height="184"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aN2-Eh-JXp">
+                            <rect key="frame" x="0.0" y="136" width="375" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="48" id="geK-T3-5HB"/>
+                            </constraints>
+                            <state key="normal" title="取消"/>
+                            <connections>
+                                <action selector="cancelAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="u6N-Jv-sxK"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YOa-fI-Hz1">
+                            <rect key="frame" x="9" y="135" width="357" height="1"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="058-HG-wV3"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ths-06-SaW">
+                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="weixin" translatesAutoresizingMaskIntoConstraints="NO" id="GWs-ug-cJk" customClass="ZXUIImageView" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="61" y="26" width="64" height="64"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="64" id="ZuC-Sh-coR"/>
+                                        <constraint firstAttribute="width" constant="64" id="rgI-K5-d5B"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="32"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                            <real key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                            <color key="value" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="微信好友" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kH6-Nz-Z7C">
+                                    <rect key="frame" x="58.5" y="98" width="69.5" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VND-ex-iHt">
+                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                                    <connections>
+                                        <action selector="friendAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="bim-kd-QhD"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="VND-ex-iHt" secondAttribute="bottom" id="HNM-g6-s0T"/>
+                                <constraint firstItem="GWs-ug-cJk" firstAttribute="top" secondItem="ths-06-SaW" secondAttribute="top" constant="26" id="ULO-7w-fCh"/>
+                                <constraint firstItem="kH6-Nz-Z7C" firstAttribute="top" secondItem="GWs-ug-cJk" secondAttribute="bottom" constant="8" id="Vlx-8g-u8C"/>
+                                <constraint firstItem="VND-ex-iHt" firstAttribute="leading" secondItem="ths-06-SaW" secondAttribute="leading" id="YgX-HX-HYx"/>
+                                <constraint firstItem="GWs-ug-cJk" firstAttribute="centerX" secondItem="ths-06-SaW" secondAttribute="centerX" id="fs3-ts-YGt"/>
+                                <constraint firstItem="kH6-Nz-Z7C" firstAttribute="centerX" secondItem="ths-06-SaW" secondAttribute="centerX" id="n2C-4S-Xkp"/>
+                                <constraint firstItem="VND-ex-iHt" firstAttribute="top" secondItem="ths-06-SaW" secondAttribute="top" id="scn-kZ-vvu"/>
+                                <constraint firstAttribute="trailing" secondItem="VND-ex-iHt" secondAttribute="trailing" id="yHT-vL-ZOr"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mxj-yP-49i">
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="135"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pyq" translatesAutoresizingMaskIntoConstraints="NO" id="8fG-TP-Tni" customClass="ZXUIImageView" customModule="FindCar" customModuleProvider="target">
+                                    <rect key="frame" x="62" y="26" width="64" height="64"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="64" id="erI-hc-aZg"/>
+                                        <constraint firstAttribute="height" constant="64" id="glT-CR-1u1"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="32"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                            <real key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                            <color key="value" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="微信朋友圈" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qk-Cn-73g">
+                                    <rect key="frame" x="50.5" y="98" width="87" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="76x-wQ-vAq">
+                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="135"/>
+                                    <connections>
+                                        <action selector="friendsCircleAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="ec3-30-qBT"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="5qk-Cn-73g" firstAttribute="top" secondItem="8fG-TP-Tni" secondAttribute="bottom" constant="8" id="4b1-CR-Dee"/>
+                                <constraint firstItem="8fG-TP-Tni" firstAttribute="top" secondItem="Mxj-yP-49i" secondAttribute="top" constant="26" id="Grd-wn-I7t"/>
+                                <constraint firstAttribute="trailing" secondItem="76x-wQ-vAq" secondAttribute="trailing" id="Itj-G9-B3h"/>
+                                <constraint firstItem="76x-wQ-vAq" firstAttribute="top" secondItem="Mxj-yP-49i" secondAttribute="top" id="QmT-eo-oFU"/>
+                                <constraint firstItem="8fG-TP-Tni" firstAttribute="centerX" secondItem="Mxj-yP-49i" secondAttribute="centerX" id="cNI-4f-9Xt"/>
+                                <constraint firstItem="5qk-Cn-73g" firstAttribute="centerX" secondItem="Mxj-yP-49i" secondAttribute="centerX" id="crU-Ur-PM0"/>
+                                <constraint firstItem="76x-wQ-vAq" firstAttribute="leading" secondItem="Mxj-yP-49i" secondAttribute="leading" id="kqa-8H-xzO"/>
+                                <constraint firstAttribute="bottom" secondItem="76x-wQ-vAq" secondAttribute="bottom" id="vtD-be-kkK"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ths-06-SaW" firstAttribute="leading" secondItem="ANP-dK-uTg" secondAttribute="leading" id="07N-sO-sMR"/>
+                        <constraint firstItem="Mxj-yP-49i" firstAttribute="leading" secondItem="ths-06-SaW" secondAttribute="trailing" id="1fy-sP-1Bc"/>
+                        <constraint firstAttribute="trailing" secondItem="Mxj-yP-49i" secondAttribute="trailing" id="4JC-wL-0dJ"/>
+                        <constraint firstItem="YOa-fI-Hz1" firstAttribute="leading" secondItem="ANP-dK-uTg" secondAttribute="leading" constant="9" id="8L5-qI-mBZ"/>
+                        <constraint firstAttribute="trailing" secondItem="aN2-Eh-JXp" secondAttribute="trailing" id="BsM-dj-KYA"/>
+                        <constraint firstItem="YOa-fI-Hz1" firstAttribute="top" secondItem="Mxj-yP-49i" secondAttribute="bottom" id="EnO-45-zi5"/>
+                        <constraint firstItem="aN2-Eh-JXp" firstAttribute="top" secondItem="YOa-fI-Hz1" secondAttribute="bottom" id="PgC-7k-pZT"/>
+                        <constraint firstAttribute="bottom" secondItem="aN2-Eh-JXp" secondAttribute="bottom" id="UKN-h9-t3d"/>
+                        <constraint firstItem="aN2-Eh-JXp" firstAttribute="leading" secondItem="ANP-dK-uTg" secondAttribute="leading" id="bby-f0-hXH"/>
+                        <constraint firstItem="ths-06-SaW" firstAttribute="top" secondItem="ANP-dK-uTg" secondAttribute="top" id="cvN-OV-EKQ"/>
+                        <constraint firstAttribute="trailing" secondItem="YOa-fI-Hz1" secondAttribute="trailing" constant="9" id="goY-gd-kfS"/>
+                        <constraint firstItem="ths-06-SaW" firstAttribute="width" secondItem="Mxj-yP-49i" secondAttribute="width" id="iGa-2G-SGn"/>
+                        <constraint firstItem="YOa-fI-Hz1" firstAttribute="top" secondItem="ths-06-SaW" secondAttribute="bottom" id="lZB-g6-A75"/>
+                        <constraint firstItem="Mxj-yP-49i" firstAttribute="top" secondItem="ANP-dK-uTg" secondAttribute="top" id="nRK-mN-kG5"/>
+                        <constraint firstAttribute="height" constant="184" id="rfU-hB-lCl"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="ANP-dK-uTg" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="1gb-1F-dfG"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="ANP-dK-uTg" secondAttribute="bottom" constant="-184" id="BsK-hr-rlU"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ANP-dK-uTg" secondAttribute="trailing" id="sKU-yE-T4K"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="backView" destination="ANP-dK-uTg" id="HKV-M2-uvm"/>
+                <outlet property="backViewBottomGap" destination="BsK-hr-rlU" id="UTz-8x-Bap"/>
+                <outlet property="backViewH" destination="rfU-hB-lCl" id="9uf-sJ-y4w"/>
+                <outlet property="cancelBtn" destination="aN2-Eh-JXp" id="7BV-I3-jrH"/>
+                <outlet property="friendCircleLB" destination="5qk-Cn-73g" id="vBj-ZL-2WG"/>
+                <outlet property="friendLB" destination="kH6-Nz-Z7C" id="2KI-Bv-OQo"/>
+                <outlet property="geliView" destination="YOa-fI-Hz1" id="PLQ-ag-Avo"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="52.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="pyq" width="60" height="60"/>
+        <image name="weixin" width="60" height="60"/>
+    </resources>
+</document>

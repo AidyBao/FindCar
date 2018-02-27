@@ -1,0 +1,81 @@
+//
+//  ZXLaunchViewController.swift
+//  FindCar
+//
+//  Created by 120v on 2017/12/27.
+//  Copyright © 2017年 screson. All rights reserved.
+//
+
+import UIKit
+
+class ZXLaunchViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //获取用户数据
+        ZXUser.user.getUser()
+        
+        //判断登录状况
+        rejudgeLoginStatus()
+        
+    }
+    
+    func rejudgeLoginStatus() {
+        
+        if ZXUser.user.isLogin {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+            dateFormatter.locale = Locale.current
+            
+            //上次时间
+            var lastDateStr: String = ""
+            var lastDate: Date?
+            if UserDefaults.standard.object(forKey: "ZXLastDate") != nil {
+                lastDateStr = UserDefaults.standard.object(forKey: "ZXLastDate") as! String
+                lastDate = dateFormatter.date(from: lastDateStr)!
+            }
+            
+            //目前时间
+            let currentDateStr = ZXDateUtils.current.dateAndTime(false, timeWithSecond: true)
+            let currentDate = dateFormatter.date(from: currentDateStr)
+            
+            if lastDate != nil {
+                //时间差
+                let interval = currentDate?.timeIntervalSince(lastDate!)
+                
+                //7天后需要从新登录
+                let requerTime = TimeInterval(7*24*60*60)
+                
+                if Int(interval!) < Int(requerTime) { //自动登录
+                    ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+                }else{//从新登录
+                    ZXRouter.changeRootViewController(ZXLoginViewController())
+                }
+            }else{
+                ZXRouter.changeRootViewController(ZXRootController.zx_tabbarVC())
+            }
+            UserDefaults.standard.set(currentDateStr, forKey: "ZXLastDate")
+            UserDefaults.standard.synchronize()
+        }else{
+            ZXRouter.changeRootViewController(UINavigationController.init(rootViewController: ZXLoginViewController()))
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

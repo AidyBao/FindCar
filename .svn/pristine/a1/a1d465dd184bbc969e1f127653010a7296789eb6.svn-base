@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZXTaskDetailViewController" customModule="FindCar" customModuleProvider="target">
+            <connections>
+                <outlet property="btnBackToHome" destination="Fjx-LD-aCh" id="9yM-I9-TjN"/>
+                <outlet property="btnUploadInfo" destination="hiY-xX-QHQ" id="GXq-by-3dZ"/>
+                <outlet property="tblList" destination="qQw-3c-rRu" id="nDa-Ai-wdw"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KKk-RL-Fdg">
+                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fjx-LD-aCh">
+                            <rect key="frame" x="8" y="7" width="174.5" height="46"/>
+                            <state key="normal" title="返回首页">
+                                <color key="titleColor" red="0.57414853570000002" green="0.57416242360000003" blue="0.57415497299999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="backToHome:" destination="-1" eventType="touchUpInside" id="qnB-aF-9oD"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hiY-xX-QHQ" customClass="ZXCButton" customModule="FindCar" customModuleProvider="target">
+                            <rect key="frame" x="192.5" y="7" width="174.5" height="46"/>
+                            <state key="normal" title="上传车辆信息">
+                                <color key="titleColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="23"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="uploadInfoAction:" destination="-1" eventType="touchUpInside" id="y2m-e8-aHl"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="3an-Ft-q2E"/>
+                        <constraint firstAttribute="trailing" secondItem="hiY-xX-QHQ" secondAttribute="trailing" constant="8" id="O6s-EY-Oq3"/>
+                        <constraint firstItem="hiY-xX-QHQ" firstAttribute="width" secondItem="Fjx-LD-aCh" secondAttribute="width" id="TQi-oG-dwb"/>
+                        <constraint firstItem="hiY-xX-QHQ" firstAttribute="leading" secondItem="Fjx-LD-aCh" secondAttribute="trailing" constant="10" id="U1e-Ue-QGj"/>
+                        <constraint firstItem="Fjx-LD-aCh" firstAttribute="leading" secondItem="KKk-RL-Fdg" secondAttribute="leading" constant="8" id="Uvb-Wr-lE1"/>
+                        <constraint firstItem="hiY-xX-QHQ" firstAttribute="top" secondItem="KKk-RL-Fdg" secondAttribute="top" constant="7" id="c8s-GS-ReJ"/>
+                        <constraint firstAttribute="bottom" secondItem="hiY-xX-QHQ" secondAttribute="bottom" constant="7" id="l7c-8Z-a9e"/>
+                        <constraint firstItem="Fjx-LD-aCh" firstAttribute="top" secondItem="KKk-RL-Fdg" secondAttribute="top" constant="7" id="wXs-LH-Dst"/>
+                        <constraint firstAttribute="bottom" secondItem="Fjx-LD-aCh" secondAttribute="bottom" constant="7" id="yEV-2N-oLE"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="qQw-3c-rRu">
+                    <rect key="frame" x="10" y="0.0" width="355" height="607"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="wNk-Av-Pfa"/>
+                        <outlet property="delegate" destination="-1" id="o8x-CK-37g"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="KKk-RL-Fdg" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="2ji-34-ADp"/>
+                <constraint firstItem="qQw-3c-rRu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="4AY-t9-OtI"/>
+                <constraint firstItem="qQw-3c-rRu" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="AYi-u8-HIV"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qQw-3c-rRu" secondAttribute="trailing" constant="10" id="DIL-0T-KCl"/>
+                <constraint firstItem="KKk-RL-Fdg" firstAttribute="top" secondItem="qQw-3c-rRu" secondAttribute="bottom" id="Sap-Pt-2qY"/>
+                <constraint firstItem="KKk-RL-Fdg" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="jJU-qX-3Mq"/>
+                <constraint firstItem="KKk-RL-Fdg" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="msy-i4-oKY"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="24.5" y="54.5"/>
+        </view>
+    </objects>
+</document>

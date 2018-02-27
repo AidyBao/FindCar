@@ -1,0 +1,88 @@
+//
+//  ZXUploadCarInfoViewController.swift
+//  FindCar
+//
+//  Created by screson on 2018/1/4.
+//  Copyright © 2018年 screson. All rights reserved.
+//
+
+import UIKit
+
+/// 补充车辆信息
+class ZXUploadCarInfoViewController: ZXUIViewController {
+    @IBOutlet weak var tblList: UITableView!
+    @IBOutlet weak var btnCommit: ZXCButton!
+    
+    fileprivate let arrTitles = ["1 车辆车架号", "2 车头照片", "3 车尾照片", "4 重大问题照片"]
+    fileprivate let arrSubTitles = ["车架号大多在发动机舱、仪表板左侧或挡风玻璃左下方", "将车牌号包含在照片中", "将车牌号包含在照片中", "例如车辆验证损坏、部件缺失等"]
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        self.title = "补充车辆信息"
+        self.tblList.showsVerticalScrollIndicator = false
+        self.view.backgroundColor = UIColor.zx_subTintColor
+        self.tblList.backgroundColor = UIColor.zx_subTintColor
+        self.zx_addNavBarButtonItems(textNames: ["查看示例"], font: nil, color: UIColor.zx_tintColor, at: .right)
+        self.tblList.register(UINib.init(nibName: ZXImageInputCell.NibName, bundle: nil), forCellReuseIdentifier: ZXImageInputCell.reuseIdentifier)
+        self.tblList.register(UINib.init(nibName: ZXTextInput1TableViewCell.NibName, bundle: nil), forCellReuseIdentifier: ZXTextInput1TableViewCell.reuseIdentifier)
+    }
+    
+    override func zx_rightBarButtonAction(index: Int) {
+        let verifyVC = ZXVerifyCarInfoViewController()
+        self.navigationController?.pushViewController(verifyVC, animated: true)
+    }
+
+    @IBAction func commitAction(_ sender: Any) {
+        
+    }
+    
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return ZXImageInputCell.height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 4 {
+            return 15
+        }
+        return CGFloat.leastNormalMagnitude
+    }
+}
+
+extension ZXUploadCarInfoViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXTextInput1TableViewCell.reuseIdentifier, for: indexPath) as! ZXTextInput1TableViewCell
+            cell.lbIsOptional.isHidden = false
+            cell.lbTitle.text = "5 备注"
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ZXImageInputCell.reuseIdentifier, for: indexPath) as! ZXImageInputCell
+            cell.lbTitle.text = arrTitles[indexPath.section]
+            cell.lbSubTitle.text = arrSubTitles[indexPath.section]
+            if indexPath.row == 3 {
+                cell.lbIsOptional.isHidden = false
+            } else {
+                cell.lbIsOptional.isHidden = true
+            }
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+}
